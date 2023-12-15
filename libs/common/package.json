@@ -1,0 +1,10 @@
+{
+	"dependencies": {
+		"@swc/helpers": "~0.5.2"
+	},
+	"main": "./src/index.js",
+	"name": "@heap-code/common",
+	"type": "commonjs",
+	"typings": "./src/index.d.ts",
+	"version": "0.0.1"
+}

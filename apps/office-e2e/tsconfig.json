@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"forceConsistentCasingInFileNames": true,
+		"module": "commonjs",
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"outDir": "../../dist/out-tsc",
+		"sourceMap": false,
+		"strict": true,
+		"types": ["cypress", "node"]
+	},
+	"extends": "../../tsconfig.base.json",
+	"include": [
+		"**/*.ts",
+		"**/*.js",
+		"cypress.config.ts",
+		"**/*.cy.ts",
+		"**/*.cy.js",
+		"**/*.d.ts"
+	]
+}

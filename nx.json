@@ -1,5 +1,8 @@
 {
 	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"affected": {
+		"defaultBase": "master"
+	},
 	"generators": {
 		"@nx/angular:application": {
 			"e2eTestRunner": "cypress",
@@ -31,7 +34,10 @@
 			"!{projectRoot}/eslint.config.js"
 		],
 		"sharedGlobals": [],
-		"workspace": ["{workspaceRoot}/*", "{workspaceRoot}/!(apps|libs)/**/*"]
+		"workspace": [
+			"{workspaceRoot}/*",
+			"{workspaceRoot}/!(apps|libs|packages)/**/*"
+		]
 	},
 	"nxCloudAccessToken": "YTMwZmM1ZDEtMmFkMS00YjAwLWI5YTAtMWU5YzkyYzRiM2EzfHJlYWQtd3JpdGU=",
 	"targetDefaults": {

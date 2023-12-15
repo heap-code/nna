@@ -1,0 +1,86 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "office",
+	"prefix": "heap-code",
+	"projectType": "application",
+	"sourceRoot": "apps/office/src",
+	"tags": [],
+	"targets": {
+		"build": {
+			"configurations": {
+				"development": {
+					"extractLicenses": false,
+					"optimization": false,
+					"sourceMap": true
+				},
+				"production": {
+					"budgets": [
+						{
+							"maximumError": "1mb",
+							"maximumWarning": "500kb",
+							"type": "initial"
+						},
+						{
+							"maximumError": "4kb",
+							"maximumWarning": "2kb",
+							"type": "anyComponentStyle"
+						}
+					],
+					"outputHashing": "all"
+				}
+			},
+			"defaultConfiguration": "production",
+			"executor": "@angular-devkit/build-angular:application",
+			"options": {
+				"assets": [
+					"apps/office/src/favicon.ico",
+					"apps/office/src/assets"
+				],
+				"browser": "apps/office/src/main.ts",
+				"index": "apps/office/src/index.html",
+				"inlineStyleLanguage": "scss",
+				"outputPath": "dist/apps/office",
+				"polyfills": ["zone.js"],
+				"prerender": true,
+				"scripts": [],
+				"server": "apps/office/src/main.server.ts",
+				"ssr": {
+					"entry": "apps/office/server.ts"
+				},
+				"styles": ["apps/office/src/styles.scss"],
+				"tsConfig": "apps/office/tsconfig.app.json"
+			},
+			"outputs": ["{options.outputPath}"]
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
+		},
+		"serve": {
+			"configurations": {
+				"development": {
+					"buildTarget": "office:build:development"
+				},
+				"production": {
+					"buildTarget": "office:build:production"
+				}
+			},
+			"defaultConfiguration": "development",
+			"executor": "@angular-devkit/build-angular:dev-server"
+		},
+		"serve-static": {
+			"executor": "@nx/web:file-server",
+			"options": {
+				"buildTarget": "office:build",
+				"staticFilePath": "dist/apps/office/browser"
+			}
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"options": {
+				"jestConfig": "apps/office/jest.config.ts"
+			},
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+		}
+	}
+}

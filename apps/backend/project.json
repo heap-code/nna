@@ -1,0 +1,53 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "backend",
+	"projectType": "application",
+	"sourceRoot": "apps/backend/src",
+	"tags": [],
+	"targets": {
+		"build": {
+			"configurations": {
+				"development": {},
+				"production": {}
+			},
+			"defaultConfiguration": "production",
+			"executor": "@nx/webpack:webpack",
+			"options": {
+				"assets": ["apps/backend/src/assets"],
+				"compiler": "tsc",
+				"main": "apps/backend/src/main.ts",
+				"outputPath": "dist/apps/backend",
+				"target": "node",
+				"tsConfig": "apps/backend/tsconfig.app.json",
+				"webpackConfig": "apps/backend/webpack.config.js"
+			},
+			"outputs": ["{options.outputPath}"]
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
+		},
+		"serve": {
+			"configurations": {
+				"development": {
+					"buildTarget": "backend:build:development"
+				},
+				"production": {
+					"buildTarget": "backend:build:production"
+				}
+			},
+			"defaultConfiguration": "development",
+			"executor": "@nx/js:node",
+			"options": {
+				"buildTarget": "backend:build"
+			}
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"options": {
+				"jestConfig": "apps/backend/jest.config.ts"
+			},
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+		}
+	}
+}

@@ -160,6 +160,11 @@
 				"pathGroups": [
 					{
 						"group": "external",
+						"pattern": "@nna/**",
+						"position": "after"
+					},
+					{
+						"group": "external",
 						"pattern": "~/**",
 						"position": "after"
 					}
