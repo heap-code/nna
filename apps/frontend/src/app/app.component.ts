@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { Component } from "@angular/core";
+import { RouterModule } from "@angular/router";
+
+import { NxWelcomeComponent } from "./nx-welcome.component";
 
 @Component({
-  standalone: true,
-  imports: [NxWelcomeComponent, RouterModule],
-  selector: 'nx-nest-js-angular-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+	imports: [NxWelcomeComponent, RouterModule],
+	selector: "nx-nest-js-angular-root",
+	standalone: true,
+	styleUrl: "./app.component.scss",
+	templateUrl: "./app.component.html",
 })
 export class AppComponent {
-  title = 'frontend';
+	title = "frontend";
 }

@@ -1,42 +1,187 @@
 {
-  "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nx"],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "@nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
-              {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
-      "env": {
-        "jest": true
-      },
-      "rules": {}
-    }
-  ]
+	"extends": ["prettier"],
+	"overrides": [
+		{
+			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			"rules": {
+				"@nx/enforce-module-boundaries": [
+					"error",
+					{
+						"allow": [],
+						"depConstraints": [
+							{
+								"onlyDependOnLibsWithTags": ["*"],
+								"sourceTag": "*"
+							}
+						],
+						"enforceBuildableLibDependency": true
+					}
+				]
+			}
+		},
+		{
+			"extends": ["plugin:@nx/typescript"],
+			"files": ["*.ts", "*.tsx"],
+			"rules": {}
+		},
+		{
+			"extends": ["plugin:@nx/javascript"],
+			"files": ["*.js", "*.jsx"],
+			"rules": {}
+		},
+		{
+			"env": {
+				"jest": true
+			},
+			"files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+			"rules": {}
+		},
+		/** Custom rules */
+		{
+			"extends": [
+				"plugin:jsonc/base",
+				"plugin:jsonc/recommended-with-json"
+			],
+			"files": ["*.json"],
+			"rules": {
+				"jsonc/array-bracket-newline": [
+					/* prettier */
+					"off",
+					{
+						"minItems": 2,
+						"multiline": true
+					}
+				],
+				"jsonc/array-element-newline": [
+					/* prettier */
+					"off",
+					"always"
+				],
+				"jsonc/indent": ["error", "tab"],
+				"jsonc/key-spacing": [
+					"error",
+					{
+						"afterColon": true,
+						"beforeColon": false,
+						"mode": "strict"
+					}
+				],
+				"jsonc/no-comments": "warn",
+				"jsonc/object-curly-newline": [
+					"error",
+					{
+						"consistent": true,
+						"minProperties": 1,
+						"multiline": true
+					}
+				],
+				"jsonc/object-property-newline": [
+					"error",
+					{
+						"allowAllPropertiesOnSameLine": false
+					}
+				],
+				"jsonc/sort-keys": "error",
+				"max-len": "off",
+				"no-multiple-empty-lines": [
+					"error",
+					{
+						"max": 0
+					}
+				]
+			}
+		},
+		{
+			"files": [
+				".eslintrc.json",
+				".prettierrc.json",
+				"tsconfig.json",
+				"tsconfig.*.json"
+			],
+			"rules": {
+				/* OK for `rc` files */
+				"jsonc/no-comments": "off"
+			}
+		},
+		{
+			"files": [
+				"cypress.config.ts",
+				"jest.config.ts",
+				"jest.preset.ts",
+				"orm.config.ts",
+				"webpack.config.ts"
+			],
+			"rules": {
+				"import/no-default-export": "off"
+			}
+		},
+		{
+			"files": ["index.ts"],
+			"plugins": ["sort-exports"],
+			"rules": {
+				"sort-exports/sort-exports": [
+					"error",
+					{
+						"sortDir": "asc"
+					}
+				]
+			}
+		}
+	],
+	"plugins": [
+		"@nx",
+		"sort-destructure-keys",
+		"sort-keys-plus",
+		"eslint-plugin-import",
+		"unused-imports",
+		"prettier",
+		"sort-keys-plus"
+	],
+	"root": true,
+	"rules": {
+		"import/first": "error",
+		"import/newline-after-import": "error",
+		"import/no-default-export": "error",
+		"import/no-mutable-exports": "error",
+		"import/no-useless-path-segments": "error",
+		"import/order": [
+			"error",
+			{
+				"alphabetize": {
+					"order": "asc"
+				},
+				"distinctGroup": false,
+				"groups": [
+					["builtin", "external"],
+					["internal", "parent", "sibling", "index"],
+					"object"
+				],
+				"newlines-between": "always",
+				"pathGroups": [
+					{
+						"group": "external",
+						"pattern": "~/**",
+						"position": "after"
+					}
+				]
+			}
+		],
+		"prettier/prettier": "error",
+		"sort-destructure-keys/sort-destructure-keys": "error",
+		"sort-keys-plus/sort-keys": [
+			"error",
+			"asc",
+			{
+				"allowLineSeparatedGroups": true
+			}
+		],
+		"unused-imports/no-unused-imports": "error",
+		"unused-imports/no-unused-vars": [
+			"warn",
+			{
+				"args": "after-used",
+				"argsIgnorePattern": "^_"
+			}
+		]
+	}
 }
