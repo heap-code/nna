@@ -75,6 +75,13 @@
 				"staticFilePath": "dist/apps/office/browser"
 			}
 		},
+		"stylelint": {
+			"executor": "nx-stylelint:lint",
+			"options": {
+				"lintFilePatterns": ["apps/office/**/*.{css,scss}"]
+			},
+			"outputs": ["{options.outputFile}"]
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"options": {

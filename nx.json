@@ -31,7 +31,8 @@
 			"!{projectRoot}/**/*.cy.[jt]s?(x)",
 			"!{projectRoot}/cypress.config.[jt]s",
 			"!{projectRoot}/.eslintrc.json",
-			"!{projectRoot}/eslint.config.js"
+			"!{projectRoot}/eslint.config.js",
+			"!{projectRoot}/.stylelintrc(.(json|yml|yaml|js))?"
 		],
 		"sharedGlobals": [],
 		"workspace": [
@@ -75,6 +76,13 @@
 				"{workspaceRoot}/.eslintignore",
 				"{workspaceRoot}/eslint.config.js"
 			],
+			"options": {
+				"maxWarnings": 15
+			}
+		},
+		"stylelint": {
+			"cache": true,
+			"inputs": ["default", "{workspaceRoot}/.stylelintrc.json"],
 			"options": {
 				"maxWarnings": 15
 			}

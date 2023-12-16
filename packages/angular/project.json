@@ -10,6 +10,13 @@
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]
 		},
+		"stylelint": {
+			"executor": "nx-stylelint:lint",
+			"options": {
+				"lintFilePatterns": ["packages/angular/**/*.{css,scss}"]
+			},
+			"outputs": ["{options.outputFile}"]
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"options": {

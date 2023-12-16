@@ -19,7 +19,7 @@
 				"outputPath": "dist/apps/backend",
 				"target": "node",
 				"tsConfig": "apps/backend/tsconfig.app.json",
-				"webpackConfig": "apps/backend/webpack.config.js"
+				"webpackConfig": "apps/backend/webpack.config.ts"
 			},
 			"outputs": ["{options.outputPath}"]
 		},

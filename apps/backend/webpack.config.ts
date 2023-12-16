@@ -1,7 +1,7 @@
-const { composePlugins, withNx } = require("@nx/webpack");
+import { composePlugins, withNx } from "@nx/webpack";
 
 // Nx plugins for webpack.
-module.exports = composePlugins(
+export default composePlugins(
 	withNx({
 		target: "node",
 	}),

@@ -75,6 +75,13 @@
 				"staticFilePath": "dist/apps/frontend/browser"
 			}
 		},
+		"stylelint": {
+			"executor": "nx-stylelint:lint",
+			"options": {
+				"lintFilePatterns": ["apps/frontend/**/*.{css,scss}"]
+			},
+			"outputs": ["{options.outputFile}"]
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"options": {
