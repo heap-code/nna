@@ -6,19 +6,21 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"importHelpers": true,
-		"lib": ["es2020", "dom"],
+		"lib": ["es2022", "dom"],
 		"module": "esnext",
 		"moduleResolution": "node",
+		"noImplicitOverride": true,
 		"paths": {
 			"@nna/angular": ["packages/angular/src/index.ts"],
 			"@nna/core": ["packages/core/src/index.ts"],
 			"@nna/nest": ["packages/nest/src/index.ts"],
-			"~/common": ["libs/common/src/index.ts"]
+			"~/common/*": ["libs/common/src/*"]
 		},
 		"rootDir": ".",
 		"skipDefaultLibCheck": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
+		"strict": true,
 		"target": "es2015"
 	},
 	"exclude": ["node_modules", "tmp"]

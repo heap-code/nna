@@ -104,6 +104,11 @@
 			}
 		},
 		{
+			"extends": ["plugin:yml/recommended", "plugin:yml/prettier"],
+			"files": ["*.yml", "*.yaml"],
+			"parser": "yaml-eslint-parser"
+		},
+		{
 			"files": [
 				"cypress.config.ts",
 				"jest.config.ts",

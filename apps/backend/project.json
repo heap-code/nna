@@ -19,6 +19,17 @@
 				"outputPath": "dist/apps/backend",
 				"target": "node",
 				"tsConfig": "apps/backend/tsconfig.app.json",
+				"tsPlugins": [
+					{
+						"name": "@nestjs/swagger/plugin",
+						"options": {
+							"controllerFileNameSuffix": [".controller.ts"],
+							"controllerKeyOfComment": "description",
+							"dtoKeyOfComment": "description",
+							"introspectComments": true
+						}
+					}
+				],
 				"webpackConfig": "apps/backend/webpack.config.ts"
 			},
 			"outputs": ["{options.outputPath}"]
