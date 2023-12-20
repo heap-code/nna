@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - release/v*
+  pull_request:
+    branches:
+      - master
+      - release/v*
+
+jobs:
+  checks:
+    if: contains(github.event.pull_request.labels.*.name, 'renovate') != true
+    uses: ./.github/workflows/reusable-ci.yml
+    secrets:
+      NX_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
+
+  checks_renovate:
+    if: contains(github.event.pull_request.labels.*.name, 'renovate')
+    # NX token not used to limit its usage (credits)
+    uses: ./.github/workflows/reusable-ci.yml

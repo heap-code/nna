@@ -111,7 +111,9 @@
 		"lint:fix": "npm run lint -- --fix",
 		"stylelint": "nx run-many --all --target=stylelint",
 		"stylelint:fix": "npm run stylelint -- --fix",
-		"test": "nx run-many --all --target=test"
+		"test": "nx run-many --all --target=test",
+		"test:ci": "nx run-many --all --target=test --configuration ci",
+		"test:e2e": "nx run-many --all --target=e2e"
 	},
 	"version": "0.0.0"
 }
