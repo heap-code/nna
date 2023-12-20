@@ -40,7 +40,8 @@
 			"{workspaceRoot}/!(apps|libs|packages)/**/*"
 		]
 	},
-	"nxCloudAccessToken": "YTMwZmM1ZDEtMmFkMS00YjAwLWI5YTAtMWU5YzkyYzRiM2EzfHJlYWQtd3JpdGU=",
+	"nxCloudAccessToken": "NDUxODJmOGItOTVhNi00OWEyLTkxZDEtZmI1ZTZjOTkxMDQzfHJlYWQ=",
+	"parallel": 4,
 	"targetDefaults": {
 		"@nx/jest:jest": {
 			"cache": true,

@@ -1,5 +1,5 @@
 {
-	"extends": ["../../libs/front/.eslintrc.json"],
+	"extends": ["../../packages/angular/.eslintrc.json"],
 	"ignorePatterns": ["!**/*"],
 	"overrides": [
 		{
@@ -9,13 +9,13 @@
 			],
 			"files": ["*.ts"],
 			"parserOptions": {
-				"project": ["./apps/office/tsconfig.*?.json"]
+				"project": ["./libs/front/tsconfig.*?.json"]
 			},
 			"rules": {
 				"@angular-eslint/component-selector": [
 					"error",
 					{
-						"prefix": "office",
+						"prefix": "front",
 						"style": "kebab-case",
 						"type": "element"
 					}
@@ -23,17 +23,11 @@
 				"@angular-eslint/directive-selector": [
 					"error",
 					{
-						"prefix": "office",
+						"prefix": "front",
 						"style": "camelCase",
 						"type": "attribute"
 					}
 				]
-			}
-		},
-		{
-			"files": ["./src/main.server.ts"],
-			"rules": {
-				"import/no-default-export": "off"
 			}
 		}
 	]

@@ -1,3 +1,17 @@
 {
-	"extends": ["../../.eslintrc.json"]
+	"extends": ["../../.eslintrc.json"],
+	"overrides": [
+		{
+			"files": ["*.ts"],
+			"parserOptions": {
+				"project": ["./apps/backend/tsconfig.lint.json"]
+			},
+			"rules": {
+				"@darraghor/nestjs-typed/param-decorator-name-matches-route-param": "error",
+				"@darraghor/nestjs-typed/provided-injected-should-match-factory-parameters": "error",
+				"@darraghor/nestjs-typed/sort-module-metadata-arrays": "error"
+			}
+		}
+	],
+	"plugins": ["@darraghor/nestjs-typed"]
 }

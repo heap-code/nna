@@ -1,6 +1,6 @@
 export default {
-	coverageDirectory: "../../coverage/apps/office",
-	displayName: "office",
+	coverageDirectory: "../../coverage/libs/front",
+	displayName: "front",
 	preset: "../../jest.preset.js",
 	setupFilesAfterEnv: ["<rootDir>/src/test-setup.ts"],
 	snapshotSerializers: [
