@@ -1,6 +1,7 @@
-/* eslint-disable */
 export default {
+	coverageDirectory: "../../coverage/apps/backend",
 	displayName: "backend",
+	moduleFileExtensions: ["ts", "js", "html"],
 	preset: "../../jest.preset.js",
 	testEnvironment: "node",
 	transform: {
@@ -9,6 +10,4 @@ export default {
 			{ tsconfig: "<rootDir>/tsconfig.spec.json" },
 		],
 	},
-	moduleFileExtensions: ["ts", "js", "html"],
-	coverageDirectory: "../../coverage/apps/backend",
 };

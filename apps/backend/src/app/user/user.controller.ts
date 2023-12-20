@@ -19,6 +19,6 @@ export class UserController {
 
 	@Post("asd")
 	public dd(@Body() a: UserDTO) {
-		return [1, 2];
+		return [1, 2, a._id];
 	}
 }

@@ -1,9 +1,10 @@
-/* eslint-disable */
 export default {
+	coverageDirectory: "../../coverage/backend-e2e",
 	displayName: "backend-e2e",
+	globalSetup: "<rootDir>/src/support/global/setup.ts",
+	globalTeardown: "<rootDir>/src/support/global/teardown.ts",
+	moduleFileExtensions: ["ts", "js", "html"],
 	preset: "../../jest.preset.js",
-	globalSetup: "<rootDir>/src/support/global-setup.ts",
-	globalTeardown: "<rootDir>/src/support/global-teardown.ts",
 	setupFiles: ["<rootDir>/src/support/test-setup.ts"],
 	testEnvironment: "node",
 	transform: {
@@ -14,6 +15,4 @@ export default {
 			},
 		],
 	},
-	moduleFileExtensions: ["ts", "js", "html"],
-	coverageDirectory: "../../coverage/backend-e2e",
 };

@@ -1,18 +1,23 @@
 {
 	"extends": ["../../.eslintrc.json"],
-	"ignorePatterns": ["!**/*"],
 	"overrides": [
 		{
-			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-			"rules": {}
-		},
-		{
 			"files": ["*.ts", "*.tsx"],
+			"parserOptions": {
+				"project": "./apps/backend-e2e/tsconfig.spec.json"
+			},
 			"rules": {}
 		},
 		{
-			"files": ["*.js", "*.jsx"],
-			"rules": {}
+			"files": [
+				"./src/support/global/setup.ts",
+				"./src/support/global/teardown.ts",
+				"./src/support/test-setup.ts"
+			],
+			"rules": {
+				"import/no-default-export": "off",
+				"jsdoc/require-jsdoc": "off"
+			}
 		}
 	]
 }

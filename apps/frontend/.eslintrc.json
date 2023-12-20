@@ -1,6 +1,5 @@
 {
-	"extends": ["../../.eslintrc.json"],
-	"ignorePatterns": ["!**/*"],
+	"extends": ["../../libs/front/.eslintrc.json"],
 	"overrides": [
 		{
 			"extends": [
@@ -8,11 +7,14 @@
 				"plugin:@angular-eslint/template/process-inline-templates"
 			],
 			"files": ["*.ts"],
+			"parserOptions": {
+				"project": ["./apps/frontend/tsconfig.*?.json"]
+			},
 			"rules": {
 				"@angular-eslint/component-selector": [
 					"error",
 					{
-						"prefix": "nx-nest-js-angular",
+						"prefix": "app",
 						"style": "kebab-case",
 						"type": "element"
 					}
@@ -20,7 +22,7 @@
 				"@angular-eslint/directive-selector": [
 					"error",
 					{
-						"prefix": "nxNestJsAngular",
+						"prefix": "app",
 						"style": "camelCase",
 						"type": "attribute"
 					}
@@ -28,9 +30,10 @@
 			}
 		},
 		{
-			"extends": ["plugin:@nx/angular-template"],
-			"files": ["*.html"],
-			"rules": {}
+			"files": ["./src/main.server.ts"],
+			"rules": {
+				"import/no-default-export": "off"
+			}
 		}
 	]
 }

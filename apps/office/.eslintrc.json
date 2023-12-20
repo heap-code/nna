@@ -1,5 +1,5 @@
 {
-	"extends": ["../../.eslintrc.json"],
+	"extends": ["../../libs/front/.eslintrc.json"],
 	"ignorePatterns": ["!**/*"],
 	"overrides": [
 		{
@@ -8,11 +8,14 @@
 				"plugin:@angular-eslint/template/process-inline-templates"
 			],
 			"files": ["*.ts"],
+			"parserOptions": {
+				"project": ["./apps/office/tsconfig.*?.json"]
+			},
 			"rules": {
 				"@angular-eslint/component-selector": [
 					"error",
 					{
-						"prefix": "heap-code",
+						"prefix": "office",
 						"style": "kebab-case",
 						"type": "element"
 					}
@@ -20,7 +23,7 @@
 				"@angular-eslint/directive-selector": [
 					"error",
 					{
-						"prefix": "heapCode",
+						"prefix": "office",
 						"style": "camelCase",
 						"type": "attribute"
 					}
@@ -28,9 +31,10 @@
 			}
 		},
 		{
-			"extends": ["plugin:@nx/angular-template"],
-			"files": ["*.html"],
-			"rules": {}
+			"files": ["./src/main.server.ts"],
+			"rules": {
+				"import/no-default-export": "off"
+			}
 		}
 	]
 }

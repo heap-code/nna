@@ -14,7 +14,8 @@
 			"@nna/angular": ["packages/angular/src/index.ts"],
 			"@nna/core": ["packages/core/src/index.ts"],
 			"@nna/nest": ["packages/nest/src/index.ts"],
-			"~/common/*": ["libs/common/src/*"]
+			"~/common/*": ["libs/common/src/*"],
+			"~/front/*": ["libs/front/src/*"]
 		},
 		"rootDir": ".",
 		"skipDefaultLibCheck": true,
