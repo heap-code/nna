@@ -7,6 +7,9 @@ on:
 
 jobs:
   job:
+    # Ignore the heap-code bot commits and devDependencies
+    if: ${{ github.actor != vars.HC_BOT && !(github.actor == 'renovate[bot]' && contains(github.event.head_commit.message, 'chore(deps):')) }}
+
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -28,5 +31,4 @@ jobs:
 
       - name: Generate code coverage summary
         run: npm run test:ci
-        # TODO: badges
-# TODO: the remaining steps when more complete
+# TODO: Add the remaining steps (coverage badges + releases)  when more complete
