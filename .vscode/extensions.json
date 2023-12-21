@@ -3,6 +3,7 @@
 		"nrwl.angular-console",
 		"firsttris.vscode-jest-runner",
 		"dbaeumer.vscode-eslint",
-		"stylelint.vscode-stylelint"
+		"stylelint.vscode-stylelint",
+		"ms-vscode-remote.remote-containers"
 	]
 }
