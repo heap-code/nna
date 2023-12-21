@@ -10,6 +10,10 @@ on:
       - master
       - release/v*
 
+concurrency:
+  group: "${{ github.workflow }} - ${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   checks:
     if: contains(github.event.pull_request.labels.*.name, 'renovate') != true
@@ -19,5 +23,7 @@ jobs:
 
   checks_renovate:
     if: contains(github.event.pull_request.labels.*.name, 'renovate')
-    # NX token not used to limit its usage (credits)
     uses: ./.github/workflows/reusable-ci.yml
+    with:
+      # NX token not used to limit its usage (credits)
+      NX_NO_CLOUD: true

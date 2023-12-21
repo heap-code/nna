@@ -2,6 +2,9 @@ name: CI Base
 
 on:
   workflow_call:
+    inputs:
+      NX_NO_CLOUD:
+        type: boolean
     secrets:
       NX_TOKEN:
         required: false
@@ -11,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_TOKEN }}
+      NX_NO_CLOUD: ${{ inputs.NX_NO_CLOUD }}
 
     strategy:
       matrix:

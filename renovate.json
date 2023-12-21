@@ -22,9 +22,11 @@
 		},
 		{
 			"automerge": true,
-			"packagePatterns": ["*"]
+			"automergeStrategy": "squash",
+			"matchUpdateTypes": ["minor", "patch", "pin", "digest"]
 		}
 	],
 	"rebaseWhen": "behind-base-branch",
+	"stabilityDays": 3,
 	"unicodeEmoji": true
 }
