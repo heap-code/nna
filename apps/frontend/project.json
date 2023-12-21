@@ -59,7 +59,10 @@
 		"serve": {
 			"configurations": {
 				"development": {
-					"buildTarget": "frontend:build:development"
+					"buildTarget": "frontend:build:development",
+					"options": {
+						"proxyConfig": "apps/frontend/proxy.conf.json"
+					}
 				},
 				"production": {
 					"buildTarget": "frontend:build:production"
