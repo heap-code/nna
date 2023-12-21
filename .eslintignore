@@ -15,5 +15,7 @@ CHANGELOG.md
 !.vscode/settings.json
 !.vscode/tasks.json
 
+!.devcontainer/
+
 !.github/
 !.github/workflows/*.yml

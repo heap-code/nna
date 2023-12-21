@@ -1,7 +1,22 @@
 {
-    "name": "Dev environment",
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
-    "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"]
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"nrwl.angular-console",
+				"firsttris.vscode-jest-runner",
+				"dbaeumer.vscode-eslint",
+				"stylelint.vscode-stylelint",
+				"hediet.vscode-drawio",
+				"mhutchie.git-graph"
+			]
+		}
+	},
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"name": "Dev environment",
+	"postAttachCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install; npx nx reset"
 }

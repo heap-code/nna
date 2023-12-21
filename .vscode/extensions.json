@@ -4,6 +4,8 @@
 		"firsttris.vscode-jest-runner",
 		"dbaeumer.vscode-eslint",
 		"stylelint.vscode-stylelint",
-		"ms-vscode-remote.remote-containers"
+		"ms-vscode-remote.remote-containers",
+		"hediet.vscode-drawio",
+		"mhutchie.git-graph"
 	]
 }
