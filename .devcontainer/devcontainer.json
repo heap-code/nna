@@ -10,7 +10,12 @@
 				"dbaeumer.vscode-eslint",
 				"stylelint.vscode-stylelint",
 				"hediet.vscode-drawio",
-				"mhutchie.git-graph"
+				"mhutchie.git-graph",
+				"Angular.ng-template",
+				"formulahendry.auto-rename-tag",
+				"formulahendry.auto-close-tag",
+				"EditorConfig.EditorConfig",
+				"Gruntfuggly.todo-tree"
 			]
 		}
 	},

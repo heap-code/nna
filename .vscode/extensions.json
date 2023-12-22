@@ -6,6 +6,11 @@
 		"stylelint.vscode-stylelint",
 		"ms-vscode-remote.remote-containers",
 		"hediet.vscode-drawio",
-		"mhutchie.git-graph"
+		"mhutchie.git-graph",
+		"angular.ng-template",
+		"formulahendry.auto-rename-tag",
+		"formulahendry.auto-close-tag",
+		"editorconfig.editorconfig",
+		"gruntfuggly.todo-tree"
 	]
 }
