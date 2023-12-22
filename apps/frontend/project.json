@@ -60,9 +60,7 @@
 			"configurations": {
 				"development": {
 					"buildTarget": "frontend:build:development",
-					"options": {
-						"proxyConfig": "apps/frontend/proxy.conf.json"
-					}
+					"proxyConfig": "apps/frontend/proxy.conf.json"
 				},
 				"production": {
 					"buildTarget": "frontend:build:production"

@@ -59,7 +59,8 @@
 		"serve": {
 			"configurations": {
 				"development": {
-					"buildTarget": "office:build:development"
+					"buildTarget": "office:build:development",
+					"proxyConfig": "apps/office/proxy.conf.json"
 				},
 				"production": {
 					"buildTarget": "office:build:production"
