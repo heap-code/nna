@@ -59,7 +59,7 @@
 		"@storybook/angular": "7.6.6",
 		"@storybook/core-server": "7.6.6",
 		"@storybook/jest": "^0.2.3",
-		"@storybook/test-runner": "^0.13.0",
+		"@storybook/test-runner": "^0.16.0",
 		"@storybook/testing-library": "^0.2.2",
 		"@svgr/webpack": "^8.0.1",
 		"@swc-node/register": "~1.6.7",
