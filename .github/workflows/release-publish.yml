@@ -42,6 +42,5 @@ jobs:
         run: git add .badges
 
       # TODO
-	  # - name: Release and publish
+      # - name: Release and publish
       #   run: npx release-it --ci
-

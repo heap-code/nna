@@ -8,6 +8,8 @@ CHANGELOG.md
 # Do not ignore the rule configuration files
 !.*rc.json
 
+!.release-it.json
+
 !.vscode/
 .vscode/*
 !.vscode/extensions.json

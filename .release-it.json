@@ -11,5 +11,36 @@
 	},
 	"npm": {
 		"publish": false
+	},
+	"plugins": {
+		"@release-it/conventional-changelog": {
+			"header": "# Changelog",
+			"infile": "CHANGELOG.md",
+			"preset": {
+				"name": "conventionalcommits",
+				"types": [
+					{
+						"section": "Features",
+						"type": "feat"
+					},
+					{
+						"section": "Bug Fixes",
+						"type": "fix"
+					},
+					{
+						"section": "Documentation",
+						"type": "docs"
+					},
+					{
+						"section": "Performances",
+						"type": "perf"
+					},
+					{
+						"section": "Code Refactors",
+						"type": "refactor"
+					}
+				]
+			}
+		}
 	}
 }
