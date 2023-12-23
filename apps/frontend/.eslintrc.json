@@ -8,7 +8,10 @@
 			],
 			"files": ["*.ts"],
 			"parserOptions": {
-				"project": ["./apps/frontend/tsconfig.*?.json"]
+				"project": [
+					"./apps/frontend/tsconfig.*?.json",
+					"apps/frontend/.storybook/tsconfig.json"
+				]
 			},
 			"rules": {
 				"@angular-eslint/component-selector": [
@@ -30,7 +33,11 @@
 			}
 		},
 		{
-			"files": ["./src/main.server.ts"],
+			"files": [
+				"./src/main.server.ts",
+				".storybook/main.ts",
+				".storybook/preview.ts"
+			],
 			"rules": {
 				"import/no-default-export": "off"
 			}

@@ -1,5 +1,5 @@
 export default {
-	coverageDirectory: "../../coverage/backend-e2e",
+	coverageDirectory: "../../dist/coverage/backend-e2e",
 	displayName: "backend-e2e",
 	globalSetup: "<rootDir>/src/support/global/setup.ts",
 	globalTeardown: "<rootDir>/src/support/global/teardown.ts",

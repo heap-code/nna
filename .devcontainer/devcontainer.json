@@ -1,0 +1,28 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"nrwl.angular-console",
+				"firsttris.vscode-jest-runner",
+				"dbaeumer.vscode-eslint",
+				"stylelint.vscode-stylelint",
+				"hediet.vscode-drawio",
+				"mhutchie.git-graph",
+				"Angular.ng-template",
+				"formulahendry.auto-rename-tag",
+				"formulahendry.auto-close-tag",
+				"EditorConfig.EditorConfig",
+				"Gruntfuggly.todo-tree",
+				"cweijan.vscode-database-client2"
+			]
+		}
+	},
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"name": "Dev environment",
+	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install; npx nx reset"
+}

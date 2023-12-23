@@ -1,0 +1,26 @@
+{
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "explicit"
+	},
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"html",
+		"vue",
+		"markdown",
+		"json",
+		"yaml"
+	],
+	"files.associations": {
+		// Supposition: some files are ignored (e.g.: tsconfig.json) in the eslint plugin
+		// Doing this, "force" them to be considered
+		"*.json": "json",
+		"*.yaml": "yaml",
+		"*.yml": "yaml"
+	},
+	"stylelint.enable": true,
+	"stylelint.snippet": ["css", "scss"],
+	"stylelint.validate": ["css", "scss"]
+}

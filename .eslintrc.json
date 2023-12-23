@@ -353,7 +353,8 @@
 				".eslintrc.json",
 				".prettierrc.json",
 				"tsconfig.json",
-				"tsconfig.*.json"
+				"tsconfig.*.json",
+				".vscode/settings.json"
 			],
 			"rules": {
 				/* OK for `rc` files */
@@ -370,27 +371,6 @@
 			"parser": "yaml-eslint-parser",
 			"rules": {
 				/* Only prettier*/
-			}
-		},
-		{
-			"extends": ["plugin:markdownlint/recommended"],
-			"files": ["*.md"],
-			"parser": "eslint-plugin-markdownlint/parser",
-			"rules": {
-				"markdownlint/md013": [
-					"error",
-					{
-						"line_length": 100
-					}
-				],
-				"markdownlint/md033": [
-					"error",
-					{
-						"allowed_elements": ["a", "img"]
-					}
-				],
-				"no-trailing-spaces": "off",
-				"prettier/prettier": "off"
 			}
 		},
 		{

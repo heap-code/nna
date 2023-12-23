@@ -34,6 +34,13 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Stylelint
+        run: npm run stylelint
+
+      # TODO
+      # - name: Comments coverage
+      #   run: npm run compodoc:coverage
+
       - name: Build
         run: npm run build
 
@@ -41,7 +48,7 @@ jobs:
         run: npm run test:ci
 
       - name: Tests e2e
-        run: npm run test:e2e
+        run: npm run test:e2e:ci
 
         # TODO: office too
       #      - name: Upload Cypress artifacts in case of error

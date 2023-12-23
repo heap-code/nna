@@ -7,8 +7,7 @@
 		"e2e": {
 			"executor": "@nx/jest:jest",
 			"options": {
-				"jestConfig": "apps/backend-e2e/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "apps/backend-e2e/jest.config.ts"
 			},
 			"outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"]
 		},

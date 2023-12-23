@@ -52,6 +52,14 @@
 			},
 			"outputs": ["{options.outputPath}"]
 		},
+		"compodoc": {
+			"executor": "nx:run-commands",
+			"options": {
+				"args": "--base='npx @compodoc/compodoc -p ./apps/frontend/tsconfig.app.json -d ./dist/compodoc/apps/frontend --disablePrivate --disableInternal --disableLifeCycleHooks'",
+				"command": "{args.base} -r 4080 -s"
+			},
+			"outputs": ["{workspaceRoot}/dist/compodoc/apps/frontend"]
+		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]
@@ -59,7 +67,8 @@
 		"serve": {
 			"configurations": {
 				"development": {
-					"buildTarget": "frontend:build:development"
+					"buildTarget": "frontend:build:development",
+					"proxyConfig": "apps/frontend/proxy.conf.json"
 				},
 				"production": {
 					"buildTarget": "frontend:build:production"
@@ -75,6 +84,41 @@
 				"staticFilePath": "dist/apps/frontend/browser"
 			}
 		},
+		"storybook": {
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			},
+			"executor": "@storybook/angular:start-storybook",
+			"options": {
+				"browserTarget": "frontend:storybook-build",
+				"compodoc": false,
+				"configDir": "apps/frontend/.storybook",
+				"port": 4400
+			}
+		},
+		"storybook-build": {
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			},
+			"executor": "@storybook/angular:build-storybook",
+			"options": {
+				"browserTarget": "frontend:storybook-build",
+				"compodoc": false,
+				"configDir": "apps/frontend/.storybook",
+				"outputDir": "dist/storybook/frontend"
+			},
+			"outputs": ["{options.outputDir}"]
+		},
+		"storybook-test": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "test-storybook -c apps/frontend/.storybook --url=http://localhost:4400"
+			}
+		},
 		"stylelint": {
 			"executor": "nx-stylelint:lint",
 			"options": {
@@ -87,7 +131,7 @@
 			"options": {
 				"jestConfig": "apps/frontend/jest.config.ts"
 			},
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
 		}
 	}
 }

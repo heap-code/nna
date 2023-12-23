@@ -1,5 +1,5 @@
 export default {
-	coverageDirectory: "../../coverage/apps/office",
+	coverageDirectory: "../../dist/coverage/apps/office",
 	displayName: "office",
 	preset: "../../jest.preset.js",
 	setupFilesAfterEnv: ["<rootDir>/src/test-setup.ts"],

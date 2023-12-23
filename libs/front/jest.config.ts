@@ -1,5 +1,5 @@
 export default {
-	coverageDirectory: "../../coverage/libs/front",
+	coverageDirectory: "../../dist/coverage/libs/front",
 	displayName: "front",
 	preset: "../../jest.preset.js",
 	setupFilesAfterEnv: ["<rootDir>/src/test-setup.ts"],

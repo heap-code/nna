@@ -14,7 +14,7 @@
 			"options": {
 				"jestConfig": "libs/common/jest.config.ts"
 			},
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
 		}
 	}
 }

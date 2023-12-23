@@ -15,7 +15,7 @@
 			"options": {
 				"jestConfig": "libs/front/jest.config.ts"
 			},
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
 		}
 	}
 }
