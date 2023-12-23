@@ -31,4 +31,17 @@ jobs:
 
       - name: Generate code coverage summary
         run: npm run test:ci
-# TODO: Add the remaining steps (coverage badges + releases)  when more complete
+
+      - name: Generate code coverage badges
+        run: for path in ./dist/coverage/*/*; do npx node-jest-badges -c "$path/coverage-summary.json" -o ".badges/${path:16}/code/"; done
+
+      - name: Set default code coverage badges
+        run: for path in .badges/*/*/code; do cp $path/coverage-jest\ coverage.svg $path/coverage.svg; done
+
+      - name: Add badges
+        run: git add .badges
+
+      # TODO
+	  # - name: Release and publish
+      #   run: npx release-it --ci
+
