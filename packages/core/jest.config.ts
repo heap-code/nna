@@ -19,7 +19,7 @@ if (swcJestConfig.swcrc === undefined) {
 // swcJestConfig.module.noInterop = false;
 
 export default {
-	coverageDirectory: "../../coverage/libs/core",
+	coverageDirectory: "../../dist/coverage/libs/core",
 	displayName: "core",
 	moduleFileExtensions: ["ts", "js", "html"],
 	preset: "../../jest.preset.js",

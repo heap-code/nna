@@ -15,7 +15,8 @@
 				"formulahendry.auto-rename-tag",
 				"formulahendry.auto-close-tag",
 				"EditorConfig.EditorConfig",
-				"Gruntfuggly.todo-tree"
+				"Gruntfuggly.todo-tree",
+				"cweijan.vscode-database-client2"
 			]
 		}
 	},

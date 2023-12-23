@@ -126,7 +126,7 @@
 			"options": {
 				"jestConfig": "apps/office/jest.config.ts"
 			},
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
 		}
 	}
 }

@@ -1,5 +1,5 @@
 export default {
-	coverageDirectory: "../../coverage/packages/nest",
+	coverageDirectory: "../../dist/coverage/packages/nest",
 	displayName: "nest",
 	moduleFileExtensions: ["ts", "js", "html"],
 	preset: "../../jest.preset.js",

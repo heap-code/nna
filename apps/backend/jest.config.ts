@@ -1,5 +1,5 @@
 export default {
-	coverageDirectory: "../../coverage/apps/backend",
+	coverageDirectory: "../../dist/coverage/apps/backend",
 	displayName: "backend",
 	moduleFileExtensions: ["ts", "js", "html"],
 	preset: "../../jest.preset.js",

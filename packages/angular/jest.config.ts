@@ -1,5 +1,5 @@
 export default {
-	coverageDirectory: "../../coverage/packages/angular",
+	coverageDirectory: "../../dist/coverage/packages/angular",
 	displayName: "angular",
 	preset: "../../jest.preset.js",
 	setupFilesAfterEnv: ["<rootDir>/src/test-setup.ts"],

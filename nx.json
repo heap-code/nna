@@ -60,7 +60,7 @@
 			],
 			"options": {
 				"codeCoverage": true,
-				"passWithNoTests": true
+				"passWithNoTests": false
 			}
 		},
 		"build": {
