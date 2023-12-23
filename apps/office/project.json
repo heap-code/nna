@@ -79,6 +79,41 @@
 				"staticFilePath": "dist/apps/office/browser"
 			}
 		},
+		"storybook": {
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			},
+			"executor": "@storybook/angular:start-storybook",
+			"options": {
+				"browserTarget": "office:storybook-build",
+				"compodoc": false,
+				"configDir": "apps/office/.storybook",
+				"port": 5400
+			}
+		},
+		"storybook-build": {
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			},
+			"executor": "@storybook/angular:build-storybook",
+			"options": {
+				"browserTarget": "office:storybook-build",
+				"compodoc": false,
+				"configDir": "apps/office/.storybook",
+				"outputDir": "dist/storybook/office"
+			},
+			"outputs": ["{options.outputDir}"]
+		},
+		"storybook-test": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "test-storybook -c apps/office/.storybook --url=http://localhost:5400"
+			}
+		},
 		"stylelint": {
 			"executor": "nx-stylelint:lint",
 			"options": {
