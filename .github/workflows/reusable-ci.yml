@@ -35,7 +35,11 @@ jobs:
         run: npm run lint
 
       - name: Stylelint
-        run: npm run lint:style
+        run: npm run stylelint
+
+      # TODO
+      # - name: Comments coverage
+      #   run: npm run compodoc:coverage
 
       - name: Build
         run: npm run build

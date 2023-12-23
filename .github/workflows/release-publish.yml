@@ -34,13 +34,17 @@ jobs:
 
       - name: Generate code coverage badges
         run: for path in ./dist/coverage/*/*; do npx node-jest-badges -c "$path/coverage-summary.json" -o ".badges/${path:16}/code/"; done
-
       - name: Set default code coverage badges
         run: for path in .badges/*/*/code; do cp $path/coverage-jest\ coverage.svg $path/coverage.svg; done
 
+      - name: Generate comment coverage badges
+        run: npm run compodoc:build
+      - name: Move comment coverage badges
+        run: for path in ./dist/compodoc/*/*; do mkdir -p "./.badges/${path:16}/comment" && cp "$path/images/coverage-badge-documentation.svg" "./.badges/${path:16}/comment/coverage.svg"; done
+
       - name: Add badges
-        run: git add .badges
+        run: git add .badges/
 
       # TODO
       # - name: Release and publish
-      #   run: npx release-it --ci
+      #   run: npx release-it --ci --no-git.requireCleanWorkingDir

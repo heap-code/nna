@@ -34,6 +34,14 @@
 			},
 			"outputs": ["{options.outputPath}"]
 		},
+		"compodoc": {
+			"executor": "nx:run-commands",
+			"options": {
+				"args": "--base='npx @compodoc/compodoc -p ./apps/backend/tsconfig.app.json -d ./dist/compodoc/apps/backend --disablePrivate --disableInternal --disableLifeCycleHooks'",
+				"command": "{args.base} -r 3080 -s"
+			},
+			"outputs": ["{workspaceRoot}/dist/compodoc/apps/backend"]
+		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]

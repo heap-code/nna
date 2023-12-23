@@ -68,6 +68,18 @@
 			"dependsOn": ["^build"],
 			"inputs": ["production", "^production"]
 		},
+		"compodoc": {
+			"cache": true,
+			"configurations": {
+				"build": {
+					"command": "{args.base}"
+				},
+				"coverage": {
+					"command": "{args.base} --coverageTest 75 --silent"
+				}
+			},
+			"inputs": ["default", "^production"]
+		},
 		"e2e": {
 			"cache": true,
 			"inputs": ["default", "^production"]
