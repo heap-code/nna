@@ -1,0 +1,15 @@
+{
+	"git": {
+		"commit": true,
+		"commitMessage": "chore(release): release v${version}",
+		"push": true,
+		"tag": true,
+		"tagName": "v${version}"
+	},
+	"github": {
+		"release": true
+	},
+	"npm": {
+		"publish": false
+	}
+}
