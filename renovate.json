@@ -1,5 +1,7 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"automerge": true,
+	"automergeStrategy": "squash",
 	"extends": ["config:recommended", "group:definitelyTyped"],
 	"labels": ["dependencies", "renovate"],
 	"packageRules": [
@@ -21,9 +23,10 @@
 			"matchPackagePrefixes": ["@release-it/"]
 		},
 		{
-			"automerge": true,
-			"automergeStrategy": "squash",
-			"matchUpdateTypes": ["minor", "patch", "pin", "digest"]
+			"addLabels": ["dependency-major"],
+			"automerge": false,
+			"matchDepTypes": ["dependencies"],
+			"matchUpdateTypes": ["major"]
 		}
 	],
 	"rebaseWhen": "behind-base-branch",
