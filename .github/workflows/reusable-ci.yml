@@ -33,13 +33,11 @@ jobs:
 
       - name: Lint
         run: npm run lint
-
       - name: Stylelint
         run: npm run stylelint
 
-      # TODO
-      # - name: Comments coverage
-      #   run: npm run compodoc:coverage
+      - name: Comments coverage
+        run: npm run compodoc:coverage
 
       - name: Build
         run: npm run build
@@ -50,12 +48,20 @@ jobs:
       - name: Tests e2e
         run: npm run test:e2e:ci
 
-        # TODO: office too
-      #      - name: Upload Cypress artifacts in case of error
-      #        uses: actions/upload-artifact@v3
-      #        if: failure()
-      #        with:
-      #          if-no-files-found: warn
-      #          name: cypress-logs
-      #          path: dist/cypress/apps/frontend-e2e/
-      #          retention-days: 7
+      - name: Upload Cypress artifacts in case of error in `frontend`
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          if-no-files-found: warn
+          name: cypress-logs
+          path: dist/cypress/apps/frontend-e2e/
+          retention-days: 7
+
+      - name: Upload Cypress artifacts in case of error in `office`
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          if-no-files-found: warn
+          name: cypress-logs
+          path: dist/cypress/apps/office-e2e/
+          retention-days: 7

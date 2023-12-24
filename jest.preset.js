@@ -5,7 +5,11 @@ const nxPreset = require("@nx/jest/preset").default;
  */
 module.exports = {
 	...nxPreset,
-	coverageReporters: ["html", "json-summary"],
+	collectCoverageFrom: [
+		"<rootDir>/src/**/*.ts",
+		"!<rootDir>/src/**/index.ts",
+	],
+	coverageReporters: ["html", "json-summary", "text"],
 	watchPlugins: [
 		"jest-watch-typeahead/filename",
 		"jest-watch-typeahead/testname",

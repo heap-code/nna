@@ -454,7 +454,8 @@
 			"warn",
 			{
 				"args": "after-used",
-				"argsIgnorePattern": "^_"
+				"argsIgnorePattern": "^_",
+				"varsIgnorePattern": "^_\\d*"
 			}
 		]
 	}

@@ -5,6 +5,14 @@
 	"sourceRoot": "packages/nest/src",
 	"tags": [],
 	"targets": {
+		"compodoc": {
+			"executor": "nx:run-commands",
+			"options": {
+				"args": "--base='npx @compodoc/compodoc -p ./packages/nest/tsconfig.lib.json -d ./dist/compodoc/packages/nest --disablePrivate --disableInternal --disableLifeCycleHooks'",
+				"command": "{args.base} -r 10001 -s"
+			},
+			"outputs": ["{workspaceRoot}/dist/compodoc/packages/nest"]
+		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]

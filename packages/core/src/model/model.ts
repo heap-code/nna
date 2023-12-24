@@ -1,6 +1,7 @@
 import * as z from "zod";
 
-export const entitySchema = z.object({
+/** Base schema for `Model` */
+export const schema = z.object({
 	_id: z
 		.number({ description: "Unique ID defining an entity" })
 		.min(0)
@@ -13,4 +14,5 @@ export const entitySchema = z.object({
 		.readonly(),
 });
 
-export type EntityModel = z.infer<typeof entitySchema>;
+/** Extracted type from the `Model` [schema]{@link schema}  */
+export type Type = z.infer<typeof schema>;

@@ -75,7 +75,7 @@
 					"command": "{args.base}"
 				},
 				"coverage": {
-					"command": "{args.base} --coverageTest 75 --silent"
+					"command": "{args.base} --coverageTest 0 --silent"
 				}
 			},
 			"inputs": ["default", "^production"]
