@@ -14,7 +14,7 @@
 		"@angular/ssr": "~17.0.0",
 		"@mikro-orm/core": "^5.9.5",
 		"@mikro-orm/nestjs": "^5.2.2",
-		"@mikro-orm/postgresql": "^5.9.5",
+		"@mikro-orm/postgresql": "^5.9.6",
 		"@nestjs/common": "^10.0.2",
 		"@nestjs/core": "^10.0.2",
 		"@nestjs/platform-express": "^10.0.2",
@@ -38,6 +38,7 @@
 		"@angular/language-service": "~17.0.0",
 		"@compodoc/compodoc": "^1.1.23",
 		"@darraghor/eslint-plugin-nestjs-typed": "^4.3.9",
+		"@mikro-orm/cli": "^5.9.6",
 		"@nestjs/schematics": "^10.0.1",
 		"@nestjs/testing": "^10.0.2",
 		"@nx/angular": "17.2.6",
@@ -119,6 +120,13 @@
 		"node": ">=18.0.0"
 	},
 	"license": "MIT",
+	"mikro-orm": {
+		"configPaths": [
+			"./apps/backend/src/orm.config.ts"
+		],
+		"tsConfigPath": "./apps/backend/tsconfig.app.json",
+		"useTsNode": true
+	},
 	"name": "@nna/nx-nest-angular",
 	"private": true,
 	"scripts": {
@@ -160,6 +168,7 @@
 		"office:stylelint": "nx run office:stylelint",
 		"office:stylelint:fix": "npm run office:stylelint -- --fix",
 		"office:test": "nx run office:test",
+		"storybook:build": "nx run-many --all --target=storybook-build",
 		"stylelint": "nx run-many --all --target=stylelint",
 		"stylelint:fix": "npm run stylelint -- --fix",
 		"test": "nx run-many --all --target=test",

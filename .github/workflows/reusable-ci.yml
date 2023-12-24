@@ -31,6 +31,10 @@ jobs:
       - name: Install packages
         run: npm ci
 
+      # Verify that all mikro-orm versions are correct (useful for renovate)
+      - name: Verify Mikro-orm versions
+        run: npx mikro-orm debug
+
       - name: Lint
         run: npm run lint
       - name: Stylelint
