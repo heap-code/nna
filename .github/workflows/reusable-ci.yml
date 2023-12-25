@@ -53,7 +53,7 @@ jobs:
         run: npm run test:e2e:ci
 
       - name: Upload Cypress artifacts in case of error in `frontend`
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           if-no-files-found: warn
@@ -62,7 +62,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Cypress artifacts in case of error in `office`
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           if-no-files-found: warn
