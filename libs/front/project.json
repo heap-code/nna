@@ -6,6 +6,14 @@
 	"sourceRoot": "libs/front/src",
 	"tags": [],
 	"targets": {
+		"compodoc": {
+			"executor": "nx:run-commands",
+			"options": {
+				"args": "--base='npx @compodoc/compodoc -p ./libs/front/tsconfig.lib.json -d ./dist/compodoc/libs/front --disablePrivate --disableInternal --disableLifeCycleHooks'",
+				"command": "{args.base} -r 10002 -s"
+			},
+			"outputs": ["{workspaceRoot}/dist/compodoc/libs/front"]
+		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]

@@ -1,11 +1,9 @@
 # core
 
-This library was generated with [Nx](https://nx.dev).
+![documentation](../.././.badges/packages/core/comment/coverage.svg)
 
-## Building
-
-Run `nx build core` to build the library.
-
-## Running unit tests
-
-Run `nx test core` to execute the unit tests via [Jest](https://jestjs.io).
+![coverage-branches](../.././.badges/packages/core/code/coverage-branches.svg)
+![coverage-functions](../.././.badges/packages/core/code/coverage-functions.svg)
+![coverage-jest coverage](../.././.badges/packages/core/code/coverage-jest coverage.svg)
+![coverage-lines](../.././.badges/packages/core/code/coverage-lines.svg)
+![coverage-statements](../.././.badges/packages/core/code/coverage-statements.svg)

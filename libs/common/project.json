@@ -5,6 +5,14 @@
 	"sourceRoot": "libs/common/src",
 	"tags": [],
 	"targets": {
+		"compodoc": {
+			"executor": "nx:run-commands",
+			"options": {
+				"args": "--base='npx @compodoc/compodoc -p ./libs/common/tsconfig.lib.json -d ./dist/compodoc/libs/common --disablePrivate --disableInternal --disableLifeCycleHooks'",
+				"command": "{args.base} -r 10002 -s"
+			},
+			"outputs": ["{workspaceRoot}/dist/compodoc/libs/common"]
+		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]

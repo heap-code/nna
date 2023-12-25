@@ -381,7 +381,7 @@
 				"markdownlint/md013": [
 					"error",
 					{
-						"line_length": 100
+						"line_length": 200
 					}
 				],
 				"markdownlint/md033": [

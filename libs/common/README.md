@@ -1,11 +1,9 @@
 # common
 
-This library was generated with [Nx](https://nx.dev).
+![documentation](../.././.badges/libs/common/comment/coverage.svg)
 
-## Building
-
-Run `nx build common` to build the library.
-
-## Running unit tests
-
-Run `nx test common` to execute the unit tests via [Jest](https://jestjs.io).
+![coverage-branches](../.././.badges/libs/common/code/coverage-branches.svg)
+![coverage-functions](../.././.badges/libs/common/code/coverage-functions.svg)
+![coverage-jest coverage](../.././.badges/libs/common/code/coverage-jest coverage.svg)
+![coverage-lines](../.././.badges/libs/common/code/coverage-lines.svg)
+![coverage-statements](../.././.badges/libs/common/code/coverage-statements.svg)
