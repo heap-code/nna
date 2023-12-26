@@ -223,6 +223,13 @@
 				"@typescript-eslint/no-unsafe-declaration-merging": "warn",
 				/* Managed by "unused-imports/no-unused-vars" */
 				"@typescript-eslint/no-unused-vars": "off",
+				"@typescript-eslint/no-use-before-define": [
+					"error",
+					{
+						"ignoreTypeReferences": true,
+						"typedefs": true
+					}
+				],
 				"@typescript-eslint/prefer-enum-initializers": "error",
 				"@typescript-eslint/prefer-for-of": "warn",
 				"@typescript-eslint/prefer-includes": "warn",

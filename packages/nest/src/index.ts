@@ -1,1 +1,2 @@
-export * from "./lib/nest.module";
+export * from "./entity";
+export * from "./orm";
