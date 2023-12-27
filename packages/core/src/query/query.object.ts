@@ -1,4 +1,4 @@
-import { QueryFilter } from "./query.filter";
+import { QueryFilter } from "./filter";
 import { QueryOptions } from "./query.options";
 
 /** An object with all parameters and options for a query */
