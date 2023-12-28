@@ -111,6 +111,10 @@
 			"options": {
 				"maxWarnings": 15
 			}
+		},
+		"typecheck": {
+			"cache": true,
+			"inputs": ["default"]
 		}
 	}
 }

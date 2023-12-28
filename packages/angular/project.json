@@ -31,6 +31,12 @@
 				"jestConfig": "packages/angular/jest.config.ts"
 			},
 			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p packages/angular/tsconfig.spec.json"
+			}
 		}
 	}
 }

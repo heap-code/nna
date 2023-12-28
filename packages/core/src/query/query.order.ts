@@ -1,4 +1,4 @@
 export type QueryOrder<T> = {
-	[K in keyof T]?: void;
+	[K in keyof T]?: unknown;
 	// TODO
 };
