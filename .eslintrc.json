@@ -400,6 +400,13 @@
 				"no-trailing-spaces": "off",
 				"prettier/prettier": "off"
 			}
+		},
+		{
+			"files": ["*.ts", "*.js"],
+			"rules": {
+				/* FIXME: There's a plugin that disables that rule (probably prettier) */
+				"curly": ["error", "all"]
+			}
 		}
 	],
 	"plugins": [
@@ -415,6 +422,14 @@
 	],
 	"root": true,
 	"rules": {
+		"eqeqeq": "error",
+		"eslint-comments/no-unused-disable": "error",
+		"eslint-comments/require-description": [
+			"warn",
+			{
+				"ignore": ["eslint-enable"]
+			}
+		],
 		"import/first": "error",
 		"import/newline-after-import": "error",
 		"import/no-default-export": "error",
@@ -447,6 +462,13 @@
 				]
 			}
 		],
+		"no-alert": "error",
+		"no-console": "error",
+		"no-empty": "error",
+		"no-return-await": "error",
+		"prefer-const": "error",
+		"prefer-rest-params": "error",
+		"prefer-template": "error",
 		"prettier/prettier": "error",
 		"sort-destructure-keys/sort-destructure-keys": "error",
 		"sort-keys-plus/sort-keys": [
@@ -456,6 +478,7 @@
 				"allowLineSeparatedGroups": true
 			}
 		],
+		"sort-vars": "error",
 		"unused-imports/no-unused-imports": "error",
 		"unused-imports/no-unused-vars": [
 			"warn",
