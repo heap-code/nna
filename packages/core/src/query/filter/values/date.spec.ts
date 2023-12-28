@@ -1,29 +1,24 @@
 import { z } from "zod";
 
-import {
-	schema,
-	schemaOperators,
-	schemaStrict,
-	Type,
-	Operators,
-} from "./string-nullable";
+import { schema, schemaOperators, schemaStrict, Type, Operators } from "./date";
 
-describe("Nullable string filter", () => {
+describe("Date filter", () => {
 	describe("Validation", () => {
 		it("should be valid", () => {
 			const filters: readonly Type[] = [
-				"a string",
-				null,
+				new Date(),
 				{
-					$eq: "1",
-					$gt: "2",
-					$gte: "3",
-					$lt: "4",
-					$lte: "5",
-					$ne: "6",
+					$eq: new Date(),
+					$gt: new Date(),
+					$gte: new Date(),
+					$lt: new Date(),
+					$lte: new Date(),
+					$ne: new Date(),
 				},
-				{ $eq: null },
-				{ $in: ["7", "8", null], $nin: ["9", "0"] },
+				{
+					$in: [new Date(), new Date()],
+					$nin: [new Date(), new Date()],
+				},
 				{ $exists: true, $nin: [] },
 				{ $exists: false },
 				{ $like: "abc", $re: "def" },
@@ -35,9 +30,10 @@ describe("Nullable string filter", () => {
 
 		it("should not be valid", () => {
 			const filters: readonly Type[] = [
-				1 as unknown as string,
-				{ $eq: 1 as unknown as string },
-				{ $exists: null as unknown as boolean },
+				1 as unknown as Date,
+				null as unknown as Date,
+				{ $eq: 1 as unknown as Date },
+				{ $eq: null as unknown as Date },
 			];
 
 			for (const filter of filters) {
@@ -48,13 +44,15 @@ describe("Nullable string filter", () => {
 		it("should not be valid (operators only)", () => {
 			const filters: ReadonlyArray<[Operators, number]> = [
 				[{ $eq: 1 as unknown as string }, 1],
+				[{ $eq: null as unknown as string }, 1],
 				[
 					{
 						$exists: 2 as unknown as boolean,
-						$in: ["3", 4 as unknown as string],
+						$in: ["3", 4 as unknown as Date],
 					},
-					2,
+					3,
 				],
+				[{ $ne: null }, 1],
 				[
 					{
 						$like: new Date() as unknown as string,
@@ -84,9 +82,9 @@ describe("Nullable string filter", () => {
 	describe("Transformation", () => {
 		it("should remove extraenous values", () => {
 			const toParse: Type = {
-				$eq: "abc",
+				$eq: new Date(),
 				$exists: true,
-				$in: ["a", null],
+				$in: [new Date(), new Date()],
 			};
 			expect(schema.parse({ ...toParse, a: "2" })).toStrictEqual(toParse);
 		});

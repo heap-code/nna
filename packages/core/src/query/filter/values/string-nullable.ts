@@ -15,6 +15,6 @@ const type = z.string().nullable();
 export const schemaOperators = createFilterOperatorSchema(z.string(), type);
 
 /** Validation schema for nullable `string` filter */
-export const schema: z.ZodType<Type> = type.or(schemaOperators);
+export const schema: z.ZodType<Type> = schemaOperators.or(type);
 /** Strict validation schema for nullable `string` filter (no extraenous values) */
-export const schemaStrict: z.ZodType<Type> = type.or(schemaOperators.strict());
+export const schemaStrict: z.ZodType<Type> = schemaOperators.strict().or(type);

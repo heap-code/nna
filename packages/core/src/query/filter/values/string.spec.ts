@@ -1,4 +1,12 @@
-import { schema, schemaStrict, Type } from "./string";
+import { z } from "zod";
+
+import {
+	schema,
+	schemaOperators,
+	schemaStrict,
+	Type,
+	Operators,
+} from "./string";
 
 describe("String filter", () => {
 	describe("Validation", () => {
@@ -29,22 +37,41 @@ describe("String filter", () => {
 				null as unknown as string,
 				{ $eq: 1 as unknown as string },
 				{ $eq: null as unknown as string },
-				// Values are cast in array (when possible)
-				{
-					$exists: 2 as unknown as boolean,
-					$in: ["3", 4 as unknown as string],
-				},
-				{
-					$ne: null,
-				},
-				{
-					$like: new Date() as unknown as string,
-					$re: 3 as unknown as string,
-				},
 			];
 
 			for (const filter of filters) {
-				expect(schema.safeParse(filter).success).toBe(false);
+				expect(schemaOperators.safeParse(filter).success).toBe(false);
+			}
+		});
+
+		it("should not be valid (operators only)", () => {
+			const filters: ReadonlyArray<[Operators, number]> = [
+				[{ $eq: 1 as unknown as string }, 1],
+				[{ $eq: null as unknown as string }, 1],
+				[
+					{
+						$exists: 2 as unknown as boolean,
+						$in: ["3", 4 as unknown as string],
+					},
+					2,
+				],
+				[{ $ne: null }, 1],
+				[
+					{
+						$like: new Date() as unknown as string,
+						$re: 3 as unknown as string,
+					},
+					2,
+				],
+			];
+
+			for (const [filter, nError] of filters) {
+				const result = schemaOperators.safeParse(
+					filter,
+				) as z.SafeParseError<Type>;
+
+				expect(result.success).toBe(false);
+				expect(result.error.errors).toHaveLength(nError);
 			}
 		});
 

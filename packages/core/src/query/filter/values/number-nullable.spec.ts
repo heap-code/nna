@@ -6,27 +6,18 @@ import {
 	schemaStrict,
 	Type,
 	Operators,
-} from "./string-nullable";
+} from "./number-nullable";
 
-describe("Nullable string filter", () => {
+describe("Nullable number filter", () => {
 	describe("Validation", () => {
 		it("should be valid", () => {
 			const filters: readonly Type[] = [
-				"a string",
+				101,
 				null,
-				{
-					$eq: "1",
-					$gt: "2",
-					$gte: "3",
-					$lt: "4",
-					$lte: "5",
-					$ne: "6",
-				},
-				{ $eq: null },
-				{ $in: ["7", "8", null], $nin: ["9", "0"] },
+				{ $eq: 1, $gt: 2, $gte: 3, $lt: 4, $lte: 5, $ne: 6 },
+				{ $in: [null, 8], $nin: [9, 0] },
 				{ $exists: true, $nin: [] },
 				{ $exists: false },
-				{ $like: "abc", $re: "def" },
 			];
 			for (const filter of filters) {
 				expect(schema.safeParse(filter).success).toBe(true);
@@ -35,33 +26,25 @@ describe("Nullable string filter", () => {
 
 		it("should not be valid", () => {
 			const filters: readonly Type[] = [
-				1 as unknown as string,
-				{ $eq: 1 as unknown as string },
-				{ $exists: null as unknown as boolean },
+				"101" as unknown as number,
+				{ $gt: "101" as unknown as number },
 			];
-
 			for (const filter of filters) {
-				expect(schemaOperators.safeParse(filter).success).toBe(false);
+				expect(schema.safeParse(filter).success).toBe(false);
 			}
 		});
 
 		it("should not be valid (operators only)", () => {
 			const filters: ReadonlyArray<[Operators, number]> = [
-				[{ $eq: 1 as unknown as string }, 1],
+				[{ $eq: "a" as unknown as number }, 1],
 				[
 					{
 						$exists: 2 as unknown as boolean,
-						$in: ["3", 4 as unknown as string],
+						$in: [4, "3" as unknown as number],
 					},
 					2,
 				],
-				[
-					{
-						$like: new Date() as unknown as string,
-						$re: 3 as unknown as string,
-					},
-					2,
-				],
+				[{ $ne: new Date().toISOString() as unknown as number }, 1],
 			];
 
 			for (const [filter, nError] of filters) {
@@ -84,9 +67,9 @@ describe("Nullable string filter", () => {
 	describe("Transformation", () => {
 		it("should remove extraenous values", () => {
 			const toParse: Type = {
-				$eq: "abc",
+				$eq: 123,
 				$exists: true,
-				$in: ["a", null],
+				$in: [1, null],
 			};
 			expect(schema.parse({ ...toParse, a: "2" })).toStrictEqual(toParse);
 		});

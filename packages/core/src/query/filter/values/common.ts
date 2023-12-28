@@ -3,28 +3,31 @@ import { z } from "zod";
 import { FilterValueOperatorMap } from "../filter";
 
 /**
- * TODO
+ * Creates a validation schema for a value query filter
  *
- * @param baseType
- * @param bType0
+ * @param ordType type that can be ordered (>, >=, <, <=)
+ * @param eqType type that can be compared (==, !=)
+ * @returns the validation schema
  */
 export function createFilterOperatorSchema<
 	T extends z.ZodType,
 	U extends z.ZodType = T,
->(baseType: T, bType0?: U) {
-	const bType = bType0 ?? baseType;
+>(ordType: T, eqType?: U) {
+	if (!eqType) {
+		return createFilterOperatorSchema(ordType, ordType);
+	}
 
 	return z.object({
-		$eq: bType.optional(),
-		$ne: bType.optional(),
+		$eq: eqType.optional(),
+		$ne: eqType.optional(),
 
-		$gt: baseType.optional(),
-		$gte: baseType.optional(),
-		$lt: baseType.optional(),
-		$lte: baseType.optional(),
+		$gt: ordType.optional(),
+		$gte: ordType.optional(),
+		$lt: ordType.optional(),
+		$lte: ordType.optional(),
 
-		$in: z.array(bType).optional(),
-		$nin: z.array(bType).optional(),
+		$in: z.array(eqType).optional(),
+		$nin: z.array(eqType).optional(),
 
 		$exists: z.boolean().optional(),
 
