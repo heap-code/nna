@@ -1,11 +1,10 @@
 import { z } from "zod";
 
 import { Filter } from "./filter";
+import { CreateFilterObjectSchemaOptions } from "./filter-object.schema";
 
-export interface CreateFilterSchemaOptions {
-	// TODO
-	strict?: boolean;
-}
+export interface CreateFilterSchemaOptions
+	extends CreateFilterObjectSchemaOptions {}
 
 /**
  * TODO
@@ -15,7 +14,7 @@ export interface CreateFilterSchemaOptions {
  */
 export function createFilterSchema<T extends z.ZodObject<z.ZodRawShape>>(
 	schema: T,
-	options: CreateFilterSchemaOptions,
+	options?: CreateFilterSchemaOptions,
 ): z.ZodType<Filter<z.infer<T>>> {
 	// TODO
 

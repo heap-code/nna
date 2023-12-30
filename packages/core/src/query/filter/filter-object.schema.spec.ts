@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { Filter } from "./filter";
-import { createFilterSchema } from "./filter.schema";
+import { FilterObject } from "./filter-object";
+import { createFilterObjectSchema } from "./filter-object.schema";
 
 const schemaFlat = z.object({
 	boolean: z.boolean(),
@@ -15,12 +15,12 @@ const schemaFlat = z.object({
 });
 type SchemaFlat = z.infer<typeof schemaFlat>;
 
-describe("QueryFilter schema", () => {
+describe("QueryObjectFilter schema", () => {
 	describe("With flat objects", () => {
-		const filterSchema = createFilterSchema(schemaFlat);
+		const filterSchema = createFilterObjectSchema(schemaFlat);
 
 		it("should be valid", () => {
-			const filters: Array<Filter<SchemaFlat>> = [
+			const filters: Array<FilterObject<SchemaFlat>> = [
 				{
 					boolean: true,
 					booleanNullable: false,
@@ -42,32 +42,6 @@ describe("QueryFilter schema", () => {
 					number: { $gt: 2, $lt: 10 },
 					stringNullable: { $eq: null },
 				},
-				{
-					$and: [
-						{ number: { $gt: 10 } },
-						{ dateNullable: null, number: { $lt: 100 } },
-					],
-					stringNullable: null,
-				},
-				{
-					$or: [
-						{ number: { $gte: 10, $lte: 20 } },
-						{ numberNullable: { $ne: null } },
-					],
-					boolean: false,
-				},
-				{
-					$not: { number: { $gte: 10, $lte: 20 } },
-					boolean: true,
-				},
-				{
-					$and: [{ string: { $gt: "a" } }, { number: { $lt: 2 } }],
-					$or: [
-						{ $and: [{ number: 1 }, { number: 2 }] },
-						{ $not: { boolean: { $exists: true } } },
-					],
-					string: { $ne: "" },
-				},
 				{},
 			];
 
@@ -77,7 +51,7 @@ describe("QueryFilter schema", () => {
 		});
 
 		it("should not be valid", () => {
-			const filters: Array<[Filter<SchemaFlat>, number]> = [
+			const filters: Array<[FilterObject<SchemaFlat>, number]> = [
 				[
 					{
 						boolean: "true" as unknown as boolean,
@@ -100,27 +74,12 @@ describe("QueryFilter schema", () => {
 					},
 					4,
 				],
-				[
-					{
-						$and: [
-							{ string: "" },
-							{ string: 123 as unknown as string },
-						],
-						$not: { boolean: null as unknown as boolean },
-						$or: [
-							{ string: "" },
-							{ string: 123 as unknown as string },
-						],
-						date: { $eq: "" as unknown as Date },
-					},
-					4,
-				],
 			];
 
 			for (const [filter, nError] of filters) {
 				const result = filterSchema.safeParse(
 					filter,
-				) as z.SafeParseError<Filter<SchemaFlat>>;
+				) as z.SafeParseError<FilterObject<SchemaFlat>>;
 
 				expect(result.success).toBe(false);
 				expect(result.error.errors).toHaveLength(nError);
@@ -136,21 +95,12 @@ describe("QueryFilter schema", () => {
 		});
 		type SchemaNested = z.infer<typeof schemaNested>;
 
-		const filterSchema = createFilterSchema(schemaNested);
+		const filterSchema = createFilterObjectSchema(schemaNested);
 
 		it("should be valid", () => {
-			const filters: Array<Filter<SchemaNested>> = [
-				{
-					$or: [
-						{ nest: { child: { number: 0 } } },
-						{ child: { number: 0 } },
-					],
-					child: { boolean: { $eq: true } },
-				},
-				{
-					$not: { $or: [{ child: { number: 0 } }] },
-					children: { number: { $gt: 0, $lt: 10 } },
-				},
+			const filters: Array<FilterObject<SchemaNested>> = [
+				{ child: { boolean: { $eq: true } } },
+				{ children: { number: { $gt: 0, $lt: 10 } } },
 			];
 
 			for (const filter of filters) {
@@ -159,16 +109,15 @@ describe("QueryFilter schema", () => {
 		});
 
 		it("should not be valid", () => {
-			const filters: Array<[Filter<SchemaNested>, number]> = [
+			const filters: Array<[FilterObject<SchemaNested>, number]> = [
 				[{ child: { string: { $ne: 1 as unknown as string } } }, 1],
 				[{ nest: { child: { string: 1 as unknown as string } } }, 1],
-				[{ $and: [{ child: { string: 1 as unknown as string } }] }, 1],
 				[
 					{
 						children: [
 							{
 								string: 1 as unknown as string,
-							} satisfies Filter<SchemaNested>["children"],
+							} satisfies FilterObject<SchemaNested>["children"],
 						] as never,
 					},
 					1,
@@ -178,7 +127,7 @@ describe("QueryFilter schema", () => {
 			for (const [filter, nError] of filters) {
 				const result = filterSchema.safeParse(
 					filter,
-				) as z.SafeParseError<Filter<SchemaNested>>;
+				) as z.SafeParseError<FilterObject<SchemaNested>>;
 
 				expect(result.success).toBe(false);
 				expect(result.error.errors).toHaveLength(nError);

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { createFilterOperatorSchema } from "./common";
-import { FilterValue, FilterValueOperatorMap } from "../filter";
+import { FilterValue, FilterValueOperatorMap } from "../filter-value";
 
 /** Operators filter for nullable `boolean` */
 export type Operators = FilterValueOperatorMap<boolean | null>;

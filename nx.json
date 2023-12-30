@@ -50,7 +50,8 @@
 			"cache": true,
 			"configurations": {
 				"ci": {
-					"ci": true
+					"ci": true,
+					"codeCoverage": true
 				}
 			},
 			"inputs": [
@@ -59,7 +60,6 @@
 				"{workspaceRoot}/jest.preset.js"
 			],
 			"options": {
-				"codeCoverage": true,
 				"passWithNoTests": false
 			}
 		},

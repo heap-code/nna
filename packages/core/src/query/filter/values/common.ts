@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { FilterValueOperatorMap } from "../filter";
+import { FilterValueOperatorMap } from "../filter-value";
 
 /**
  * Creates a validation schema for a value query filter
@@ -17,27 +17,29 @@ export function createFilterOperatorSchema<
 		return createFilterOperatorSchema(ordType, ordType);
 	}
 
-	return z.object({
-		$eq: eqType.optional(),
-		$ne: eqType.optional(),
+	return z
+		.object({
+			$eq: eqType,
+			$ne: eqType,
 
-		$gt: ordType.optional(),
-		$gte: ordType.optional(),
-		$lt: ordType.optional(),
-		$lte: ordType.optional(),
+			$gt: ordType,
+			$gte: ordType,
+			$lt: ordType,
+			$lte: ordType,
 
-		$in: z.array(eqType).optional(),
-		$nin: z.array(eqType).optional(),
+			$in: z.array(eqType),
+			$nin: z.array(eqType),
 
-		$exists: z.boolean().optional(),
+			$exists: z.boolean(),
 
-		/**
-		 * Search for records whose value match the given text.
-		 *
-		 * It works correctly only to indexed properties.
-		 */
-		$fulltext: z.string().optional(),
-		$like: z.string().optional(),
-		$re: z.string().optional(),
-	} satisfies Record<keyof FilterValueOperatorMap<unknown>, z.ZodType>);
+			/**
+			 * Search for records whose value match the given text.
+			 *
+			 * It works correctly only to indexed properties.
+			 */
+			$fulltext: z.string(),
+			$like: z.string(),
+			$re: z.string(),
+		} satisfies Record<keyof FilterValueOperatorMap<unknown>, z.ZodType>)
+		.partial();
 }
