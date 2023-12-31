@@ -12,7 +12,10 @@ export type Type = FilterValue<string | null>;
 const type = z.string().nullable();
 
 /** The validation schema for nullable `string` operators only */
-export const schemaOperators = createFilterOperatorSchema(z.string(), type);
+export const schemaOperators = createFilterOperatorSchema(
+	z.string(),
+	type,
+) satisfies z.ZodType<Operators>;
 
 /** Validation schema for nullable `string` filter */
 export const schema: z.ZodType<Type> = schemaOperators.or(type);

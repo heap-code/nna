@@ -12,7 +12,10 @@ export type Type = FilterValue<number | null>;
 const type = z.number().nullable();
 
 /** The validation schema for nullable `number` operators only */
-export const schemaOperators = createFilterOperatorSchema(z.number(), type);
+export const schemaOperators = createFilterOperatorSchema(
+	z.number(),
+	type,
+) satisfies z.ZodType<Operators>;
 
 /** Validation schema for nullable `number` filter */
 export const schema: z.ZodType<Type> = schemaOperators.or(type);

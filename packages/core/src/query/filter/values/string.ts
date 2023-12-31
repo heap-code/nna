@@ -12,7 +12,9 @@ export type Type = FilterValue<string>;
 const type = z.string();
 
 /** The validation schema for `string` operators only */
-export const schemaOperators = createFilterOperatorSchema(type);
+export const schemaOperators = createFilterOperatorSchema(
+	type,
+) satisfies z.ZodType<Operators>;
 
 /** Validation schema for `string` filter */
 export const schema: z.ZodType<Type> = schemaOperators.or(type);

@@ -12,7 +12,9 @@ export type Type = FilterValue<boolean>;
 const type = z.boolean();
 
 /** The validation schema for `boolean` operators only */
-export const schemaOperators = createFilterOperatorSchema(type);
+export const schemaOperators = createFilterOperatorSchema(
+	type,
+) satisfies z.ZodType<Operators>;
 
 /** Validation schema for `boolean` filter */
 export const schema: z.ZodType<Type> = schemaOperators.or(type);

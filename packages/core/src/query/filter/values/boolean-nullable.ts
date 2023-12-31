@@ -12,7 +12,10 @@ export type Type = FilterValue<boolean | null>;
 const type = z.boolean().nullable();
 
 /** The validation schema for nullable `boolean` operators only */
-export const schemaOperators = createFilterOperatorSchema(z.boolean(), type);
+export const schemaOperators = createFilterOperatorSchema(
+	z.boolean(),
+	type,
+) satisfies z.ZodType<Operators>;
 
 /** Validation schema for nullable `boolean` filter */
 export const schema: z.ZodType<Type> = schemaOperators.or(type);

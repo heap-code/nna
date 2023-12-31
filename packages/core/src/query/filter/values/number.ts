@@ -12,7 +12,9 @@ export type Type = FilterValue<number>;
 const type = z.number();
 
 /** The validation schema for `number` operators only */
-export const schemaOperators = createFilterOperatorSchema(type);
+export const schemaOperators = createFilterOperatorSchema(
+	type,
+) satisfies z.ZodType<Operators>;
 
 /** Validation schema for `number` filter */
 export const schema: z.ZodType<Type> = schemaOperators.or(type);

@@ -12,7 +12,9 @@ export type Type = FilterValue<Date>;
 const type = z.date();
 
 /** The validation schema for `Date` operators only */
-export const schemaOperators = createFilterOperatorSchema(type);
+export const schemaOperators = createFilterOperatorSchema(
+	type,
+) satisfies z.ZodType<Operators>;
 
 /** Validation schema for `Date` filter */
 export const schema: z.ZodType<Type> = schemaOperators.or(type);
