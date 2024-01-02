@@ -186,5 +186,101 @@ describe("QueryFilter schema", () => {
 		});
 	});
 
-	describe("With discriminated union", () => {});
+	describe("With discriminated union", () => {
+		const schemaDiscriminated = z.discriminatedUnion("type", [
+			z.object({ date: z.date().nullable(), type: z.literal("idle") }),
+			z.object({ data: z.string(), type: z.literal("success") }),
+			z.object({ code: z.number(), type: z.literal("error") }),
+		]);
+
+		const schemaWithDiscrimination = z.object({
+			child: z.object({
+				discriminated: schemaDiscriminated,
+				number: z.number(),
+			}),
+			discriminated: schemaDiscriminated,
+		});
+		type SchemaWithDiscrimination = z.infer<
+			typeof schemaWithDiscrimination
+		>;
+
+		const filterSchema = createFilterSchema(schemaWithDiscrimination, {
+			strict: true,
+		});
+
+		it("should be valid", () => {
+			const filters: Array<Filter<SchemaWithDiscrimination>> = [
+				{ discriminated: { type: "idle" } },
+				{
+					$or: [
+						{
+							discriminated: {
+								data: { $in: ["abc", "def"] },
+								type: "success",
+							},
+						},
+						{
+							discriminated: {
+								code: { $gte: 400 },
+								type: "error",
+							},
+						},
+					],
+				},
+			];
+
+			for (const filter of filters) {
+				expect(filterSchema.safeParse(filter).success).toBe(true);
+			}
+		});
+
+		it("should not be valid", () => {
+			const filters: Array<[Filter<SchemaWithDiscrimination>, number]> = [
+				[
+					{
+						$or: [
+							{
+								discriminated: {
+									data: { $in: ["abc", "def"] },
+									type: "success",
+								},
+							},
+							{
+								discriminated: {
+									code: { $gte: "400" as unknown as number },
+									type: "error",
+								},
+							},
+						],
+					},
+					1,
+				],
+				[
+					{
+						$or: [
+							{
+								discriminated: {
+									data: { $in: ["abc", "def"] },
+									type: "success",
+								},
+							},
+							{
+								discriminated: { code: { $gte: 400 } },
+							},
+						],
+					},
+					1,
+				],
+			];
+
+			for (const [filter, nError] of filters) {
+				const result = filterSchema.safeParse(
+					filter,
+				) as z.SafeParseError<Filter<SchemaWithDiscrimination>>;
+
+				expect(result.success).toBe(false);
+				expect(result.error.errors).toHaveLength(nError);
+			}
+		});
+	});
 });

@@ -243,7 +243,8 @@
 				"etc/no-assign-mutated-array": "error",
 				"etc/prefer-less-than": "warn",
 				"jsdoc/require-param-type": "off",
-				"jsdoc/require-returns-type": "off"
+				"jsdoc/require-returns-type": "off",
+				"typescript-sort-keys/string-enum": "warn"
 			}
 		},
 		{
@@ -418,6 +419,7 @@
 		"sonarjs",
 		"sort-destructure-keys",
 		"sort-keys-plus",
+		"typescript-sort-keys",
 		"unicorn",
 		"unused-imports"
 	],

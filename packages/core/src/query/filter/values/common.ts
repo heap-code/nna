@@ -26,7 +26,7 @@ export function createFilterOperatorSchema<
 		return createFilterOperatorSchema(ordType, ordType);
 	}
 
-	// FIXME: The output type is wrongly determined if the `satisfies` is put directly for the object
+	// FIXME: The output type is wrongly determined if the `satisfies` is put directly on the object
 	const schema = {
 		$eq: eqType,
 		$ne: eqType,

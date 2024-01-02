@@ -135,5 +135,64 @@ describe("QueryObjectFilter schema", () => {
 		});
 	});
 
-	describe("With discriminated union", () => {});
+	describe("With discriminated union", () => {
+		const schemaDiscriminated = z.discriminatedUnion("type", [
+			z.object({ date: z.date().nullable(), type: z.literal("idle") }),
+			z.object({ data: z.string(), type: z.literal("success") }),
+			z.object({ code: z.number(), type: z.literal("error") }),
+		]);
+
+		const schemaWithDiscrimination = z.object({
+			child: z.object({
+				discriminated: schemaDiscriminated,
+				number: z.number(),
+			}),
+			discriminated: schemaDiscriminated,
+		});
+		type SchemaWithDiscrimination = z.infer<
+			typeof schemaWithDiscrimination
+		>;
+
+		const filterSchema = createFilterObjectSchema(
+			schemaWithDiscrimination,
+			{ strict: true },
+		);
+
+		it("should be valid", () => {
+			const filters: Array<FilterObject<SchemaWithDiscrimination>> = [
+				{ child: { number: { $eq: 2 } } },
+				{ discriminated: { type: "idle" } },
+				{
+					child: {
+						discriminated: { date: { $ne: null }, type: "idle" },
+					},
+					discriminated: { code: 404, type: "error" },
+				},
+				{ discriminated: { data: { $like: "abc" }, type: "success" } },
+			];
+
+			for (const filter of filters) {
+				expect(filterSchema.safeParse(filter).success).toBe(true);
+			}
+		});
+
+		it("should not be valid", () => {
+			const filters: Array<
+				[FilterObject<SchemaWithDiscrimination>, number]
+			> = [
+				[{ discriminated: { code: 400 } }, 1],
+				[{ discriminated: { code: 400, type: "success" } }, 1],
+				[{ discriminated: { data: { $gt: "abc" }, type: "idle" } }, 1],
+			];
+
+			for (const [filter, nError] of filters) {
+				const result = filterSchema.safeParse(
+					filter,
+				) as z.SafeParseError<FilterObject<SchemaWithDiscrimination>>;
+
+				expect(result.success).toBe(false);
+				expect(result.error.errors).toHaveLength(nError);
+			}
+		});
+	});
 });

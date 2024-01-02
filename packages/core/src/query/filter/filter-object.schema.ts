@@ -28,7 +28,7 @@ export function createFilterObjectSchema<T extends z.ZodObject<z.ZodRawShape>>(
 
 		const y = schema as z.ZodArray<z.ZodTypeAny> | z.ZodObject<never>;
 		if (y._def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
-			return z.lazy(() => createFilterObjectSchema(y, options));
+			return z.lazy(() => createFilterObjectSchema(y as never, options));
 		}
 
 		const f = y._def;
