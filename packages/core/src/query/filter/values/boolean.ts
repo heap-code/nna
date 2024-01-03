@@ -1,22 +1,52 @@
 import { z } from "zod";
 
-import { createFilterOperatorSchema } from "./common";
-import { FilterValue, FilterValueOperatorMap } from "../filter-value";
+import * as common from "./common";
+import { FilterValue } from "../filter-value";
 
-/** Operators filter for `boolean` */
-export type Operators = FilterValueOperatorMap<boolean>;
 /** Filter for `boolean` */
-export type Type = FilterValue<boolean>;
+export type BooleanFilter = FilterValue<boolean>;
+/** Filter for nullable `boolean` */
+export type BooleanFilterNullable = FilterValue<boolean | null>;
 
-/** @internal */
-const type = z.boolean();
+/** Options to create a `boolean` filter validation schema */
+export type BooleanOptions = common.SchemaOptions;
 
-/** The validation schema for `boolean` operators only */
-export const schemaOperators = createFilterOperatorSchema(
-	type,
-) satisfies z.ZodType<Operators>;
+/**
+ * Creates a validation schema for a `boolean` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(
+	options: BooleanOptions & common.SchemaOptionsNullable,
+): z.ZodType<BooleanFilterNullable>;
+/**
+ * Creates a validation schema for a nullable `boolean` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options?: BooleanOptions): z.ZodType<BooleanFilter>;
 
-/** Validation schema for `boolean` filter */
-export const schema: z.ZodType<Type> = schemaOperators.or(type);
-/** Strict validation schema for `boolean` filter (no extraenous values) */
-export const schemaStrict: z.ZodType<Type> = schemaOperators.strict().or(type);
+/**
+ * Creates a validation schema for a `boolean` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options: BooleanOptions = {}) {
+	const { coerce } = options;
+	return common.schema(
+		coerce
+			? (z
+					.custom()
+					.transform(val =>
+						val === "true" ? true : val === "false" ? false : val,
+					)
+					.pipe(z.boolean()) as never)
+			: z.boolean(),
+		options,
+	);
+}
+
+export { schema as boolean };

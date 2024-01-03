@@ -45,22 +45,15 @@ export function getFilterValueFromZodEqType(abc: FilterZodEqType) {
 		nullable: boolean,
 	): z.ZodType<FilterValueType> => {
 		switch (def.typeName) {
-			case z.ZodFirstPartyTypeKind.ZodString:
-				return nullable
-					? Values.StringNullable.schema
-					: Values.String.schema;
-			case z.ZodFirstPartyTypeKind.ZodNumber:
-				return nullable
-					? Values.NumberNullable.schema
-					: Values.Number.schema;
 			case z.ZodFirstPartyTypeKind.ZodBoolean:
-				return nullable
-					? Values.BooleanNullable.schema
-					: Values.Boolean.schema;
+				return Values.boolean({ nullable });
 			case z.ZodFirstPartyTypeKind.ZodDate:
-				return nullable
-					? Values.DateNullable.schema
-					: Values.Date.schema;
+				return Values.date({ nullable });
+			case z.ZodFirstPartyTypeKind.ZodNumber:
+				return Values.number({ nullable });
+			case z.ZodFirstPartyTypeKind.ZodString:
+				return Values.string({ nullable });
+
 			case z.ZodFirstPartyTypeKind.ZodNullable:
 				return fn(def.innerType, true);
 		}

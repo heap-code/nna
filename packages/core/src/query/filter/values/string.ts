@@ -1,22 +1,42 @@
 import { z } from "zod";
 
-import { createFilterOperatorSchema } from "./common";
-import { FilterValue, FilterValueOperatorMap } from "../filter-value";
+import * as common from "./common";
+import { FilterValue } from "../filter-value";
 
-/** Operators filter for `string` */
-export type Operators = FilterValueOperatorMap<string>;
 /** Filter for `string` */
-export type Type = FilterValue<string>;
+export type StringFilter = FilterValue<string>;
+/** Filter for nullable `string` */
+export type StringFilterNullable = FilterValue<string | null>;
 
-/** @internal */
-const type = z.string();
+/** Options to create a `string` filter validation schema */
+export type StringOptions = common.SchemaOptions;
 
-/** The validation schema for `string` operators only */
-export const schemaOperators = createFilterOperatorSchema(
-	type,
-) satisfies z.ZodType<Operators>;
+/**
+ * Creates a validation schema for a `string` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(
+	options: common.SchemaOptionsNullable & StringOptions,
+): z.ZodType<StringFilterNullable>;
+/**
+ * Creates a validation schema for a nullable `string` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options?: StringOptions): z.ZodType<StringFilter>;
 
-/** Validation schema for `string` filter */
-export const schema: z.ZodType<Type> = schemaOperators.or(type);
-/** Strict validation schema for `string` filter (no extraenous values) */
-export const schemaStrict: z.ZodType<Type> = schemaOperators.strict().or(type);
+/**
+ * Creates a validation schema for a `string` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options: StringOptions = {}) {
+	const { coerce } = options;
+	return common.schema(coerce ? z.coerce.string() : z.string(), options);
+}
+
+export { schema as string };

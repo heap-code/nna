@@ -1,22 +1,42 @@
 import { z } from "zod";
 
-import { createFilterOperatorSchema } from "./common";
-import { FilterValue, FilterValueOperatorMap } from "../filter-value";
+import * as common from "./common";
+import { FilterValue } from "../filter-value";
 
-/** Operators filter for `number` */
-export type Operators = FilterValueOperatorMap<number>;
 /** Filter for `number` */
-export type Type = FilterValue<number>;
+export type NumberFilter = FilterValue<number>;
+/** Filter for nullable `number` */
+export type NumberFilterNullable = FilterValue<number | null>;
 
-/** @internal */
-const type = z.number();
+/** Options to create a `number` filter validation schema */
+export type NumberOptions = common.SchemaOptions;
 
-/** The validation schema for `number` operators only */
-export const schemaOperators = createFilterOperatorSchema(
-	type,
-) satisfies z.ZodType<Operators>;
+/**
+ * Creates a validation schema for a `number` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(
+	options: common.SchemaOptionsNullable & NumberOptions,
+): z.ZodType<NumberFilterNullable>;
+/**
+ * Creates a validation schema for a nullable `number` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options?: NumberOptions): z.ZodType<NumberFilter>;
 
-/** Validation schema for `number` filter */
-export const schema: z.ZodType<Type> = schemaOperators.or(type);
-/** Strict validation schema for `number` filter (no extraenous values) */
-export const schemaStrict: z.ZodType<Type> = schemaOperators.strict().or(type);
+/**
+ * Creates a validation schema for a `number` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options: NumberOptions = {}) {
+	const { coerce } = options;
+	return common.schema(coerce ? z.coerce.number() : z.number(), options);
+}
+
+export { schema as number };

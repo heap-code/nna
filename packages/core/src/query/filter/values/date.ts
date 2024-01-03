@@ -1,22 +1,42 @@
 import { z } from "zod";
 
-import { createFilterOperatorSchema } from "./common";
-import { FilterValue, FilterValueOperatorMap } from "../filter-value";
+import * as common from "./common";
+import { FilterValue } from "../filter-value";
 
-/** Operators filter for `Date` */
-export type Operators = FilterValueOperatorMap<Date>;
-/** Filter for `Date` */
-export type Type = FilterValue<Date>;
+/** Filter for `date` */
+export type DateFilter = FilterValue<Date>;
+/** Filter for nullable `date` */
+export type DateFilterNullable = FilterValue<Date | null>;
 
-/** @internal */
-const type = z.date();
+/** Options to create a `date` filter validation schema */
+export type DateOptions = common.SchemaOptions;
 
-/** The validation schema for `Date` operators only */
-export const schemaOperators = createFilterOperatorSchema(
-	type,
-) satisfies z.ZodType<Operators>;
+/**
+ * Creates a validation schema for a `date` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(
+	options: common.SchemaOptionsNullable & DateOptions,
+): z.ZodType<DateFilterNullable>;
+/**
+ * Creates a validation schema for a nullable `date` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options?: DateOptions): z.ZodType<DateFilter>;
 
-/** Validation schema for `Date` filter */
-export const schema: z.ZodType<Type> = schemaOperators.or(type);
-/** Strict validation schema for `Date` filter (no extraenous values) */
-export const schemaStrict: z.ZodType<Type> = schemaOperators.strict().or(type);
+/**
+ * Creates a validation schema for a `date` filter
+ *
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema(options: DateOptions = {}) {
+	const { coerce } = options;
+	return common.schema(coerce ? z.coerce.date() : z.date(), options);
+}
+
+export { schema as date };
