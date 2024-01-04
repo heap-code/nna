@@ -1,9 +1,11 @@
 import { z } from "zod";
 
+import type { EnumSchema } from "./enum";
 import type { FilterValue, FilterValueOperatorMap } from "../filter-value";
 
 /** Zod schema for FilterValue ordernable type */
 export type FilterZodOrdType =
+	| EnumSchema
 	| z.ZodBoolean
 	| z.ZodDate
 	| z.ZodNumber
@@ -108,9 +110,12 @@ export function schema<T extends FilterZodOrdType>(
 ): z.ZodType<FilterValue<z.infer<T>>>;
 
 /**
+ * Creates a validation schema for (mostly primitime like) type
  *
- * @param ordType
- * @param options
+ * @param ordType type that can be ordered (>, >=, <, <=).
+ * Some coerce options must be set before receiving this parameter.
+ * @param options for the creation of the schema
+ * @returns the validation schema
  */
 export function schema<T extends FilterZodOrdType>(
 	ordType: T,
@@ -118,7 +123,7 @@ export function schema<T extends FilterZodOrdType>(
 ) {
 	const { coerce, nullable, strict } = options ?? {};
 
-	const eqType = (() => {
+	const eqType: FilterZodEqType = (() => {
 		if (!nullable) {
 			return ordType;
 		}

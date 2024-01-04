@@ -1,20 +1,19 @@
 import { z } from "zod";
 
-import * as Value from "./enum";
+import * as FilterEnum from "./enum";
 import { FilterValue } from "../filter-value";
 
 describe("Native enum filter", () => {
 	enum Position {
 		BOTTOM = "bottom",
 		CENTER = "center",
-		TOP = "top",
+		TOP = 1,
 	}
 	const Enum = z.nativeEnum(Position);
+
 	type Value = z.infer<typeof Enum>;
 	type Filter = FilterValue<Value>;
-	const schema = Value.schema(Enum, {
-		//nullable: true,
-	});
+	const schema = FilterEnum.enum(Enum);
 
 	describe("Validation", () => {
 		it("should be valid", () => {
@@ -44,7 +43,7 @@ describe("Native enum filter", () => {
 
 	describe("Validation (with null)", () => {
 		type Filter = FilterValue<Value | null>;
-		declare const schema: z.ZodType<Filter>;
+		const schema = FilterEnum.enum(Enum, { nullable: true });
 
 		it("should be valid", () => {
 			const filters: readonly Filter[] = [
@@ -57,16 +56,37 @@ describe("Native enum filter", () => {
 			}
 		});
 	});
+
+	describe("Transformation", () => {
+		it("should convert with coerce mode", () => {
+			type Filter = FilterValue<Value | null>;
+			const schema = FilterEnum.enum(Enum, {
+				coerce: true,
+				nullable: true,
+			});
+
+			const filters: ReadonlyArray<[Filter, Filter]> = [
+				[Position.BOTTOM, Position.BOTTOM],
+				[null, null],
+				["null" as unknown as Position, null],
+				[Position.TOP.toString() as unknown as Position, Position.TOP],
+			];
+			for (const [filter, expected] of filters) {
+				expect(schema.parse(filter)).toStrictEqual(expected);
+			}
+		});
+	});
 });
 
 describe("Zod enum filter", () => {
 	const Enum = z.enum(["left", "middle", "right"]);
 	type Value = z.infer<typeof Enum>;
-	declare const schema: z.ZodType<FilterValue<Value>>;
+	type Filter = FilterValue<Value>;
+	const schema = FilterEnum.enum(Enum);
 
 	describe("Validation", () => {
 		it("should be valid", () => {
-			const filters: ReadonlyArray<FilterValue<Value>> = [
+			const filters: readonly Filter[] = [
 				"middle",
 				{ $eq: "left", $in: ["middle", "right"] },
 			];
@@ -77,14 +97,14 @@ describe("Zod enum filter", () => {
 	});
 
 	it("should not be valid", () => {
-		const filters: ReadonlyArray<[FilterValue<Value>, number]> = [
+		const filters: ReadonlyArray<[Filter, number]> = [
 			[{ $gt: "left", $in: [null, "middle"] }, 1],
 			[null as unknown as Value, 1],
 		];
 		for (const [filter, nError] of filters) {
-			const results = schema.safeParse(filter) as z.SafeParseError<
-				FilterValue<Value>
-			>;
+			const results = schema.safeParse(
+				filter,
+			) as z.SafeParseError<Filter>;
 			expect(results.success).toBe(false);
 			expect(results.error.errors).toHaveLength(nError);
 		}
@@ -92,7 +112,7 @@ describe("Zod enum filter", () => {
 
 	describe("Validation (with null)", () => {
 		type Filter = FilterValue<Value | null>;
-		declare const schema: z.ZodType<Filter>;
+		const schema = FilterEnum.enum(Enum, { nullable: true });
 
 		it("should be valid", () => {
 			const filters: readonly Filter[] = [

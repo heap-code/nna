@@ -1,34 +1,74 @@
 import { z } from "zod";
 
+import * as common from "./common";
 import { FilterValue } from "../filter-value";
 
-export interface SchemaOptions {
-	// coerce?: boolean;
-	nullable?: boolean;
-	strict?: boolean;
-}
+/** Zod enum schemas managed as a filterable value */
+export type EnumSchema =
+	| z.ZodEnum<[string, ...string[]]>
+	| z.ZodNativeEnum<z.EnumLike>;
 
-export type SchemaEnum = z.ZodEnum<any> | z.ZodNativeEnum<any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- To keep type inference
+type SchemaEnum = z.ZodEnum<[string, ...string[]]> | z.ZodNativeEnum<any>;
 
-export function schema<T extends SchemaEnum>(
-	enumSchema: T,
-	options?: SchemaOptions & { nullable?: false },
-): z.ZodType<FilterValue<z.infer<T>>>;
-export function schema<T extends SchemaEnum>(
-	enumSchema: T,
-	options: SchemaOptions & { nullable: true },
-): z.ZodType<FilterValue<z.infer<T> | null>>;
+/** Options to create a `enum` filter validation schema */
+export type EnumOptions = common.SchemaOptions;
 
 /**
+ * Creates a validation schema for an `enum` filter
  *
- * @param enumSchema
- * @param options
+ * @param enumSchema the (original) enum schema to create this filter schema from
+ * @param options for the creation of the schema
+ * @returns the validation schema
  */
-export function schema<T extends SchemaEnum>(
+function schema<T extends SchemaEnum>(
 	enumSchema: T,
-	options?: SchemaOptions,
-):
-	| z.ZodType<FilterValue<z.infer<T> | null>>
-	| z.ZodType<FilterValue<z.infer<T>>> {
-	throw new Error("");
+	options: common.SchemaOptionsNullable & EnumOptions,
+): z.ZodType<FilterValue<z.infer<T> | null>>;
+/**
+ * Creates a validation schema for a nullable `enum` filter
+ *
+ * @param enumSchema the (original) enum schema to create this filter schema from
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema<T extends SchemaEnum>(
+	enumSchema: T,
+	options?: EnumOptions,
+): z.ZodType<FilterValue<z.infer<T>>>;
+
+/**
+ * Creates a validation schema for an `enum` filter
+ *
+ * @param enumSchema the (original) enum schema to create this filter schema from
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
+function schema<T extends SchemaEnum>(
+	enumSchema: T,
+	options: EnumOptions = {},
+) {
+	if (
+		options.coerce &&
+		enumSchema._def.typeName === z.ZodFirstPartyTypeKind.ZodNativeEnum
+	) {
+		const values = Object.values(
+			(enumSchema as z.ZodNativeEnum<z.EnumLike>)._def.values,
+		);
+		const schemaEnum = z
+			.custom()
+			.transform(
+				inp =>
+					values.find(
+						value => value.toString() === inp?.toString(),
+					) ?? inp,
+			)
+			.pipe(enumSchema) as unknown as T;
+
+		return common.schema(schemaEnum, options);
+	}
+
+	return common.schema(enumSchema, options);
 }
+
+export { schema as enum };

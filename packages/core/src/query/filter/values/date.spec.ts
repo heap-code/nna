@@ -59,7 +59,7 @@ describe("Date filter", () => {
 			for (const [filter, nError] of filters) {
 				const result = schema.safeParse(
 					filter,
-				) as z.SafeParseError<Type>;
+				) as z.SafeParseError<Filter.DateFilter>;
 
 				expect(result.success).toBe(false);
 				expect(result.error.errors).toHaveLength(nError);
