@@ -22,14 +22,10 @@ export type FilterZodEqType =
  * @param eqType type that can be compared (==, !=)
  * @returns the validation schema
  */
-export function schemaOperatorMap<
+function schemaOperatorMap<
 	T extends FilterZodOrdType,
 	U extends FilterZodEqType = T,
->(ordType: T, eqType?: U) {
-	if (!eqType) {
-		return schemaOperatorMap(ordType, ordType);
-	}
-
+>(ordType: T, eqType: U) {
 	// FIXME: The output type is wrongly determined if the `satisfies` is put directly on this object
 	const schema = {
 		$eq: eqType,
@@ -121,10 +117,10 @@ export function schema<T extends FilterZodOrdType>(
  */
 export function schema<T extends FilterZodOrdType>(
 	ordType: T,
-	options?: SchemaOptions,
+	options: SchemaOptions,
 ) {
 	// TODO (FilterValue-singleton): a singleton for each primitive (expect enum) with theirs options for performance?
-	const { coerce, nullable, strict } = options ?? {};
+	const { coerce, nullable, strict } = options;
 
 	const eqType: FilterZodEqType = (() => {
 		if (!nullable) {

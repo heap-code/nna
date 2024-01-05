@@ -109,6 +109,7 @@ describe("QueryObjectFilter schema", () => {
 			child: schemaFlat,
 			children: z.array(schemaFlat),
 			nest: z.object({ child: schemaFlat }),
+			unknow: z.array(z.custom()),
 		});
 		type SchemaNested = z.infer<typeof schemaNested>;
 
@@ -139,6 +140,8 @@ describe("QueryObjectFilter schema", () => {
 					},
 					1,
 				],
+				// Unkown type => no schema
+				[{ unknow: {} }, 1],
 			];
 
 			for (const [filter, nError] of filters) {

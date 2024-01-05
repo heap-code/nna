@@ -58,13 +58,13 @@ describe("Native enum filter", () => {
 	});
 
 	describe("Transformation", () => {
-		it("should convert with coerce mode", () => {
-			type Filter = FilterValue<Value | null>;
-			const schema = FilterEnum.enum(Enum, {
-				coerce: true,
-				nullable: true,
-			});
+		type Filter = FilterValue<Value | null>;
+		const schema = FilterEnum.enum(Enum, {
+			coerce: true,
+			nullable: true,
+		});
 
+		it("should convert with coerce mode", () => {
 			const filters: ReadonlyArray<[Filter, Filter]> = [
 				[Position.BOTTOM, Position.BOTTOM],
 				[null, null],
@@ -74,6 +74,13 @@ describe("Native enum filter", () => {
 			for (const [filter, expected] of filters) {
 				expect(schema.parse(filter)).toStrictEqual(expected);
 			}
+		});
+
+		it("should fail with unkown 'coerced' value", () => {
+			expect(
+				schema.safeParse(`${Position.TOP.toString()}-no-coerce`)
+					.success,
+			).toBe(false);
 		});
 	});
 });
