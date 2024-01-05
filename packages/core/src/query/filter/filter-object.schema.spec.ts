@@ -3,11 +3,20 @@ import { z } from "zod";
 import { FilterObject } from "./filter-object";
 import * as Filter from "./filter-object.schema";
 
+enum MyEnum {
+	A = "0",
+	B = "1",
+}
+
 const schemaFlat = z.object({
 	boolean: z.boolean(),
 	booleanNullable: z.boolean().nullable(),
 	date: z.date(),
 	dateNullable: z.date().nullable(),
+	enumNative: z.nativeEnum(MyEnum),
+	enumNativeNullable: z.nativeEnum(MyEnum).nullable(),
+	enumZod: z.enum(["a", "b", "c"]),
+	enumZodNullable: z.enum(["a", "b"]).nullable(),
 	number: z.number(),
 	numberNullable: z.number().nullable(),
 	string: z.string(),
@@ -26,6 +35,10 @@ describe("QueryObjectFilter schema", () => {
 					booleanNullable: false,
 					date: new Date(),
 					dateNullable: new Date(),
+					enumNative: MyEnum.A,
+					enumNativeNullable: MyEnum.B,
+					enumZod: "a",
+					enumZodNullable: "b",
 					number: 1,
 					numberNullable: 2,
 					string: "abc",
@@ -34,11 +47,15 @@ describe("QueryObjectFilter schema", () => {
 				{
 					booleanNullable: null,
 					dateNullable: null,
+					enumNativeNullable: null,
+					enumZodNullable: null,
 					numberNullable: null,
 					stringNullable: null,
 				},
 				{
 					boolean: true,
+					enumNative: { $ne: MyEnum.A },
+					enumZod: { $in: ["a", "b"] },
 					number: { $gt: 2, $lt: 10 },
 					stringNullable: { $eq: null },
 				},

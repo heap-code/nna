@@ -1,6 +1,6 @@
 import type { OperatorMap } from "@mikro-orm/core/typings";
 
-import { PrimitiveExtended } from "../../primitive";
+import { QueryPrimitive } from "../query.primitive";
 
 /** Filter operators for "Primitive" (+ Date) values */
 export type FilterValueOperatorMap<T> = Omit<
@@ -9,6 +9,6 @@ export type FilterValueOperatorMap<T> = Omit<
 >;
 
 /** Filter for "Primitive" (+ Date) values */
-export type FilterValue<T extends PrimitiveExtended> =
+export type FilterValue<T extends QueryPrimitive> =
 	| FilterValueOperatorMap<T>
 	| T;

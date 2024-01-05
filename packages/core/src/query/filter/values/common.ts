@@ -11,7 +11,9 @@ export type FilterZodOrdType =
 	| z.ZodNumber
 	| z.ZodString;
 /** Zod schema for FilterValue comparable type */
-export type FilterZodEqType = FilterZodOrdType | z.ZodNullable<FilterZodEqType>;
+export type FilterZodEqType =
+	| FilterZodOrdType
+	| z.ZodNullable<FilterZodOrdType>;
 
 /**
  * Creates a validation schema for a value query filter operators

@@ -1,50 +1,72 @@
 import { z } from "zod";
 
-import { FilterObject } from "./filter-object";
+import type { FilterObject } from "./filter-object";
+import { isFilterValueConvertible } from "./filter-value.helper";
 import * as FilterValue from "./filter-value.schema";
 
+/** @internal */
+function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
+	shape: T["shape"],
+	options: ObjectOptions,
+) {
+	// Explore the shape to create the filter
+	return z
+		.object(
+			Object.fromEntries(
+				Object.entries(shape)
+					.map(([key, schema]) => [key, fromType(schema, options)])
+					.filter(([, schema]) => schema !== null),
+			),
+		)
+		.partial() satisfies z.ZodType<FilterObject<z.infer<T>>>;
+}
+
+/** @internal */
+function fromType(
+	zodType: z.ZodTypeAny,
+	options: ObjectOptions,
+): z.ZodType | null {
+	if (isFilterValueConvertible(zodType)) {
+		// The schema use `QueryPrimitive`
+		return z.lazy(() => FilterValue.value(zodType, options));
+	}
+
+	const { _def } = zodType as
+		| z.ZodArray<z.ZodTypeAny>
+		| z.ZodObject<z.ZodRawShape>
+		| z.ZodUnknown;
+
+	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodArray) {
+		// For an array, explore its type
+		return z.lazy(() => fromType(_def.type, options) || z.never());
+	}
+
+	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
+		// For a nested object, it simply needs to explore its shape
+		return z.lazy(() => fromShape(_def.shape(), options));
+	}
+
+	// Unmanaged/unkown type
+	return null;
+}
+
+/** Options to create an object filter validation schema */
 export type ObjectOptions = FilterValue.ValueOptions;
 
 /**
- * TODO
+ * Creates a validation schema for an object schema
  *
- * @param schema
- * @param options
+ * @param schema the object schema to create this filter
+ * @param options for the creation of the schema
+ * @returns the filter validation schema for the given schema
  */
-function schema<T extends z.ZodObject<z.ZodRawShape>>(
+function _schema<T extends z.ZodObject<z.ZodRawShape>>(
 	schema: T,
 	options?: ObjectOptions,
 ) {
-	// TODO
-	const fn = (schema: z.ZodTypeAny): z.ZodType | null => {
-		if (FilterValue.isFilterValueConvertible(schema)) {
-			return FilterValue.value(schema, options);
-		}
-
-		const y = schema as z.ZodArray<z.ZodTypeAny> | z.ZodObject<never>;
-		if (y._def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
-			return z.lazy(() => schema(y as never, options));
-		}
-
-		const f = y._def;
-		if (f.typeName === z.ZodFirstPartyTypeKind.ZodArray) {
-			return z.lazy(() => {
-				const t = fn(f.type);
-				return t ? t : z.never();
-			});
-		}
-
-		return null;
-	};
-
-	const x = Object.fromEntries(
-		Object.entries(schema.shape)
-			.map(([key, schema]) => {
-				return [key, fn(schema)];
-			})
-			.filter(([, schema]) => schema !== null) as never,
-	);
-	return z.object(x).partial() satisfies z.ZodType<FilterObject<z.infer<T>>>;
+	return fromShape(schema.shape, options ?? {}) satisfies z.ZodType<
+		FilterObject<z.infer<T>>
+	>;
 }
 
-export { schema as object };
+export { _schema as object };

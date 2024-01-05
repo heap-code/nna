@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-import * as Filter from "./filter-value.schema";
+import { isFilterValueConvertible } from "./filter-value.helper";
 
 describe("FilterValue schema", () => {
 	enum MyEnum {
-		A,
-		B,
-		C,
+		A = "a",
+		B = "b",
+		C = "c",
 	}
 
 	it("isFilterValueConvertible", () => {
@@ -23,10 +23,11 @@ describe("FilterValue schema", () => {
 			[z.string().min(3), true],
 			[z.object({}), false],
 			[z.object({}).nullable(), false],
+			[z.custom(), false],
 		];
 
 		for (const [schema, expected] of tests) {
-			expect(Filter.isFilterValueConvertible(schema)).toBe(expected);
+			expect(isFilterValueConvertible(schema)).toBe(expected);
 		}
 	});
 });

@@ -227,6 +227,8 @@
 				"@typescript-eslint/no-use-before-define": [
 					"error",
 					{
+						"classes": false,
+						"functions": false,
 						"ignoreTypeReferences": true,
 						"typedefs": true
 					}
