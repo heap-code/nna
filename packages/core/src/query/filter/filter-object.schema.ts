@@ -6,7 +6,7 @@ import {
 	isZodSchemaFilterEqType,
 } from "./filter-value.schema";
 
-export interface CreateFilterObjectSchemaOptions {
+export interface ObjectOptions {
 	// TODO
 	strict?: boolean;
 }
@@ -17,10 +17,11 @@ export interface CreateFilterObjectSchemaOptions {
  * @param schema
  * @param options
  */
-export function createFilterObjectSchema<T extends z.ZodObject<z.ZodRawShape>>(
+function schema<T extends z.ZodObject<z.ZodRawShape>>(
 	schema: T,
-	options?: CreateFilterObjectSchemaOptions,
+	options?: ObjectOptions,
 ) {
+	// TODO
 	const fn = (schema: z.ZodTypeAny): z.ZodType | null => {
 		if (isZodSchemaFilterEqType(schema)) {
 			return getFilterValueFromZodEqType(schema);
@@ -28,7 +29,7 @@ export function createFilterObjectSchema<T extends z.ZodObject<z.ZodRawShape>>(
 
 		const y = schema as z.ZodArray<z.ZodTypeAny> | z.ZodObject<never>;
 		if (y._def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
-			return z.lazy(() => createFilterObjectSchema(y as never, options));
+			return z.lazy(() => schema(y as never, options));
 		}
 
 		const f = y._def;
@@ -50,6 +51,7 @@ export function createFilterObjectSchema<T extends z.ZodObject<z.ZodRawShape>>(
 	const x = Object.fromEntries(
 		y.filter(([, schema]) => schema !== null) as never,
 	);
-	//console.log(x);
 	return z.object(x).partial() satisfies z.ZodType<FilterObject<z.infer<T>>>;
 }
+
+export { schema as object };

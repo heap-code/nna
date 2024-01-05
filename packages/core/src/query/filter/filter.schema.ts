@@ -1,12 +1,9 @@
 import { z } from "zod";
 
 import { Filter, FilterLogicalOperatorMap } from "./filter";
-import {
-	CreateFilterObjectSchemaOptions,
-	createFilterObjectSchema,
-} from "./filter-object.schema";
+import * as FilterObject from "./filter-object.schema";
 
-export type CreateFilterSchemaOptions = CreateFilterObjectSchemaOptions;
+export type FilterOptions = FilterObject.ObjectOptions;
 
 /**
  * TODO
@@ -14,11 +11,11 @@ export type CreateFilterSchemaOptions = CreateFilterObjectSchemaOptions;
  * @param schema
  * @param options
  */
-export function createFilterSchema<T extends z.ZodObject<z.ZodRawShape>>(
+function schema<T extends z.ZodObject<z.ZodRawShape>>(
 	schema: T,
-	options?: CreateFilterSchemaOptions,
+	options?: FilterOptions,
 ) {
-	const abc: z.ZodType<Filter<z.infer<T>>> = createFilterObjectSchema(
+	const abc: z.ZodType<Filter<z.infer<T>>> = FilterObject.object(
 		schema,
 		options,
 	).merge(
@@ -36,3 +33,5 @@ export function createFilterSchema<T extends z.ZodObject<z.ZodRawShape>>(
 
 	return abc;
 }
+
+export { schema as filter };

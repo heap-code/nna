@@ -4,14 +4,14 @@ import * as Values from "./values";
 import type { FilterZodEqType } from "./values/common";
 
 export type FilterValueType =
-	| Values.Boolean.Type
-	| Values.BooleanNullable.Type
-	| Values.Date.Type
-	| Values.DateNullable.Type
-	| Values.Number.Type
-	| Values.NumberNullable.Type
-	| Values.String.Type
-	| Values.StringNullable.Type;
+	| Values.BooleanFilter
+	| Values.BooleanFilterNullable
+	| Values.DateFilter
+	| Values.DateFilterNullable
+	| Values.NumberFilter
+	| Values.NumberFilterNullable
+	| Values.StringFilter
+	| Values.StringFilterNullable;
 
 /**
  *
@@ -35,15 +35,18 @@ export function isZodSchemaFilterEqType(
 	return false;
 }
 
+export interface ValueOptions {}
+
 /**
  *
  * @param abc
  */
-export function getFilterValueFromZodEqType(abc: FilterZodEqType) {
+function schema(abc: FilterZodEqType) {
 	const fn = (
 		{ _def: def }: FilterZodEqType,
 		nullable: boolean,
 	): z.ZodType<FilterValueType> => {
+		// TODO (FilterValue-singleton): a singleton for each primitive (expect enum) with theirs options for performance?
 		switch (def.typeName) {
 			case z.ZodFirstPartyTypeKind.ZodBoolean:
 				return Values.boolean({ nullable });
@@ -61,3 +64,5 @@ export function getFilterValueFromZodEqType(abc: FilterZodEqType) {
 
 	return fn(abc, false);
 }
+
+export { schema as value };

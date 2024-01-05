@@ -7,7 +7,5 @@ export type FilterObject<T> = {
 		? FilterValue<T[P]>
 		: T[P] extends ReadonlyArray<infer U>
 			? FilterObject<U>
-			: T[P] extends object
-				? FilterObject<T[P]>
-				: FilterValue<T[P]>;
+			: FilterObject<T[P]>;
 };

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { FilterObject } from "./filter-object";
-import { createFilterObjectSchema } from "./filter-object.schema";
+import * as Filter from "./filter-object.schema";
 
 const schemaFlat = z.object({
 	boolean: z.boolean(),
@@ -17,7 +17,7 @@ type SchemaFlat = z.infer<typeof schemaFlat>;
 
 describe("QueryObjectFilter schema", () => {
 	describe("With flat objects", () => {
-		const filterSchema = createFilterObjectSchema(schemaFlat);
+		const filterSchema = Filter.object(schemaFlat);
 
 		it("should be valid", () => {
 			const filters: Array<FilterObject<SchemaFlat>> = [
@@ -95,7 +95,7 @@ describe("QueryObjectFilter schema", () => {
 		});
 		type SchemaNested = z.infer<typeof schemaNested>;
 
-		const filterSchema = createFilterObjectSchema(schemaNested);
+		const filterSchema = Filter.object(schemaNested);
 
 		it("should be valid", () => {
 			const filters: Array<FilterObject<SchemaNested>> = [
@@ -153,10 +153,9 @@ describe("QueryObjectFilter schema", () => {
 			typeof schemaWithDiscrimination
 		>;
 
-		const filterSchema = createFilterObjectSchema(
-			schemaWithDiscrimination,
-			{ strict: true },
-		);
+		const filterSchema = Filter.object(schemaWithDiscrimination, {
+			strict: true,
+		});
 
 		it("should be valid", () => {
 			const filters: Array<FilterObject<SchemaWithDiscrimination>> = [

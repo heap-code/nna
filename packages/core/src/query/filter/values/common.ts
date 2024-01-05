@@ -28,7 +28,7 @@ export function schemaOperatorMap<
 		return schemaOperatorMap(ordType, ordType);
 	}
 
-	// FIXME: The output type is wrongly determined if the `satisfies` is put directly on the object
+	// FIXME: The output type is wrongly determined if the `satisfies` is put directly on this object
 	const schema = {
 		$eq: eqType,
 		$ne: eqType,
@@ -121,6 +121,7 @@ export function schema<T extends FilterZodOrdType>(
 	ordType: T,
 	options?: SchemaOptions,
 ) {
+	// TODO (FilterValue-singleton): a singleton for each primitive (expect enum) with theirs options for performance?
 	const { coerce, nullable, strict } = options ?? {};
 
 	const eqType: FilterZodEqType = (() => {
