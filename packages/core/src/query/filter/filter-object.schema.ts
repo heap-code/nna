@@ -1,15 +1,9 @@
 import { z } from "zod";
 
 import { FilterObject } from "./filter-object";
-import {
-	getFilterValueFromZodEqType,
-	isZodSchemaFilterEqType,
-} from "./filter-value.schema";
+import * as FilterValue from "./filter-value.schema";
 
-export interface ObjectOptions {
-	// TODO
-	strict?: boolean;
-}
+export type ObjectOptions = FilterValue.ValueOptions;
 
 /**
  * TODO
@@ -23,8 +17,8 @@ function schema<T extends z.ZodObject<z.ZodRawShape>>(
 ) {
 	// TODO
 	const fn = (schema: z.ZodTypeAny): z.ZodType | null => {
-		if (isZodSchemaFilterEqType(schema)) {
-			return getFilterValueFromZodEqType(schema);
+		if (FilterValue.isFilterValueConvertible(schema)) {
+			return FilterValue.value(schema, options);
 		}
 
 		const y = schema as z.ZodArray<z.ZodTypeAny> | z.ZodObject<never>;
@@ -40,16 +34,15 @@ function schema<T extends z.ZodObject<z.ZodRawShape>>(
 			});
 		}
 
-		//console.log(schema);
 		return null;
 	};
 
-	const y = Object.entries(schema.shape).map(([key, schema]) => {
-		return [key, fn(schema)];
-	});
-
 	const x = Object.fromEntries(
-		y.filter(([, schema]) => schema !== null) as never,
+		Object.entries(schema.shape)
+			.map(([key, schema]) => {
+				return [key, fn(schema)];
+			})
+			.filter(([, schema]) => schema !== null) as never,
 	);
 	return z.object(x).partial() satisfies z.ZodType<FilterObject<z.infer<T>>>;
 }
