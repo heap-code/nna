@@ -11,5 +11,3 @@ export const options: Options = {
 	migrations: { emit: "ts", snapshot: true, snapshotName: "snapshot" },
 	seeder: { emit: "ts" },
 };
-
-

@@ -29,9 +29,5 @@
 	},
 	"stylelint.enable": true,
 	"stylelint.snippet": ["css", "scss"],
-	"stylelint.validate": [
-		"css",
-		"scss"
-	],
-	"terminal.explorerKind": "integrated"
+	"stylelint.validate": ["css", "scss"]
 }

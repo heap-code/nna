@@ -1,5 +1,6 @@
 import { Options } from "@swc/core";
 import { readFileSync } from "fs";
+import { JestConfigWithTsJest } from "ts-jest";
 
 // Reading the SWC compilation config and remove the "exclude"
 // for the test files to be compiled by SWC
@@ -27,4 +28,4 @@ export default {
 	transform: {
 		"^.+\\.[tj]s$": ["@swc/jest", swcJestConfig],
 	},
-};
+} satisfies JestConfigWithTsJest;

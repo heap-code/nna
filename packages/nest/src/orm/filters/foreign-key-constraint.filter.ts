@@ -9,13 +9,20 @@ import { BaseExceptionFilter } from "@nestjs/core";
 @Catch(ForeignKeyConstraintViolationException)
 export class ForeignKeyConstraintFilter extends BaseExceptionFilter {
 	/** @inheritDoc */
-	public override catch(exception: ForeignKeyConstraintViolationException, host: ArgumentsHost) {
+	public override catch(
+		exception: ForeignKeyConstraintViolationException,
+		host: ArgumentsHost,
+	) {
 		super.catch(
-			new NotFoundException("A foreign relation key did not match an entity", {
-				cause: exception,
-				description: (exception as unknown as { detail: string }).detail
-			}),
-			host
+			new NotFoundException(
+				"A foreign relation key did not match an entity",
+				{
+					cause: exception,
+					description: (exception as unknown as { detail: string })
+						.detail,
+				},
+			),
+			host,
 		);
 	}
 }

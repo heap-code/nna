@@ -1,3 +1,5 @@
+import { JestConfigWithTsJest } from "ts-jest";
+
 export default {
 	coverageDirectory: "../../dist/coverage/packages/nest",
 	displayName: "nest",
@@ -10,4 +12,4 @@ export default {
 			{ tsconfig: "<rootDir>/tsconfig.spec.json" },
 		],
 	},
-};
+} satisfies JestConfigWithTsJest;
