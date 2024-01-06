@@ -182,6 +182,12 @@ describe("QueryObjectFilter schema", () => {
 				{ child: { number: { $eq: 2 } } },
 				{ discriminated: { type: "idle" } },
 				{
+					discriminated: {
+						// `as "error"` comes from Zod
+						type: { $in: ["error", "success" as "error"] },
+					},
+				},
+				{
 					child: {
 						discriminated: { date: { $ne: null }, type: "idle" },
 					},
@@ -191,7 +197,11 @@ describe("QueryObjectFilter schema", () => {
 			];
 
 			for (const filter of filters) {
-				expect(filterSchema.safeParse(filter).success).toBe(true);
+				const results = filterSchema.safeParse(
+					filter,
+				) as z.SafeParseSuccess<never>;
+				expect(results.success).toBe(true);
+				expect(results.data).toStrictEqual(filter);
 			}
 		});
 

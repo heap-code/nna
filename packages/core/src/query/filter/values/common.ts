@@ -104,7 +104,7 @@ export function schema<T extends FilterZodOrdType>(
 ): z.ZodType<FilterValue<z.infer<T> | null>>;
 export function schema<T extends FilterZodOrdType>(
 	ordType: T,
-	options?: SchemaOptions,
+	options: SchemaOptions,
 ): z.ZodType<FilterValue<z.infer<T>>>;
 
 /**

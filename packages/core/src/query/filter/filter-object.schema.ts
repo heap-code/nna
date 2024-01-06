@@ -33,6 +33,7 @@ function fromType(
 
 	const { _def } = zodType as
 		| z.ZodArray<z.ZodTypeAny>
+		| z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>>
 		| z.ZodObject<z.ZodRawShape>
 		| z.ZodUnknown;
 
@@ -44,6 +45,26 @@ function fromType(
 	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
 		// For a nested object, it simply needs to explore its shape
 		return z.lazy(() => fromShape(_def.shape(), options));
+	}
+
+	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
+		const { discriminator, options } = _def;
+
+		const b = options.map(
+			({ shape: { [discriminator]: key, ...shape } }) =>
+				[key as unknown as z.ZodLiteral<string>, shape] as const,
+		);
+
+		const ff = z.enum(b.map(([a]) => a.value));
+
+		return z
+			.discriminatedUnion(
+				discriminator,
+				b.map(([key, shape]) =>
+					fromShape(shape, options).extend({ [discriminator]: key }),
+				),
+			)
+			.or(z.object({ [discriminator]: fromType(ff, options) }));
 	}
 
 	// Unmanaged/unkown type
