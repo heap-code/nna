@@ -20,7 +20,7 @@ function schema<T extends z.ZodObject<z.ZodRawShape>>(
 	const filterSchema: z.ZodType<Filter<z.infer<T>>> = FilterObject.object(
 		schema,
 		options,
-	).merge(
+	).and(
 		z
 			.object({
 				$and: z.array(z.lazy(() => filterSchema)),

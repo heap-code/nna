@@ -22,6 +22,68 @@ function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
 }
 
 /** @internal */
+function fromDiscriminated(
+	a: z.ZodDiscriminatedUnionDef<
+		string,
+		Array<z.ZodDiscriminatedUnionOption<string>>
+	>,
+
+	options: ObjectOptions,
+): z.ZodType<FilterObject<z.infer<(typeof a)["options"][number]>>> {
+	const { discriminator, options: abc } = a;
+	const mapping = abc.map(
+		({ shape: { [discriminator]: key, ...shape } }) =>
+			[key as unknown as z.ZodLiteral<string>, shape] as const,
+	);
+
+	const keys = z.enum(
+		mapping.map(([{ value }]) => value) as [string, ...string[]],
+	);
+
+	return z.custom().transform((val, ctx) => {
+		if (z.object({ [discriminator]: keys }).safeParse(val).success) {
+			const y = z
+				.discriminatedUnion(
+					discriminator,
+					mapping.map(([key, shape]) =>
+						fromShape(shape, options)
+							.merge(
+								z.object({
+									[discriminator]: key,
+								}),
+							)
+							.strict(),
+					),
+				)
+				.safeParse(val);
+
+			if (y.success) {
+				return y.data;
+			}
+
+			for (const issue of y.error.issues) {
+				ctx.addIssue(issue);
+			}
+			return {};
+		}
+
+		const y = z
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- `keys` is created in this function from a managed schema
+			.object({ [discriminator]: fromType(keys, options)! })
+			.safeParse(val);
+
+		if (y.success) {
+			return y.data;
+		}
+
+		for (const issue of y.error.issues) {
+			ctx.addIssue(issue);
+		}
+		return {};
+	});
+}
+
+/** @internal */
 function fromType(
 	zodType: z.ZodTypeAny,
 	options: ObjectOptions,
@@ -32,9 +94,8 @@ function fromType(
 	}
 
 	const { _def } = zodType as
+		| ObjectSchema
 		| z.ZodArray<z.ZodTypeAny>
-		| z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>>
-		| z.ZodObject<z.ZodRawShape>
 		| z.ZodUnknown;
 
 	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodArray) {
@@ -48,28 +109,16 @@ function fromType(
 	}
 
 	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
-		const { discriminator, options } = _def;
-
-		const b = options.map(
-			({ shape: { [discriminator]: key, ...shape } }) =>
-				[key as unknown as z.ZodLiteral<string>, shape] as const,
-		);
-
-		const ff = z.enum(b.map(([a]) => a.value));
-
-		return z
-			.discriminatedUnion(
-				discriminator,
-				b.map(([key, shape]) =>
-					fromShape(shape, options).extend({ [discriminator]: key }),
-				),
-			)
-			.or(z.object({ [discriminator]: fromType(ff, options) }));
+		return z.lazy(() => fromDiscriminated(_def, options));
 	}
 
 	// Unmanaged/unkown type
 	return null;
 }
+
+export type ObjectSchema =
+	| z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>>
+	| z.ZodObject<z.ZodRawShape>;
 
 /** Options to create an object filter validation schema */
 export type ObjectOptions = FilterValue.ValueOptions;
@@ -81,13 +130,20 @@ export type ObjectOptions = FilterValue.ValueOptions;
  * @param options for the creation of the schema
  * @returns the filter validation schema for the given schema
  */
-function _schema<T extends z.ZodObject<z.ZodRawShape>>(
+function _schema<T extends ObjectSchema>(
 	schema: T,
 	options?: ObjectOptions,
-) {
-	return fromShape(schema.shape, options ?? {}) satisfies z.ZodType<
-		FilterObject<z.infer<T>>
-	>;
+): z.ZodType<FilterObject<z.infer<T>>> {
+	if (!options) {
+		return _schema(schema, {});
+	}
+
+	const { _def } = schema;
+	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
+		return fromDiscriminated(_def, options);
+	}
+
+	return fromShape(_def.shape(), options);
 }
 
 export { _schema as object };

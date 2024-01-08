@@ -223,5 +223,19 @@ describe("QueryObjectFilter schema", () => {
 				expect(result.error.errors).toHaveLength(nError);
 			}
 		});
+
+		it("should work with first-level discrimination", () => {
+			const filterSchema = Filter.object(schemaDiscriminated, {
+				strict: true,
+			});
+
+			const tests: Array<[z.infer<typeof filterSchema>, boolean]> = [
+				[{ type: { $ne: "error" } }, true],
+				[{ code: 400, type: "success" }, false],
+			];
+			for (const [filter, expected] of tests) {
+				expect(filterSchema.safeParse(filter).success).toBe(expected);
+			}
+		});
 	});
 });
