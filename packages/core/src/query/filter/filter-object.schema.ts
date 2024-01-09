@@ -30,38 +30,37 @@ function fromDiscriminated(
 		Array<z.ZodDiscriminatedUnionOption<string>>
 	>,
 	options: ObjectOptions,
-): z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>> &
-	z.ZodType<FilterObject<z.infer<(typeof definition)["options"][number]>>> {
+): z.ZodType<FilterObject<z.infer<(typeof definition)["options"][number]>>> {
 	const { discriminator } = definition;
 	const mapping = definition.options.map(
 		({ shape: { [discriminator]: key, ...shape } }) =>
 			[key as unknown as z.ZodLiteral<string>, shape] as const,
 	);
 
-	// Create an enum schema from the values of the discriminated key
-	const keys = z.enum(
-		mapping.map(([{ value }]) => value) as [string, ...string[]],
-	);
-
-	const discriminatorSchema = fromType(
-		z.object({ [discriminator]: keys }),
+	// Schema for only the discriminator key as a `FilterValue`
+	const discriminatorSchema = fromShape(
+		{
+			[discriminator]: z.enum(
+				mapping.map(([{ value }]) => value) as [string, ...string[]],
+			),
+		},
 		options,
-	)!;
-	//const discriminatorSchema = z.object({ [discriminator]: fromType(keys, options)! });
+	);
 
 	// The "complex" schema that works if the discriminated key is clearly defined
 	const unionSchema = z.discriminatedUnion(
 		discriminator,
+		// `as never`: The typing for this one is quite complicate to satisfie from the dynamic `map`
 		mapping.map(([key, shape]) =>
 			z
 				.object({
 					[discriminator]: key,
 				})
 				.merge(fromShape(shape, options)),
-		),
+		) as never,
 	);
 
-	return unionSchema.or(discriminatorSchema);
+	return z.union([unionSchema, discriminatorSchema]);
 }
 
 /** @internal */

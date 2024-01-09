@@ -7,7 +7,10 @@ import * as FilterObject from "./filter-object.schema";
 export type FilterOptions = FilterObject.ObjectOptions;
 
 /**
- * Creates a query validation schema for an object schema
+ * Creates a query validation schema for an object schema.
+ *
+ * Be aware that, due to the intersection of the `FilterObject` and the logical operators (`$and`, `$or`, `$not`),
+ * only the errors of one "side" of that intersection are returned (`FilterObject` first)
  *
  * @param schema the object schema to create this filter
  * @param options for the creation of the schema
@@ -17,56 +20,24 @@ function _schema<T extends FilterObject.ObjectSchema>(
 	schema: T,
 	options?: FilterOptions,
 ) {
-	// TODO: better
-
-	const fff = FilterObject.object(schema, options);
-	const obj = z.transformer(fff, {
-		transform: ({ $and: _0, $not: _1, $or: _2, ...val }) => val,
-		type: "preprocess",
-	});
-
-	const filterSchema: z.ZodType<Filter<z.infer<T>>> = z
-		.custom()
-		.transform((val, ctx) => {
-			const abc0 = obj.safeParse(val);
-			const abc1 = z
-				.object({
-					$and: z.array(z.lazy(() => filterSchema)),
-					$not: z.lazy(() => filterSchema),
-					$or: z.array(z.lazy(() => filterSchema)),
-				} satisfies Record<
-					keyof FilterLogicalOperatorMap<never>,
-					z.ZodType
-				>)
-				.partial()
-				.safeParse(val);
-
-			const i = [
-				...(abc0.success ? [] : abc0.error.issues),
-				...(abc1.success ? [] : abc1.error.issues),
-			];
-
-			for (const f of i) {
-				ctx.addIssue(f);
-			}
-
-			return val;
-		})
-		.pipe(
-			z.intersection(
-				obj,
-				z
-					.object({
-						$and: z.array(z.lazy(() => filterSchema)),
-						$not: z.lazy(() => filterSchema),
-						$or: z.array(z.lazy(() => filterSchema)),
-					} satisfies Record<
-						keyof FilterLogicalOperatorMap<never>,
-						z.ZodType
-					>)
-					.partial(),
-			),
-		);
+	const filterSchema: z.ZodType<Filter<z.infer<T>>> = z.intersection(
+		// First element is the `FilterObject`
+		z.transformer(FilterObject.object(schema, options), {
+			transform: ({ $and: _0, $not: _1, $or: _2, ...val }) => val,
+			type: "preprocess",
+		}),
+		// Then the recursive type with the logical operators
+		z
+			.object({
+				$and: z.array(z.lazy(() => filterSchema)),
+				$not: z.lazy(() => filterSchema),
+				$or: z.array(z.lazy(() => filterSchema)),
+			} satisfies Record<
+				keyof FilterLogicalOperatorMap<never>,
+				z.ZodType
+			>)
+			.partial(),
+	);
 
 	return filterSchema;
 }
