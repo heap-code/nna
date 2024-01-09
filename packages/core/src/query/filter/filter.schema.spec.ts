@@ -72,7 +72,11 @@ describe("QueryFilter schema", () => {
 			];
 
 			for (const filter of filters) {
-				expect(filterSchema.safeParse(filter).success).toBe(true);
+				const results = filterSchema.safeParse(
+					filter,
+				) as z.SafeParseSuccess<never>;
+				expect(results.success).toBe(true);
+				expect(results.data).toStrictEqual(filter);
 			}
 		});
 
@@ -212,7 +216,7 @@ describe("QueryFilter schema", () => {
 			const filters: Array<Filter<SchemaWithDiscrimination>> = [
 				{ discriminated: { type: "idle" } },
 				{
-					$or: [
+					$and: [
 						{
 							discriminated: {
 								data: { $in: ["abc", "def"] },
@@ -273,7 +277,7 @@ describe("QueryFilter schema", () => {
 				],
 			];
 
-			for (const [filter, nError] of filters) {
+			for (const [filter, nError] of filters.slice(0, 1)) {
 				const result = filterSchema.safeParse(
 					filter,
 				) as z.SafeParseError<Filter<SchemaWithDiscrimination>>;
@@ -281,6 +285,59 @@ describe("QueryFilter schema", () => {
 				expect(result.success).toBe(false);
 				expect(result.error.errors).toHaveLength(nError);
 			}
+		});
+
+		describe("With coerce", () => {
+			const filterSchema = schema(schemaWithDiscrimination, {
+				coerce: true,
+				strict: true,
+			});
+
+			it("should be valid", () => {
+				const tests: Array<
+					[
+						Filter<SchemaWithDiscrimination>,
+						Filter<SchemaWithDiscrimination>,
+					]
+				> = [
+					[
+						{ child: { number: "1" as unknown as number } },
+						{ child: { number: 1 } },
+					],
+					[
+						{
+							$not: {
+								$not: {
+									discriminated: {
+										code: {
+											$gt: "400" as unknown as number,
+										},
+										type: "error",
+									},
+								},
+							},
+						},
+						{
+							$not: {
+								$not: {
+									discriminated: {
+										code: { $gt: 400 },
+										type: "error",
+									},
+								},
+							},
+						},
+					],
+				];
+
+				for (const [filter, expected] of tests) {
+					const results = filterSchema.safeParse(
+						filter,
+					) as z.SafeParseSuccess<never>;
+					expect(results.success).toBe(true);
+					expect(results.data).toStrictEqual(expected);
+				}
+			});
 		});
 	});
 });

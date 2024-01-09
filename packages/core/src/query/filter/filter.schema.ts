@@ -13,27 +13,62 @@ export type FilterOptions = FilterObject.ObjectOptions;
  * @param options for the creation of the schema
  * @returns the filter validation schema for the given schema
  */
-function schema<T extends z.ZodObject<z.ZodRawShape>>(
+function _schema<T extends FilterObject.ObjectSchema>(
 	schema: T,
 	options?: FilterOptions,
 ) {
-	const filterSchema: z.ZodType<Filter<z.infer<T>>> = FilterObject.object(
-		schema,
-		options,
-	).and(
-		z
-			.object({
-				$and: z.array(z.lazy(() => filterSchema)),
-				$not: z.lazy(() => filterSchema),
-				$or: z.array(z.lazy(() => filterSchema)),
-			} satisfies Record<
-				keyof FilterLogicalOperatorMap<never>,
-				z.ZodType
-			>)
-			.partial(),
-	);
+	// TODO: better
+
+	const fff = FilterObject.object(schema, options);
+	const obj = z.transformer(fff, {
+		transform: ({ $and: _0, $not: _1, $or: _2, ...val }) => val,
+		type: "preprocess",
+	});
+
+	const filterSchema: z.ZodType<Filter<z.infer<T>>> = z
+		.custom()
+		.transform((val, ctx) => {
+			const abc0 = obj.safeParse(val);
+			const abc1 = z
+				.object({
+					$and: z.array(z.lazy(() => filterSchema)),
+					$not: z.lazy(() => filterSchema),
+					$or: z.array(z.lazy(() => filterSchema)),
+				} satisfies Record<
+					keyof FilterLogicalOperatorMap<never>,
+					z.ZodType
+				>)
+				.partial()
+				.safeParse(val);
+
+			const i = [
+				...(abc0.success ? [] : abc0.error.issues),
+				...(abc1.success ? [] : abc1.error.issues),
+			];
+
+			for (const f of i) {
+				ctx.addIssue(f);
+			}
+
+			return val;
+		})
+		.pipe(
+			z.intersection(
+				obj,
+				z
+					.object({
+						$and: z.array(z.lazy(() => filterSchema)),
+						$not: z.lazy(() => filterSchema),
+						$or: z.array(z.lazy(() => filterSchema)),
+					} satisfies Record<
+						keyof FilterLogicalOperatorMap<never>,
+						z.ZodType
+					>)
+					.partial(),
+			),
+		);
 
 	return filterSchema;
 }
 
-export { schema as filter };
+export { _schema as filter };

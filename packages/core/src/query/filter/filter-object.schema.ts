@@ -10,7 +10,7 @@ function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
 	options: ObjectOptions,
 ) {
 	// Explore the shape to create the filter
-	return z
+	const schema = z
 		.object(
 			Object.fromEntries(
 				Object.entries(shape)
@@ -19,6 +19,8 @@ function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
 			),
 		)
 		.partial() satisfies z.ZodType<FilterObject<z.infer<T>>>;
+
+	return options.strict ? schema.strict() : schema;
 }
 
 /** @internal */
@@ -28,58 +30,38 @@ function fromDiscriminated(
 		Array<z.ZodDiscriminatedUnionOption<string>>
 	>,
 	options: ObjectOptions,
-): z.ZodType<FilterObject<z.infer<(typeof definition)["options"][number]>>> {
-	// TODO
+): z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>> &
+	z.ZodType<FilterObject<z.infer<(typeof definition)["options"][number]>>> {
 	const { discriminator } = definition;
 	const mapping = definition.options.map(
 		({ shape: { [discriminator]: key, ...shape } }) =>
 			[key as unknown as z.ZodLiteral<string>, shape] as const,
 	);
 
+	// Create an enum schema from the values of the discriminated key
 	const keys = z.enum(
 		mapping.map(([{ value }]) => value) as [string, ...string[]],
 	);
 
-	const a0 = z.object({ [discriminator]: keys });
-	const a1 = z.discriminatedUnion(
+	const discriminatorSchema = fromType(
+		z.object({ [discriminator]: keys }),
+		options,
+	)!;
+	//const discriminatorSchema = z.object({ [discriminator]: fromType(keys, options)! });
+
+	// The "complex" schema that works if the discriminated key is clearly defined
+	const unionSchema = z.discriminatedUnion(
 		discriminator,
 		mapping.map(([key, shape]) =>
 			z
 				.object({
 					[discriminator]: key,
 				})
-				.merge(fromShape(shape, options).strict()),
+				.merge(fromShape(shape, options)),
 		),
 	);
 
-	const a2 = fromShape(z.object({ [discriminator]: keys }).shape, options);
-	//const a2 = z.object({ [discriminator]: fromType(keys, options)! });
-
-	return z.custom().transform((val, ctx) => {
-		if (a0.safeParse(val).success) {
-			const y = a1.safeParse(val);
-
-			if (y.success) {
-				return y.data;
-			}
-
-			for (const issue of y.error.issues) {
-				ctx.addIssue(issue);
-			}
-			return {};
-		}
-
-		const y = a2.safeParse(val);
-
-		if (y.success) {
-			return y.data;
-		}
-
-		for (const issue of y.error.issues) {
-			ctx.addIssue(issue);
-		}
-		return {};
-	});
+	return unionSchema.or(discriminatorSchema);
 }
 
 /** @internal */
