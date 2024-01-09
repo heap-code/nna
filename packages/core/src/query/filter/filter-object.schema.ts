@@ -23,15 +23,15 @@ function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
 
 /** @internal */
 function fromDiscriminated(
-	a: z.ZodDiscriminatedUnionDef<
+	definition: z.ZodDiscriminatedUnionDef<
 		string,
 		Array<z.ZodDiscriminatedUnionOption<string>>
 	>,
-
 	options: ObjectOptions,
-): z.ZodType<FilterObject<z.infer<(typeof a)["options"][number]>>> {
-	const { discriminator, options: abc } = a;
-	const mapping = abc.map(
+): z.ZodType<FilterObject<z.infer<(typeof definition)["options"][number]>>> {
+	// TODO
+	const { discriminator } = definition;
+	const mapping = definition.options.map(
 		({ shape: { [discriminator]: key, ...shape } }) =>
 			[key as unknown as z.ZodLiteral<string>, shape] as const,
 	);
@@ -40,22 +40,24 @@ function fromDiscriminated(
 		mapping.map(([{ value }]) => value) as [string, ...string[]],
 	);
 
+	const a0 = z.object({ [discriminator]: keys });
+	const a1 = z.discriminatedUnion(
+		discriminator,
+		mapping.map(([key, shape]) =>
+			z
+				.object({
+					[discriminator]: key,
+				})
+				.merge(fromShape(shape, options).strict()),
+		),
+	);
+
+	const a2 = fromShape(z.object({ [discriminator]: keys }).shape, options);
+	//const a2 = z.object({ [discriminator]: fromType(keys, options)! });
+
 	return z.custom().transform((val, ctx) => {
-		if (z.object({ [discriminator]: keys }).safeParse(val).success) {
-			const y = z
-				.discriminatedUnion(
-					discriminator,
-					mapping.map(([key, shape]) =>
-						fromShape(shape, options)
-							.merge(
-								z.object({
-									[discriminator]: key,
-								}),
-							)
-							.strict(),
-					),
-				)
-				.safeParse(val);
+		if (a0.safeParse(val).success) {
+			const y = a1.safeParse(val);
 
 			if (y.success) {
 				return y.data;
@@ -67,10 +69,7 @@ function fromDiscriminated(
 			return {};
 		}
 
-		const y = z
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- `keys` is created in this function from a managed schema
-			.object({ [discriminator]: fromType(keys, options)! })
-			.safeParse(val);
+		const y = a2.safeParse(val);
 
 		if (y.success) {
 			return y.data;
@@ -125,6 +124,9 @@ export type ObjectOptions = FilterValue.ValueOptions;
 
 /**
  * Creates a validation schema for an object schema
+ *
+ * With discriminated union, the discriminated key must be a literal to determine the object.
+ * The discrimanted key can be filtered as a `FilterValue` but only the key will be taken onto account.
  *
  * @param schema the object schema to create this filter
  * @param options for the creation of the schema
