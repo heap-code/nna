@@ -1,4 +1,11 @@
 {
+	"auto-close-tag.activationOnLanguage": [
+		"xml",
+		"ejs",
+		"markdown",
+		"HTML (EEx)",
+		"HTML (Eex)"
+	],
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit"
 	},

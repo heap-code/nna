@@ -1,3 +1,5 @@
+import { JestConfigWithTsJest } from "ts-jest";
+
 export default {
 	coverageDirectory: "../../dist/coverage/apps/frontend",
 	displayName: "frontend",
@@ -18,4 +20,4 @@ export default {
 		],
 	},
 	transformIgnorePatterns: ["node_modules/(?!.*\\.mjs$)"],
-};
+} satisfies JestConfigWithTsJest;

@@ -23,6 +23,12 @@
 				"jestConfig": "packages/nest/jest.config.ts"
 			},
 			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p packages/nest/tsconfig.spec.json"
+			}
 		}
 	}
 }

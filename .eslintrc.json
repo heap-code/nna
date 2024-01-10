@@ -207,6 +207,7 @@
 						"ignoreVoidOperator": true
 					}
 				],
+				"@typescript-eslint/no-empty-interface": "error",
 				"@typescript-eslint/no-extra-non-null-assertion": "error",
 				"@typescript-eslint/no-extraneous-class": [
 					"warn",
@@ -223,6 +224,15 @@
 				"@typescript-eslint/no-unsafe-declaration-merging": "warn",
 				/* Managed by "unused-imports/no-unused-vars" */
 				"@typescript-eslint/no-unused-vars": "off",
+				"@typescript-eslint/no-use-before-define": [
+					"error",
+					{
+						"classes": false,
+						"functions": false,
+						"ignoreTypeReferences": true,
+						"typedefs": true
+					}
+				],
 				"@typescript-eslint/prefer-enum-initializers": "error",
 				"@typescript-eslint/prefer-for-of": "warn",
 				"@typescript-eslint/prefer-includes": "warn",
@@ -235,7 +245,8 @@
 				"etc/no-assign-mutated-array": "error",
 				"etc/prefer-less-than": "warn",
 				"jsdoc/require-param-type": "off",
-				"jsdoc/require-returns-type": "off"
+				"jsdoc/require-returns-type": "off",
+				"typescript-sort-keys/string-enum": "warn"
 			}
 		},
 		{
@@ -393,6 +404,13 @@
 				"no-trailing-spaces": "off",
 				"prettier/prettier": "off"
 			}
+		},
+		{
+			"files": ["*.ts", "*.js"],
+			"rules": {
+				/* FIXME: There's a plugin that disables that rule (probably prettier) */
+				"curly": ["error", "all"]
+			}
 		}
 	],
 	"plugins": [
@@ -403,11 +421,20 @@
 		"sonarjs",
 		"sort-destructure-keys",
 		"sort-keys-plus",
+		"typescript-sort-keys",
 		"unicorn",
 		"unused-imports"
 	],
 	"root": true,
 	"rules": {
+		"eqeqeq": "error",
+		"eslint-comments/no-unused-disable": "error",
+		"eslint-comments/require-description": [
+			"warn",
+			{
+				"ignore": ["eslint", "eslint-enable"]
+			}
+		],
 		"import/first": "error",
 		"import/newline-after-import": "error",
 		"import/no-default-export": "error",
@@ -440,6 +467,13 @@
 				]
 			}
 		],
+		"no-alert": "error",
+		"no-console": "error",
+		"no-empty": "error",
+		"no-return-await": "error",
+		"prefer-const": "error",
+		"prefer-rest-params": "error",
+		"prefer-template": "error",
 		"prettier/prettier": "error",
 		"sort-destructure-keys/sort-destructure-keys": "error",
 		"sort-keys-plus/sort-keys": [
@@ -449,6 +483,7 @@
 				"allowLineSeparatedGroups": true
 			}
 		],
+		"sort-vars": "error",
 		"unused-imports/no-unused-imports": "error",
 		"unused-imports/no-unused-vars": [
 			"warn",

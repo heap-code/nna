@@ -1,3 +1,5 @@
+import { JestConfigWithTsJest } from "ts-jest";
+
 export default {
 	coverageDirectory: "../../dist/coverage/backend-e2e",
 	displayName: "backend-e2e",
@@ -15,4 +17,4 @@ export default {
 			},
 		],
 	},
-};
+} satisfies JestConfigWithTsJest;

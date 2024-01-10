@@ -43,6 +43,10 @@ jobs:
       - name: Comments coverage
         run: npm run compodoc:coverage
 
+      # To verify test files and if some compilers ignore typechecking
+      - name: Run typecheck
+        run: npm run typecheck
+
       - name: Build
         run: npm run build
 
