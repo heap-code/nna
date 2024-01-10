@@ -61,6 +61,7 @@ function schemaOperatorMap<
 		.partial();
 }
 
+/** Options to create a "value" filter validation schema */
 export interface SchemaOptions {
 	/**
 	 * Convert ordenable type, e.g. for `number`: `"12" => 12`.
@@ -98,10 +99,26 @@ export type SchemaOptionsNullable = Record<
 	true
 >;
 
+/**
+ * Creates a validation schema for (mostly primitime like) nullable type
+ *
+ * @param ordType type that can be ordered (>, >=, <, <=).
+ * Some coerce options must be set before receiving this parameter.
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
 export function schema<T extends FilterZodOrdType>(
 	ordType: T,
 	options: SchemaOptions & SchemaOptionsNullable,
 ): z.ZodType<FilterValue<z.infer<T> | null>>;
+/**
+ * Creates a validation schema for (mostly primitime like) type
+ *
+ * @param ordType type that can be ordered (>, >=, <, <=).
+ * Some coerce options must be set before receiving this parameter.
+ * @param options for the creation of the schema
+ * @returns the validation schema
+ */
 export function schema<T extends FilterZodOrdType>(
 	ordType: T,
 	options: SchemaOptions,
@@ -168,6 +185,6 @@ export function schema<T extends FilterZodOrdType>(
 		}
 
 		// Not important as issues are added
-		return {};
+		return val;
 	});
 }

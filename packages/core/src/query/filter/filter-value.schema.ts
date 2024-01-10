@@ -19,8 +19,6 @@ function schema<T extends FilterZodEqType>(
 	schema: T,
 	options: ValueOptions = {},
 ) {
-	// TODO (FilterValue-singleton): a singleton for each primitive (expect enum) with theirs options for performance?
-
 	const fn = (
 		zodType: FilterZodEqType,
 		nullable: boolean,
