@@ -9,9 +9,62 @@ on:
       NX_TOKEN:
         required: false
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install packages
+        run: npm ci
+
+  checks0:
+    runs-on: ubuntu-latest
+    needs: [install]
+    env:
+      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_TOKEN }}
+      NX_NO_CLOUD: ${{ inputs.NX_NO_CLOUD }}
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install packages
+        run: npm ci
+
+      # Verify that all mikro-orm versions are correct (useful for renovate)
+      - name: Verify Mikro-orm versions
+        run: npx mikro-orm debug
+
+      - name: Lint
+        run: npm run lint
+      - name: Stylelint
+        run: npm run stylelint
+
   checks:
     runs-on: ubuntu-latest
+    needs: [install]
     env:
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_TOKEN }}
       NX_NO_CLOUD: ${{ inputs.NX_NO_CLOUD }}
