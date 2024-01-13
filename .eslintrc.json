@@ -7,7 +7,7 @@
 	"overrides": [
 		{
 			"extends": ["plugin:jsdoc/recommended"],
-			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			"files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
 			"plugins": ["jsdoc"],
 			"rules": {
 				"@nx/enforce-module-boundaries": [
@@ -285,7 +285,7 @@
 				"jest": true
 			},
 			"extends": ["plugin:jest/recommended", "plugin:jest/style"],
-			"files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+			"files": ["*.spec.js", "*.spec.jsx", "*.spec.ts", "*.spec.tsx"],
 			"plugins": ["jest"],
 			"rules": {
 				/* Ok for test files */
@@ -350,7 +350,6 @@
 					}
 				],
 				"jsonc/sort-keys": "error",
-				"max-len": "off",
 				"no-multiple-empty-lines": [
 					"error",
 					{
@@ -361,20 +360,30 @@
 		},
 		{
 			"files": [
+				".devcontainer/**/devcontainer.json",
 				".eslintrc.json",
 				".prettierrc.json",
-				"tsconfig.json",
+				".vscode/settings.json",
 				"tsconfig.*.json",
-				".vscode/settings.json"
+				"tsconfig.json"
 			],
 			"rules": {
 				/* OK for `rc` files */
-				"jsonc/no-comments": "off"
+				"jsonc/no-comments": "off",
+				"jsonc/sort-array-values": [
+					"warn",
+					{
+						"order": {
+							"type": "asc"
+						},
+						"pathPattern": "compilerOptions.(lib|types)$|include$|files$|^exclude$|extends$|plugins$|eslint.validate|auto-close-tag.\\w+|stylelint.\\w+|vscode.extensions$"
+					}
+				]
 			}
 		},
 		{
-			"extends": ["plugin:yml/recommended", "plugin:yml/prettier"],
-			"files": ["*.yml", "*.yaml"],
+			"extends": ["plugin:yml/prettier", "plugin:yml/recommended"],
+			"files": ["*.yaml", "*.yml"],
 			"parser": "yaml-eslint-parser"
 		},
 		{
@@ -406,7 +415,7 @@
 			}
 		},
 		{
-			"files": ["*.ts", "*.js"],
+			"files": ["*.js", "*.ts"],
 			"rules": {
 				/* FIXME: There's a plugin that disables that rule (probably prettier) */
 				"curly": ["error", "all"]

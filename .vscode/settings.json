@@ -1,23 +1,23 @@
 {
 	"auto-close-tag.activationOnLanguage": [
-		"xml",
+		"HTML (EEx)",
+		"HTML (Eex)",
 		"ejs",
 		"markdown",
-		"HTML (EEx)",
-		"HTML (Eex)"
+		"xml"
 	],
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit"
 	},
 	"eslint.validate": [
+		"html",
 		"javascript",
 		"javascriptreact",
+		"json",
+		"markdown",
 		"typescript",
 		"typescriptreact",
-		"html",
 		"vue",
-		"markdown",
-		"json",
 		"yaml"
 	],
 	"files.associations": {

@@ -5,18 +5,20 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"nrwl.angular-console",
-				"firsttris.vscode-jest-runner",
-				"dbaeumer.vscode-eslint",
-				"stylelint.vscode-stylelint",
-				"hediet.vscode-drawio",
-				"mhutchie.git-graph",
 				"Angular.ng-template",
-				"formulahendry.auto-rename-tag",
-				"formulahendry.auto-close-tag",
 				"EditorConfig.EditorConfig",
 				"Gruntfuggly.todo-tree",
-				"cweijan.vscode-database-client2"
+				"cweijan.vscode-database-client2",
+				"dbaeumer.vscode-eslint",
+				"firsttris.vscode-jest-runner",
+				"formulahendry.auto-close-tag",
+				"formulahendry.auto-rename-tag",
+				"github.vscode-github-actions",
+				"hediet.vscode-drawio",
+				"mhutchie.git-graph",
+				"ms-azuretools.vscode-docker",
+				"nrwl.angular-console",
+				"stylelint.vscode-stylelint"
 			]
 		}
 	},
@@ -24,5 +26,5 @@
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 	"name": "Dev environment",
-	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install; npx nx reset"
+	"postStartCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install; npx nx reset"
 }

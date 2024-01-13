@@ -3,9 +3,9 @@
 	"overrides": [
 		{
 			"extends": [
-				"plugin:@nx/angular",
 				"plugin:@angular-eslint/recommended",
-				"plugin:@angular-eslint/template/process-inline-templates"
+				"plugin:@angular-eslint/template/process-inline-templates",
+				"plugin:@nx/angular"
 			],
 			"files": ["*.ts"],
 			"parserOptions": {
@@ -64,9 +64,9 @@
 		},
 		{
 			"extends": [
-				"plugin:@nx/angular-template",
 				"plugin:@angular-eslint/template/accessibility",
-				"plugin:@angular-eslint/template/recommended"
+				"plugin:@angular-eslint/template/recommended",
+				"plugin:@nx/angular-template"
 			],
 			"files": ["*.html"],
 			"plugins": ["prettier", "sort-attribute-content"],

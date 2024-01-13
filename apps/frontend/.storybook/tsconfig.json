@@ -5,12 +5,12 @@
 	"exclude": ["../**/*.spec.ts"],
 	"extends": "../tsconfig.json",
 	"include": [
-		"../src/**/*.stories.ts",
+		"*.js",
+		"*.ts",
 		"../src/**/*.stories.js",
 		"../src/**/*.stories.jsx",
-		"../src/**/*.stories.tsx",
 		"../src/**/*.stories.mdx",
-		"*.js",
-		"*.ts"
+		"../src/**/*.stories.ts",
+		"../src/**/*.stories.tsx"
 	]
 }

@@ -14,11 +14,11 @@
 	},
 	"extends": "../../tsconfig.base.json",
 	"include": [
-		"**/*.ts",
-		"**/*.js",
-		"cypress.config.ts",
-		"**/*.cy.ts",
 		"**/*.cy.js",
-		"**/*.d.ts"
+		"**/*.cy.ts",
+		"**/*.d.ts",
+		"**/*.js",
+		"**/*.ts",
+		"cypress.config.ts"
 	]
 }

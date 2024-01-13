@@ -1,17 +1,6 @@
 {
 	"recommendations": [
-		"nrwl.angular-console",
-		"firsttris.vscode-jest-runner",
-		"dbaeumer.vscode-eslint",
-		"stylelint.vscode-stylelint",
-		"ms-vscode-remote.remote-containers",
-		"hediet.vscode-drawio",
-		"mhutchie.git-graph",
-		"angular.ng-template",
-		"formulahendry.auto-rename-tag",
-		"formulahendry.auto-close-tag",
-		"editorconfig.editorconfig",
-		"gruntfuggly.todo-tree",
-		"cweijan.vscode-database-client2"
+		"github.codespaces",
+		"ms-vscode-remote.remote-containers"
 	]
 }
