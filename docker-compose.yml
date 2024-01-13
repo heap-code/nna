@@ -3,9 +3,9 @@ version: "3.4"
 services:
   db:
     image: postgres:16-alpine
-    "environment":
+    environment:
       POSTGRES_DB: "nna"
       POSTGRES_USER: "nna"
       POSTGRES_PASSWORD: DEV_PASSWORD
-    "ports":
+    ports:
       - "127.0.0.1:5432:5432"
