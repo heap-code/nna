@@ -7,12 +7,9 @@
 	"tags": [],
 	"targets": {
 		"compodoc": {
-			"executor": "nx:run-commands",
 			"options": {
-				"args": "--base='npx @compodoc/compodoc -p ./libs/front/tsconfig.lib.json -d ./dist/compodoc/libs/front --disablePrivate --disableInternal --disableLifeCycleHooks'",
-				"command": "{args.base} -r 10002 -s"
-			},
-			"outputs": ["{workspaceRoot}/dist/compodoc/libs/front"]
+				"port": 11001
+			}
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
