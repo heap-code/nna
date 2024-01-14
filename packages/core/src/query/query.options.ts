@@ -1,4 +1,4 @@
-import { QueryOrder } from "./query.order";
+import type { QueryOrder } from ".";
 
 /** Options when looking for data */
 export interface QueryOptions<T> {

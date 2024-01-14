@@ -1,9 +1,10 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import { Filter, FilterLogicalOperatorMap } from "./filter";
 import * as FilterObject from "./filter-object.schema";
+import { QueryObjectSchema } from "../query.types";
 
-/** Options to create an query filter validation schema */
+/** Options to create a query filter validation schema */
 export type FilterOptions = FilterObject.ObjectOptions;
 
 /**
@@ -16,7 +17,7 @@ export type FilterOptions = FilterObject.ObjectOptions;
  * @param options for the creation of the schema
  * @returns the filter validation schema for the given schema
  */
-function _schema<T extends FilterObject.ObjectSchema>(
+function _schema<T extends QueryObjectSchema>(
 	schema: T,
 	options?: FilterOptions,
 ) {
