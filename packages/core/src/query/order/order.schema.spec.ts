@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import { Order as QueryOrder } from "./order";
+import { OrderValue } from "./order-value";
 import * as Order from "./order.schema";
 
 const schemaFlat = z.object({
@@ -17,7 +18,12 @@ describe("Order schema", () => {
 		const orderSchema = Order.order(schemaFlat, { strict: true });
 
 		it("should be valid", () => {
-			const orders: Array<QueryOrder<SchemaFlat>> = [];
+			const orders: Array<QueryOrder<SchemaFlat>> = [
+				{},
+				{ boolean: "asc_nf", date: "asc" },
+				{ enumZod: "asc_nl" },
+				{ number: "desc", string: "desc_nf" },
+			];
 
 			for (const order of orders) {
 				expect(orderSchema.safeParse(order).success).toBe(true);
@@ -25,7 +31,11 @@ describe("Order schema", () => {
 		});
 
 		it("should not be valid", () => {
-			const orders: Array<[QueryOrder<SchemaFlat>, number]> = [];
+			const orders: Array<[QueryOrder<SchemaFlat>, number]> = [
+				[{ boolean: "abc" as OrderValue }, 1],
+				[{ number: false as unknown as OrderValue }, 1],
+				[{ abc: "asc" } as unknown as QueryOrder<SchemaFlat>, 1],
+			];
 
 			for (const [order, nError] of orders) {
 				const result = orderSchema.safeParse(
@@ -34,6 +44,22 @@ describe("Order schema", () => {
 
 				expect(result.success).toBe(false);
 				expect(result.error.errors).toHaveLength(nError);
+			}
+		});
+
+		it("should remove extraneous values (non-strict)", () => {
+			const orders: Array<QueryOrder<SchemaFlat>> = [
+				{ boolean: "asc_nf", date: "asc" },
+				{ enumZod: "asc_nl" },
+				{ number: "desc", string: "desc_nf" },
+			];
+
+			for (const order of orders) {
+				const results = orderSchema.safeParse(
+					order,
+				) as z.SafeParseSuccess<never>;
+				expect(results.success).toBe(true);
+				expect(results.data).toStrictEqual(order);
 			}
 		});
 	});
@@ -50,7 +76,10 @@ describe("Order schema", () => {
 		const orderSchema = Order.order(schemaFlat, { strict: true });
 
 		it("should be valid", () => {
-			const orders: Array<QueryOrder<SchemaNested>> = [];
+			const orders: Array<QueryOrder<SchemaNested>> = [
+				{ child: { boolean: "asc" }, children: { number: "desc" } },
+				{ nest: { child: { date: "asc_nf" } }, unknown: {} },
+			];
 
 			for (const order of orders) {
 				expect(orderSchema.safeParse(order).success).toBe(true);
@@ -58,7 +87,23 @@ describe("Order schema", () => {
 		});
 
 		it("should not be valid", () => {
-			const orders: Array<[QueryOrder<SchemaNested>, number]> = [];
+			const orders: Array<[QueryOrder<SchemaNested>, number]> = [
+				[
+					{
+						nest: {
+							child: { date: "abc" as unknown as OrderValue },
+						},
+					},
+					1,
+				],
+				[
+					{
+						children: [{ date: "asc" }],
+						nest: "asc",
+					} as unknown as never,
+					2,
+				],
+			];
 
 			for (const [order, nError] of orders) {
 				const result = orderSchema.safeParse(
@@ -93,7 +138,16 @@ describe("Order schema", () => {
 		});
 
 		it("should be valid", () => {
-			const orders: Array<QueryOrder<SchemaWithDiscrimination>> = [];
+			const orders: Array<QueryOrder<SchemaWithDiscrimination>> = [
+				{ discriminated: { type: "asc" } },
+				{
+					child: {
+						discriminated: { type: "desc" },
+						number: "desc_nl",
+					},
+				},
+				{ discriminated: { code: "asc", date: "desc" } },
+			];
 
 			for (const order of orders) {
 				expect(orderSchema.safeParse(order).success).toBe(true);
@@ -103,7 +157,13 @@ describe("Order schema", () => {
 		it("should not be valid", () => {
 			const orders: Array<
 				[QueryOrder<SchemaWithDiscrimination>, number]
-			> = [];
+			> = [
+				[
+					{ discriminated: { code: "abc" as unknown as OrderValue } },
+					1,
+				],
+				[{ discriminated: { abc: "desc" } as unknown as never }, 1],
+			];
 
 			for (const [order, nError] of orders) {
 				const result = orderSchema.safeParse(
