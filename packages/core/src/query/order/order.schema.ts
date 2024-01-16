@@ -1,8 +1,64 @@
 import * as z from "zod";
 
-import { Order } from "./order";
+import * as OrderValue from "./order-value.schema";
+import type { QueryOrder } from "..";
 import { FilterOptions } from "../filter";
 import { QueryObjectSchema } from "../query.types";
+
+/** @internal */
+function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
+	shape: T["shape"],
+	options: OrderOptions,
+) {
+	const schema = z
+		.object(
+			Object.fromEntries(
+				Object.entries(shape).map(([key, schema]) => [
+					key,
+					fromType(schema, options),
+				]),
+			),
+		)
+		.partial() satisfies z.ZodType<QueryOrder<z.infer<T>>>;
+
+	return options.strict ? schema.strict() : schema;
+}
+
+/** @internal */
+function fromDiscriminated(
+	definition: z.ZodDiscriminatedUnionDef<
+		string,
+		Array<z.ZodDiscriminatedUnionOption<string>>
+	>,
+	options: OrderOptions,
+): z.ZodType<QueryOrder<z.infer<(typeof definition)["options"][number]>>> {
+	const { discriminator } = definition;
+
+	return definition.options.reduce(
+		(type, { shape }) => type.merge(fromShape(shape, options)),
+		fromShape({ [discriminator]: OrderValue.orderValue }, options),
+	);
+}
+
+/** @internal */
+function fromType(zodType: z.ZodTypeAny, options: OrderOptions): z.ZodType {
+	const { _def } = zodType as
+		| QueryObjectSchema
+		| z.ZodArray<z.ZodTypeAny>
+		| z.ZodUnknown;
+
+	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodArray) {
+		return z.lazy(() => fromType(_def.type, options));
+	}
+	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
+		return z.lazy(() => fromShape(_def.shape(), options));
+	}
+	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
+		return z.lazy(() => fromDiscriminated(_def, options));
+	}
+
+	return OrderValue.orderValue;
+}
 
 /** Options to create a query order validation schema */
 export type OrderOptions = Pick<FilterOptions, "strict">;
@@ -16,8 +72,15 @@ export type OrderOptions = Pick<FilterOptions, "strict">;
 function _schema<T extends QueryObjectSchema>(
 	schema: T,
 	options?: OrderOptions,
-): z.ZodType<Order<z.infer<T>>> {
-	throw new Error("TODO");
+): z.ZodType<QueryOrder<z.infer<T>>> {
+	if (!options) {
+		return _schema(schema, {});
+	}
+
+	const { _def } = schema;
+	return _def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion
+		? fromDiscriminated(_def, options)
+		: fromShape(_def.shape(), options);
 }
 
 export { _schema as order };

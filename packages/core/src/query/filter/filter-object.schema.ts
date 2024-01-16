@@ -119,11 +119,9 @@ function _schema<T extends QueryObjectSchema>(
 	}
 
 	const { _def } = schema;
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
-		return fromDiscriminated(_def, options);
-	}
-
-	return fromShape(_def.shape(), options);
+	return _def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion
+		? fromDiscriminated(_def, options)
+		: fromShape(_def.shape(), options);
 }
 
 export { _schema as object };

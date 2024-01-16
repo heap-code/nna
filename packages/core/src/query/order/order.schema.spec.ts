@@ -48,6 +48,7 @@ describe("Order schema", () => {
 		});
 
 		it("should remove extraneous values (non-strict)", () => {
+			const orderSchema = Order.order(schemaFlat);
 			const orders: Array<QueryOrder<SchemaFlat>> = [
 				{ boolean: "asc_nf", date: "asc" },
 				{ enumZod: "asc_nl" },
@@ -55,9 +56,10 @@ describe("Order schema", () => {
 			];
 
 			for (const order of orders) {
-				const results = orderSchema.safeParse(
-					order,
-				) as z.SafeParseSuccess<never>;
+				const results = orderSchema.safeParse({
+					...order,
+					a: "abc",
+				}) as z.SafeParseSuccess<never>;
 				expect(results.success).toBe(true);
 				expect(results.data).toStrictEqual(order);
 			}
@@ -73,12 +75,12 @@ describe("Order schema", () => {
 		});
 		type SchemaNested = z.infer<typeof schemaNested>;
 
-		const orderSchema = Order.order(schemaFlat, { strict: true });
+		const orderSchema = Order.order(schemaNested, { strict: true });
 
 		it("should be valid", () => {
 			const orders: Array<QueryOrder<SchemaNested>> = [
 				{ child: { boolean: "asc" }, children: { number: "desc" } },
-				{ nest: { child: { date: "asc_nf" } }, unknown: {} },
+				{ nest: { child: { date: "asc_nf" } }, unknown: "asc" },
 			];
 
 			for (const order of orders) {
@@ -172,6 +174,23 @@ describe("Order schema", () => {
 
 				expect(result.success).toBe(false);
 				expect(result.error.errors).toHaveLength(nError);
+			}
+		});
+
+		it("should be valid with root discriminated union", () => {
+			const orderSchema = Order.order(schemaDiscriminated, {
+				strict: true,
+			});
+
+			const tests: Array<
+				[QueryOrder<z.infer<typeof schemaDiscriminated>>, boolean]
+			> = [
+				[{ code: "asc", date: "desc" }, true],
+				[{ abc: "asd" } as unknown as never, false],
+				[{ data: 123 as unknown as OrderValue }, false],
+			];
+			for (const [test, expected] of tests) {
+				expect(orderSchema.safeParse(test).success).toBe(expected);
 			}
 		});
 	});
