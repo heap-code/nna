@@ -1,8 +1,8 @@
 import * as z from "zod";
 
-import { Options } from "./options";
-import { options as createSchema } from "./options.schema";
-import type { QueryOrderValue } from "..";
+import { QueryOrderValue } from ".";
+import { QueryObject } from "./query-object";
+import { createQueryObjectSchema } from "./query-object.schema";
 
 const schemaData = z.object({
 	number: z.number().nullable(),
@@ -10,28 +10,31 @@ const schemaData = z.object({
 	string: z.string(),
 });
 type SchemaData = z.infer<typeof schemaData>;
-type SchemaOptions = Options<SchemaData>;
+type SchemaQuery = QueryObject<SchemaData>;
 
-describe("QueryOptions schema", () => {
-	const optionsSchema = createSchema(schemaData, { strict: true });
+describe("QueryObject Schema", () => {
+	const querySchema = createQueryObjectSchema(schemaData, { strict: true });
 
 	it("should be valid", () => {
-		const tests: SchemaOptions[] = [
+		const tests: SchemaQuery[] = [
 			{ limit: 1, skip: 1 },
-			{ order: [], skip: 1000 },
 			{
 				limit: 0,
 				order: [{ number: "asc" }, { object: { bool: "desc" } }],
 			},
+			{
+				filter: { $or: [{ number: 1 }, { string: { $ne: "a" } }] },
+				limit: 0,
+			},
 		];
 
 		for (const options of tests) {
-			expect(optionsSchema.safeParse(options).success).toBe(true);
+			expect(querySchema.safeParse(options).success).toBe(true);
 		}
 	});
 
 	it("should not be valid", () => {
-		const tests: Array<[SchemaOptions, number]> = [
+		const tests: Array<[SchemaQuery, number]> = [
 			[{ limit: -2, skip: -1 }, 2],
 			[
 				{
@@ -43,11 +46,11 @@ describe("QueryOptions schema", () => {
 				},
 				1,
 			],
-			[{ order: {} as unknown as never }, 1],
+			[{ filter: { number: "a" as unknown as number } }, 1],
 		];
 
 		for (const [options, nError] of tests) {
-			const result = optionsSchema.safeParse(
+			const result = querySchema.safeParse(
 				options,
 			) as z.SafeParseError<never>;
 
@@ -57,15 +60,15 @@ describe("QueryOptions schema", () => {
 	});
 
 	it("should remove extraneous values (non-strict)", () => {
-		const optionsSchema = createSchema(schemaData);
+		const querySchema = createQueryObjectSchema(schemaData);
 
-		const tests: SchemaOptions[] = [
-			{ limit: 1, order: [] },
-			{ limit: 0, skip: 100 },
+		const tests: SchemaQuery[] = [
+			{ filter: {}, order: [] },
+			{ limit: 0, skip: 0 },
 		];
 
 		for (const options of tests) {
-			const results = optionsSchema.safeParse({
+			const results = querySchema.safeParse({
 				...options,
 				a: "abc",
 			}) as z.SafeParseSuccess<never>;

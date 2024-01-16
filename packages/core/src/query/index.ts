@@ -1,13 +1,15 @@
 export * as QueryFilters from "./filter";
 export * as QueryOption from "./options";
 export * as QueryOrders from "./order";
-export * from "./query.results";
+export * from "./query-object";
+export * from "./query-object.schema";
+export * from "./query-results";
 export * from "./query.types";
 
 export type {
-	FilterOptions as CreateQueryFilterSchemaOptions,
 	Filter as QueryFilter,
 	FilterObject as QueryFilterObject,
+	FilterOptions as QueryFilterOptions,
 	FilterValue as QueryFilterValue,
 } from "./filter";
 export type { Options as QueryOptions } from "./options";
