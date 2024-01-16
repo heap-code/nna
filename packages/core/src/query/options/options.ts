@@ -1,7 +1,7 @@
-import type { QueryOrder } from ".";
+import type { QueryOrder } from "..";
 
 /** Options when looking for data */
-export interface QueryOptions<T> {
+export interface Options<T> {
 	/**
 	 * Limit the number of data returned.
 	 *
