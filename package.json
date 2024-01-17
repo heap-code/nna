@@ -1,4 +1,9 @@
 {
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
 	"dependencies": {
 		"@anatine/zod-nestjs": "^2.0.3",
 		"@anatine/zod-openapi": "^2.2.2",

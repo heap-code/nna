@@ -9,7 +9,6 @@
 				"EditorConfig.EditorConfig",
 				"GitHub.vscode-pull-request-github",
 				"Gruntfuggly.todo-tree",
-				"cweijan.vscode-database-client2",
 				"dbaeumer.vscode-eslint",
 				"firsttris.vscode-jest-runner",
 				"formulahendry.auto-close-tag",
@@ -18,11 +17,16 @@
 				"hediet.vscode-drawio",
 				"mhutchie.git-graph",
 				"ms-azuretools.vscode-docker",
+				"mtxr.sqltools",
 				"nrwl.angular-console",
 				"streetsidesoftware.code-spell-checker",
 				"stylelint.vscode-stylelint",
 				"yoavbls.pretty-ts-errors"
-			]
+			],
+			"settings": {
+				// Ensure correct node version
+				"eslint.runtime": "/usr/local/bin/node"
+			}
 		}
 	},
 	"features": {
@@ -33,7 +37,8 @@
 		// "ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
 	"name": "Dev environment",
-	"postStartCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install; npx nx reset"
+	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install",
+	"postStartCommand": "npm install; npx nx reset"
 	// TODO: with desktop-lite
 	// "forwardPorts": [5901, 6080],
 	// "portsAttributes": {
