@@ -5,7 +5,16 @@ import { QueryPrimitive } from "../query.types";
 /** Filter operators for "Primitive" (+ Date) values */
 export type FilterValueOperatorMap<T> = Omit<
 	OperatorMap<T>,
-	"$and" | "$contained" | "$contains" | "$ilike" | "$not" | "$or" | "$overlap"
+	| "$and"
+	| "$contained"
+	| "$contains"
+	| "$every"
+	| "$ilike"
+	| "$none"
+	| "$not"
+	| "$or"
+	| "$overlap"
+	| "$some"
 >;
 
 /** Filter for "Primitive" (+ Date) values */
