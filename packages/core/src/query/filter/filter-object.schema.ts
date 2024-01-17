@@ -1,8 +1,9 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import type { FilterObject } from "./filter-object";
 import { isFilterValueConvertible } from "./filter-value.helper";
 import * as FilterValue from "./filter-value.schema";
+import { QueryObjectSchema } from "../query.types";
 
 /** @internal */
 function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
@@ -74,7 +75,7 @@ function fromType(
 	}
 
 	const { _def } = zodType as
-		| ObjectSchema
+		| QueryObjectSchema
 		| z.ZodArray<z.ZodTypeAny>
 		| z.ZodUnknown;
 
@@ -92,13 +93,9 @@ function fromType(
 		return z.lazy(() => fromDiscriminated(_def, options));
 	}
 
-	// Unmanaged/unkown type
+	// Unmanaged/unknown type
 	return null;
 }
-
-export type ObjectSchema =
-	| z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>>
-	| z.ZodObject<z.ZodRawShape>;
 
 /** Options to create an object filter validation schema */
 export type ObjectOptions = FilterValue.ValueOptions;
@@ -107,13 +104,13 @@ export type ObjectOptions = FilterValue.ValueOptions;
  * Creates a validation schema for an object schema
  *
  * With discriminated union, the discriminated key must be a literal to determine the object.
- * The discrimanted key can be filtered as a `FilterValue` but only the key will be taken onto account.
+ * The discriminated key can be filtered as a `FilterValue` but only the key will be taken onto account.
  *
  * @param schema the object schema to create this filter
  * @param options for the creation of the schema
  * @returns the filter validation schema for the given schema
  */
-function _schema<T extends ObjectSchema>(
+function _schema<T extends QueryObjectSchema>(
 	schema: T,
 	options?: ObjectOptions,
 ): z.ZodType<FilterObject<z.infer<T>>> {
@@ -122,11 +119,9 @@ function _schema<T extends ObjectSchema>(
 	}
 
 	const { _def } = schema;
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
-		return fromDiscriminated(_def, options);
-	}
-
-	return fromShape(_def.shape(), options);
+	return _def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion
+		? fromDiscriminated(_def, options)
+		: fromShape(_def.shape(), options);
 }
 
 export { _schema as object };

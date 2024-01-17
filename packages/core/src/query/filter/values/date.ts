@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import * as common from "./common";
 import { FilterValue } from "../filter-value";

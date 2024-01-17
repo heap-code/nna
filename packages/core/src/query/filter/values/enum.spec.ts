@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import * as FilterEnum from "./enum";
 import { FilterValue } from "../filter-value";
@@ -76,7 +76,7 @@ describe("Native enum filter", () => {
 			}
 		});
 
-		it("should fail with unkown 'coerced' value", () => {
+		it("should fail with unknown 'coerced' value", () => {
 			expect(
 				schema.safeParse(`${Position.TOP.toString()}-no-coerce`)
 					.success,

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import { FilterObject } from "./filter-object";
 import * as Filter from "./filter-object.schema";
@@ -24,7 +24,7 @@ const schemaFlat = z.object({
 });
 type SchemaFlat = z.infer<typeof schemaFlat>;
 
-describe("QueryObjectFilter schema", () => {
+describe("ObjectFilter schema", () => {
 	describe("With flat objects", () => {
 		const filterSchema = Filter.object(schemaFlat);
 
@@ -109,7 +109,7 @@ describe("QueryObjectFilter schema", () => {
 			child: schemaFlat,
 			children: z.array(schemaFlat),
 			nest: z.object({ child: schemaFlat }),
-			unknow: z.array(z.custom()),
+			unknown: z.array(z.custom()),
 		});
 		type SchemaNested = z.infer<typeof schemaNested>;
 
@@ -140,8 +140,8 @@ describe("QueryObjectFilter schema", () => {
 					},
 					1,
 				],
-				// Unkown type => no schema
-				[{ unknow: {} }, 1],
+				// Unknown type => no schema
+				[{ unknown: {} }, 1],
 			];
 
 			for (const [filter, nError] of filters) {

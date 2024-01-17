@@ -7,6 +7,7 @@
 			"extensions": [
 				"Angular.ng-template",
 				"EditorConfig.EditorConfig",
+				"GitHub.vscode-pull-request-github",
 				"Gruntfuggly.todo-tree",
 				"cweijan.vscode-database-client2",
 				"dbaeumer.vscode-eslint",
@@ -18,13 +19,29 @@
 				"mhutchie.git-graph",
 				"ms-azuretools.vscode-docker",
 				"nrwl.angular-console",
-				"stylelint.vscode-stylelint"
+				"streetsidesoftware.code-spell-checker",
+				"stylelint.vscode-stylelint",
+				"yoavbls.pretty-ts-errors"
 			]
 		}
 	},
-	"mounts": [
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-	],
+	"features": {
+		// TODO: enable when some E2E tests will be set
+		// "ghcr.io/devcontainers/features/desktop-lite:1": {}
+		// TODO: determine better options and configure
+		// "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+		// "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+	},
 	"name": "Dev environment",
 	"postStartCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install; npx nx reset"
+	// TODO: with desktop-lite
+	// "forwardPorts": [5901, 6080],
+	// "portsAttributes": {
+	// 	"5091": {
+	// 		"label": "desktop web"
+	// 	},
+	// 	"6080": {
+	// 		"label": "desktop web"
+	// 	}
+	// },
 }

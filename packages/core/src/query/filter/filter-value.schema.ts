@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import { FilterValue } from "./filter-value";
 import * as FilterValues from "./values";
@@ -9,7 +9,7 @@ export type ValueOptions = Omit<SchemaOptions, "nullable">;
 
 /**
  * Creates a validation schema from a comparable schema.
- * Exemple: for a `string` schema, it returns a validations schema for {@link FilterValue}<string>
+ * Example: for a `string` schema, it returns a validations schema for {@link FilterValue}<string>
  *
  * @param schema the (original) schema to create this filter
  * @param options for the creation of the schema

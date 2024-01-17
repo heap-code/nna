@@ -1,8 +1,7 @@
-import { QueryFilter } from "./filter";
-import { QueryOptions } from "./query.options";
+import type { QueryFilter, QueryOptions } from ".";
 
 /** An object with all parameters and options for a query */
 export interface QueryObject<T> extends QueryOptions<T> {
 	/** Filter the data */
-	where?: QueryFilter<T>;
+	filter?: QueryFilter<T>;
 }

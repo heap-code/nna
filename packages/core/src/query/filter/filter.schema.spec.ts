@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 import { Filter } from "./filter";
 import { filter as schema } from "./filter.schema";
@@ -15,7 +15,7 @@ const schemaFlat = z.object({
 });
 type SchemaFlat = z.infer<typeof schemaFlat>;
 
-describe("QueryFilter schema", () => {
+describe("Filter schema", () => {
 	describe("With flat objects", () => {
 		const filterSchema = schema(schemaFlat);
 
