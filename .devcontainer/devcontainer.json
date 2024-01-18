@@ -21,6 +21,8 @@
 				"nrwl.angular-console",
 				"streetsidesoftware.code-spell-checker",
 				"stylelint.vscode-stylelint",
+				"vivaxy.vscode-conventional-commits",
+				"waderyan.gitblame",
 				"yoavbls.pretty-ts-errors"
 			],
 			"settings": {
