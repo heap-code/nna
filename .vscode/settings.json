@@ -6,7 +6,6 @@
 		"markdown",
 		"xml"
 	],
-	"commitizen.autoSync": true,
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit"
 	},
