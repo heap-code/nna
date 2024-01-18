@@ -34,15 +34,20 @@
 		}
 	},
 	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"configureZshAsDefaultShell": true
+		},
 		// TODO: enable when some E2E tests will be set
 		// "ghcr.io/devcontainers/features/desktop-lite:1": {}
 		// TODO: determine better options and configure
 		// "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-		// "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+		// "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/dhoeric/features/hadolint:1": {}
 	},
 	"name": "Dev environment",
-	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; npm install",
-	"postStartCommand": "npm install; npx nx reset"
+	"onCreateCommand": "rm -rf node_modules; npm install",
+	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; echo 'export NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")' >> ~/.bashrc",
+	"postStartCommand": "npx nx reset"
 	// TODO: with desktop-lite
 	// "forwardPorts": [5901, 6080],
 	// "portsAttributes": {
