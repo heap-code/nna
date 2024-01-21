@@ -46,7 +46,7 @@
 	},
 	"name": "Dev environment",
 	"onCreateCommand": "rm -rf node_modules; npm install",
-	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc; echo 'export NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")' >> ~/.bashrc",
+	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.zshrc; echo 'export NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")' >> ~/.zshrc",
 	"postStartCommand": "npx nx reset"
 	// TODO: with desktop-lite
 	// "forwardPorts": [5901, 6080],
