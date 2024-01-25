@@ -11,6 +11,7 @@ on:
     branches: [master]
     paths:
       - "package.json"
+      - "package-lock.json"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -22,11 +23,12 @@ jobs:
     if: contains('["renovate[bot]"]', github.actor) == true
     name: Run prettier formatting if required
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -36,7 +38,7 @@ jobs:
       - name: Check if prettier was changed as part of the latest commit on the PR
         id: prettier-package-check
         run: |
-          git diff HEAD~1 -G"prettier" --exit-code package.json && echo "prettier unchanged" || echo "::set-output name=was-changed::true"
+          git diff HEAD~1 -G"prettier" --exit-code package.json package-lock.json && echo "prettier unchanged" || echo "::set-output name=was-changed::true"
 
       - name: Run prettier formatting if prettier was changed and commit the results
         if: ${{ steps.prettier-package-check.outputs.was-changed == 'true' }}
@@ -44,12 +46,13 @@ jobs:
           # We cannot use secrets.GITHUB_TOKEN for this because it is not permitted to kick off subsequent actions worfklow runs, so we use a PAT instead
           GITHUB_TOKEN: ${{ secrets.HC_TOKEN }}
         run: |
-          npm run lint:fix
+          npm run ci
+          npx nx run-many --target=lint --fix
+          npx nx run-many --target=stylelint --fix
 
           # Commit all the changes to the PR (see note on not being able to use secrets.GITHUB_TOKEN for this)
           git config user.name "heap-code[bot]"
           git config user.email "${{ vars.HC_BOT }}@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
 
           # If the status is empty, there are no uncommitted changes
           if [[ -z $(git status --porcelain) ]]; then
