@@ -147,7 +147,7 @@
 		"build": "nx run-many --all --target=build",
 		"compodoc": "nx run-many --target=compodoc --output-style=stream",
 		"compodoc:build": "nx run-many --target=compodoc --configuration build",
-		"compodoc:coverage": "nx run-many --target=compodoc --configuration coverage",
+		"compodoc:coverage": "nx affected -t compodoc --configuration coverage",
 		"frontend:e2e": "nx e2e frontend-e2e",
 		"frontend:e2e:lint": "nx lint frontend-e2e",
 		"frontend:e2e:lint:fix": "npm run frontend:e2e:lint -- --fix",
@@ -160,7 +160,7 @@
 		"frontend:stylelint": "nx run frontend:stylelint",
 		"frontend:stylelint:fix": "npm run frontend:stylelint -- --fix",
 		"frontend:test": "nx run frontend:test",
-		"lint": "nx run-many --all --target=lint",
+		"lint": "nx affected -t lint",
 		"lint:fix": "npm run lint -- --fix",
 		"office:e2e": "nx e2e office-e2e",
 		"office:e2e:lint": "nx lint office-e2e",
@@ -175,13 +175,13 @@
 		"office:stylelint:fix": "npm run office:stylelint -- --fix",
 		"office:test": "nx run office:test",
 		"storybook:build": "nx run-many --all --target=storybook-build",
-		"stylelint": "nx run-many --all --target=stylelint",
+		"stylelint": "nx affected -t stylelint",
 		"stylelint:fix": "npm run stylelint -- --fix",
-		"test": "nx run-many --all --target=test",
+		"test": "nx affected -t test",
 		"test:ci": "nx run-many --all --target=test --configuration ci",
-		"test:e2e": "nx run-many --all --target=e2e --parallel=false",
+		"test:e2e": "nx affected -t e2e",
 		"test:e2e:ci": "npm run test:e2e -- --configuration ci",
-		"typecheck": "nx run-many --all --target=typecheck"
+		"typecheck": "nx affected -t typecheck"
 	},
 	"version": "0.0.0"
 }

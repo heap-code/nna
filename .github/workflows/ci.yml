@@ -16,14 +16,9 @@ concurrency:
 
 jobs:
   checks:
-    if: contains(github.event.pull_request.labels.*.name, 'renovate') != true
     uses: ./.github/workflows/reusable-ci.yml
     secrets:
       NX_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
-
-  checks_renovate:
-    if: contains(github.event.pull_request.labels.*.name, 'renovate')
-    uses: ./.github/workflows/reusable-ci.yml
     with:
       # NX token not used to limit its usage (credits)
-      NX_NO_CLOUD: true
+      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') }}
