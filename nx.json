@@ -82,7 +82,7 @@
 				}
 			},
 			"executor": "@twittwer/compodoc:compodoc",
-			"inputs": ["default", "^production"],
+			"inputs": ["^production", "default"],
 			"options": {
 				"disableCoverage": false,
 				"outputPath": "{workspaceRoot}/dist/compodoc/{projectRoot}",
