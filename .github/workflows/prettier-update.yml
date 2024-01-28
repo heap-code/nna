@@ -46,9 +46,9 @@ jobs:
           # We cannot use secrets.GITHUB_TOKEN for this because it is not permitted to kick off subsequent actions worfklow runs, so we use a PAT instead
           GITHUB_TOKEN: ${{ secrets.HC_TOKEN }}
         run: |
-          npm run ci
-          npx nx run-many --target=lint --fix
-          npx nx run-many --target=stylelint --fix
+          npm ci
+          npx nx run-many --target=lint --configuration fix
+          npx nx run-many --target=stylelint --configuration --fix
 
           # Commit all the changes to the PR (see note on not being able to use secrets.GITHUB_TOKEN for this)
           git config user.name "heap-code[bot]"

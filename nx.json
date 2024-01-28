@@ -97,6 +97,11 @@
 		},
 		"lint": {
 			"cache": true,
+			"configurations": {
+				"fix": {
+					"fix": true
+				}
+			},
 			"inputs": [
 				"default",
 				"{workspaceRoot}/.eslintignore",
@@ -118,6 +123,11 @@
 		},
 		"stylelint": {
 			"cache": true,
+			"configurations": {
+				"fix": {
+					"fix": true
+				}
+			},
 			"inputs": ["default", "{workspaceRoot}/.stylelintrc.json"],
 			"options": {
 				"maxWarnings": 15

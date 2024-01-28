@@ -3,6 +3,12 @@
 	"htmlWhitespaceSensitivity": "css",
 	"overrides": [
 		{
+			"files": "*.json",
+			"options": {
+				"trailingComma": "none"
+			}
+		},
+		{
 			"files": "*.html",
 			"options": {
 				"parser": "html"
