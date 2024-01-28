@@ -72,13 +72,24 @@
 			"cache": true,
 			"configurations": {
 				"build": {
-					"command": "{args.base}"
+					"serve": false,
+					"watch": false
 				},
 				"coverage": {
-					"command": "{args.base} --coverageTest 0 --silent"
+					"coverageTest": 0,
+					"serve": false,
+					"silent": true
 				}
 			},
-			"inputs": ["^production", "default"]
+			"executor": "@twittwer/compodoc:compodoc",
+			"inputs": ["^production", "default"],
+			"options": {
+				"disableCoverage": false,
+				"outputPath": "{workspaceRoot}/dist/compodoc/{projectRoot}",
+				"serve": true,
+				"tsConfig": "{projectRoot}/tsconfig.lib.json",
+				"watch": true
+			}
 		},
 		"e2e": {
 			"cache": true,
