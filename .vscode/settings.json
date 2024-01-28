@@ -9,6 +9,7 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit"
 	},
+	"eslint.onIgnoredFiles": "warn",
 	"eslint.validate": [
 		"html",
 		"javascript",

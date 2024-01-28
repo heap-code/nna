@@ -19,28 +19,28 @@
 		}
 	},
 	"namedInputs": {
-		"default": ["{projectRoot}/**/*", "sharedGlobals"],
+		"default": ["sharedGlobals", "{projectRoot}/**/*"],
 		"production": [
-			"default",
+			"!{projectRoot}/**/*.cy.[jt]s?(x)",
+			"!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
 			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-			"!{projectRoot}/tsconfig.spec.json",
+			"!{projectRoot}/.eslintrc.json",
+			"!{projectRoot}/.storybook/**/*",
+			"!{projectRoot}/.stylelintrc(.(json|yml|yaml|js))?",
+			"!{projectRoot}/cypress.config.[jt]s",
+			"!{projectRoot}/cypress/**/*",
+			"!{projectRoot}/eslint.config.js",
 			"!{projectRoot}/jest.config.[jt]s",
 			"!{projectRoot}/src/test-setup.[jt]s",
 			"!{projectRoot}/test-setup.[jt]s",
-			"!{projectRoot}/cypress/**/*",
-			"!{projectRoot}/**/*.cy.[jt]s?(x)",
-			"!{projectRoot}/cypress.config.[jt]s",
-			"!{projectRoot}/.eslintrc.json",
-			"!{projectRoot}/eslint.config.js",
-			"!{projectRoot}/.stylelintrc(.(json|yml|yaml|js))?",
-			"!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-			"!{projectRoot}/.storybook/**/*",
-			"!{projectRoot}/tsconfig.storybook.json"
+			"!{projectRoot}/tsconfig.spec.json",
+			"!{projectRoot}/tsconfig.storybook.json",
+			"default"
 		],
 		"sharedGlobals": [],
 		"workspace": [
-			"{workspaceRoot}/*",
-			"{workspaceRoot}/!(apps|libs|packages)/**/*"
+			"{workspaceRoot}/!(apps|libs|packages)/**/*",
+			"{workspaceRoot}/*"
 		]
 	},
 	"nxCloudAccessToken": "NDUxODJmOGItOTVhNi00OWEyLTkxZDEtZmI1ZTZjOTkxMDQzfHJlYWQ=",
@@ -55,8 +55,8 @@
 				}
 			},
 			"inputs": [
-				"default",
 				"^production",
+				"default",
 				"{workspaceRoot}/jest.preset.js"
 			],
 			"options": {
@@ -66,7 +66,7 @@
 		"build": {
 			"cache": true,
 			"dependsOn": ["^build"],
-			"inputs": ["production", "^production"]
+			"inputs": ["^production", "production"]
 		},
 		"compodoc": {
 			"cache": true,
@@ -93,14 +93,14 @@
 		},
 		"e2e": {
 			"cache": true,
-			"inputs": ["default", "^production"]
+			"inputs": ["^production", "default"]
 		},
 		"lint": {
 			"cache": true,
 			"inputs": [
 				"default",
-				"{workspaceRoot}/.eslintrc.json",
 				"{workspaceRoot}/.eslintignore",
+				"{workspaceRoot}/.eslintrc.json",
 				"{workspaceRoot}/eslint.config.js"
 			],
 			"options": {
@@ -110,8 +110,8 @@
 		"storybook-build": {
 			"cache": true,
 			"inputs": [
-				"default",
 				"^production",
+				"default",
 				"{projectRoot}/.storybook/**/*",
 				"{projectRoot}/tsconfig.storybook.json"
 			]
