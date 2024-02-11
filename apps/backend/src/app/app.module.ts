@@ -1,23 +1,32 @@
-import { PostgreSqlDriver } from "@mikro-orm/postgresql";
-import { Module } from "@nestjs/common";
+import { DynamicModule, Module } from "@nestjs/common";
+import { PartialDeep } from "type-fest";
 
 import { GroupModule } from "./group/group.module";
 import { UserModule } from "./user/user.module";
+import {
+	Configuration,
+	ConfigurationModule,
+	ConfigurationService,
+} from "../configuration";
 import { OrmModule } from "../orm/orm.module";
+
+export type AppModuleOptions = PartialDeep<Configuration>;
 
 @Module({
 	imports: [
+		ConfigurationModule,
 		GroupModule,
-		OrmModule.forRoot({
-			orm: {
-				connect: false,
-				dbName: "nna",
-				driver: PostgreSqlDriver,
-
-				// TODO: from a ConfigService
-			},
+		OrmModule.forRootAsync({
+			useFactory: (service: ConfigurationService) => ({
+				// TODO
+			}),
 		}),
 		UserModule,
 	],
 })
-export class AppModule {}
+export class AppModule {
+	public static forRoot(options?: AppModuleOptions): DynamicModule {
+		// TODO
+		return { module: AppModule };
+	}
+}

@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
 
 @Entity()
-export class GroupEntity  {
+export class GroupEntity {
 	@PrimaryKey()
 	public _id!: number;
 

@@ -1,9 +1,9 @@
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 
 import { GroupController } from "./group.controller";
-import { GroupService } from "./group.service";
-import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { GroupEntity } from "./group.entity";
+import { GroupService } from "./group.service";
 
 @Module({
 	controllers: [GroupController],

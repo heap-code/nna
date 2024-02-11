@@ -12,18 +12,32 @@ import { deepmerge } from "deepmerge-ts";
 import { ORM_DEFAULT_CONFIGURATION } from "./orm.default-config";
 
 /** @internal */
-const { ASYNC_OPTIONS_TYPE, ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } =
-	new ConfigurableModuleBuilder<OrmModuleSyncOptions>()
-		.setClassMethodName("forRoot")
-		.build();
+const {
+	ASYNC_OPTIONS_TYPE,
+	ConfigurableModuleClass,
+	MODULE_OPTIONS_TOKEN,
+	OPTIONS_TYPE,
+} = new ConfigurableModuleBuilder<
+	Pick<
+		NnaOrmModuleSyncOptions["orm"],
+		| "allowGlobalContext"
+		| "connect"
+		| "dbName"
+		| "password"
+		| "port"
+		| "user"
+	>
+>()
+	.setClassMethodName("forRoot")
+	.build();
 
 /** Options for `forRoot` module register */
-export type OrmModuleSyncOptions = NnaOrmModuleSyncOptions;
+export type OrmModuleSyncOptions = typeof OPTIONS_TYPE;
 /** Options for `forRootAsync` module register */
 export type OrmModuleAsyncOptions = typeof ASYNC_OPTIONS_TYPE;
 
 /**
- * Module that extends or overrides the default {@link NnaOrmModule} for app % CLI usage.
+ * Module that extends or overrides the default {@link NnaOrmModule} for app & CLI usage.
  */
 @Module({ exports: [MODULE_OPTIONS_TOKEN] })
 export class OrmModule extends ConfigurableModuleClass {
@@ -45,12 +59,8 @@ export class OrmModule extends ConfigurableModuleClass {
 				NnaOrmModule.forRootAsync({
 					imports: [dynamicModule],
 					inject: [MODULE_OPTIONS_TOKEN],
-					useFactory: ({
-						orm,
-						...options
-					}: OrmModuleSyncOptions) => ({
-						...options,
-						orm: deepmerge(ORM_DEFAULT_CONFIGURATION, orm),
+					useFactory: (options: OrmModuleSyncOptions) => ({
+						orm: deepmerge(ORM_DEFAULT_CONFIGURATION, options),
 					}),
 				}),
 			],

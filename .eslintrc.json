@@ -182,10 +182,7 @@
 								"private-instance-method"
 							]
 						},
-						"interfaces": {
-							"memberTypes": ["field", "constructor", "method"],
-							"order": "alphabetically"
-						}
+						"interfaces": "never"
 					}
 				],
 				"@typescript-eslint/naming-convention": [
@@ -246,6 +243,7 @@
 				"etc/prefer-less-than": "warn",
 				"jsdoc/require-param-type": "off",
 				"jsdoc/require-returns-type": "off",
+				"typescript-sort-keys/interface": "warn",
 				"typescript-sort-keys/string-enum": "warn"
 			}
 		},
