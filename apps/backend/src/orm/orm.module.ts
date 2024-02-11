@@ -1,17 +1,14 @@
-import { MikroOrmModule, MikroOrmModuleOptions } from "@mikro-orm/nestjs";
 import {
 	ConfigurableModuleBuilder,
 	DynamicModule,
 	Module,
 } from "@nestjs/common";
-import { APP_FILTER } from "@nestjs/core";
+import {
+	OrmModule as NnaOrmModule,
+	OrmModuleSyncOptions as NnaOrmModuleSyncOptions,
+} from "@nna/nest";
 import { deepmerge } from "deepmerge-ts";
 
-import {
-	ForeignKeyConstraintFilter,
-	NotFoundFilter,
-	UniqueConstraintFilter,
-} from "./filters";
 import { ORM_DEFAULT_CONFIGURATION } from "./orm.default-config";
 
 /** @internal */
@@ -21,27 +18,14 @@ const { ASYNC_OPTIONS_TYPE, ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } =
 		.build();
 
 /** Options for `forRoot` module register */
-export interface OrmModuleSyncOptions {
-	/** Configuration passed to the {@link MikroOrmModule} */
-	orm: MikroOrmModuleOptions;
-
-	// Let the possibility for configurable filters and such
-}
+export type OrmModuleSyncOptions = NnaOrmModuleSyncOptions;
 /** Options for `forRootAsync` module register */
 export type OrmModuleAsyncOptions = typeof ASYNC_OPTIONS_TYPE;
 
 /**
- * Module that mainly includes {@link MikroOrmModule} with merge-able configuration.
+ * Module that extends or overrides the default {@link NnaOrmModule} for app % CLI usage.
  */
-@Module({
-	exports: [MODULE_OPTIONS_TOKEN],
-	imports: [MikroOrmModule],
-	providers: [
-		{ provide: APP_FILTER, useClass: ForeignKeyConstraintFilter },
-		{ provide: APP_FILTER, useClass: NotFoundFilter },
-		{ provide: APP_FILTER, useClass: UniqueConstraintFilter },
-	],
-})
+@Module({ exports: [MODULE_OPTIONS_TOKEN] })
 export class OrmModule extends ConfigurableModuleClass {
 	/** @inheritDoc */
 	public static forRoot(options: OrmModuleSyncOptions): DynamicModule {
@@ -58,11 +42,16 @@ export class OrmModule extends ConfigurableModuleClass {
 			...module,
 			imports: [
 				...imports,
-				MikroOrmModule.forRootAsync({
+				NnaOrmModule.forRootAsync({
 					imports: [dynamicModule],
 					inject: [MODULE_OPTIONS_TOKEN],
-					useFactory: ({ orm }: OrmModuleSyncOptions) =>
-						deepmerge(ORM_DEFAULT_CONFIGURATION, orm),
+					useFactory: ({
+						orm,
+						...options
+					}: OrmModuleSyncOptions) => ({
+						...options,
+						orm: deepmerge(ORM_DEFAULT_CONFIGURATION, orm),
+					}),
 				}),
 			],
 		};

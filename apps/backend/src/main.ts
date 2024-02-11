@@ -5,10 +5,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 import { AppModule } from "./app/app.module";
 
-/**
- *
- */
-async function bootstrap() {
+void (async () => {
 	const app = await NestFactory.create(AppModule);
 	const globalPrefix = "api";
 	app.setGlobalPrefix(globalPrefix).useGlobalPipes(new ZodValidationPipe());
@@ -22,6 +19,4 @@ async function bootstrap() {
 	Logger.log(
 		`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
 	);
-}
-
-void bootstrap();
+})();
