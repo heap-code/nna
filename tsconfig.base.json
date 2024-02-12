@@ -17,6 +17,7 @@
 			"~/common/*": ["libs/common/src/*"],
 			"~/front/*": ["libs/front/src/*"]
 		},
+		"resolveJsonModule": true,
 		"rootDir": ".",
 		"skipDefaultLibCheck": true,
 		"skipLibCheck": true,

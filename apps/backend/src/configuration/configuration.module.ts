@@ -22,9 +22,20 @@ export type ConfigurationModuleSyncOptions = typeof OPTIONS_TYPE;
 /** Options for `forRootAsync` module register */
 export type ConfigurationModuleAsyncOptions = typeof ASYNC_OPTIONS_TYPE;
 
+// Injected from webpack. These are no variables, but "MACROs".
+/** @internal */
+declare const __NPM_NAME__: string;
+/** @internal */
+declare const __NPM_VERSION__: string;
+
 /** Service to access the configuration */
 @Injectable()
 export class ConfigurationService {
+	/** The name of the application (from `package.json`) */
+	public readonly APP_NAME = __NPM_NAME__;
+	/** The version of the application (from `package.json`) */
+	public readonly APP_VERSION = __NPM_VERSION__;
+
 	/** The final configuration, merged from the environment and the given configuration */
 	public readonly configuration: Configuration;
 

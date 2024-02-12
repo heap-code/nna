@@ -5,10 +5,20 @@ on:
     branches:
       - master
 
+concurrency:
+  group: "${{ github.workflow }} - ${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
+  checks:
+    uses: ./.github/workflows/reusable-ci.yml
+    secrets:
+      NX_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
+
   job:
     # Ignore the heap-code bot commits and devDependencies
     if: ${{ github.actor != vars.HC_BOT && !(github.actor == 'renovate[bot]' && contains(github.event.head_commit.message, 'chore(deps):')) }}
+    needs: [checks]
 
     runs-on: ubuntu-latest
     env:

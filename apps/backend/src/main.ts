@@ -12,8 +12,8 @@ void (async () => {
 		AppModule.forRoot(),
 		ENVIRONMENT.logger === true ? {} : { logger: ENVIRONMENT.logger },
 	);
-	const { host, logger, swagger } =
-		app.get(ConfigurationService).configuration;
+	const configService = app.get(ConfigurationService);
+	const { host, logger, swagger } = configService.configuration;
 
 	if (logger !== true) {
 		app.useLogger(logger);
@@ -25,11 +25,14 @@ void (async () => {
 		.enableCors({ ...host.cors });
 
 	if (swagger) {
-		const options = new DocumentBuilder().build();
+		const options = new DocumentBuilder()
+			.setTitle(`${configService.APP_NAME} API`)
+			.setVersion(configService.APP_VERSION)
+			.build();
 		const document = SwaggerModule.createDocument(app, options);
 		SwaggerModule.setup(`/${host.globalPrefix}`, app, document);
 	}
 
 	await app.listen(host.port, host.name);
-	Logger.log(`🚀 Application is running on: ${await app.getUrl()}`);
+	Logger.debug(`🚀 Application is running on: ${await app.getUrl()}`);
 })();
