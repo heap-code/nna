@@ -12,9 +12,7 @@ export default async () => {
 	// The `MikroOrmModule` constructs all the configuration with auto-loaded entities.
 	const app = await NestFactory.createApplicationContext(
 		AppModule.forRoot({ orm: { connect: false } }),
-		{
-			logger: ["debug", "error", "fatal"],
-		},
+		{ logger: ["error", "fatal"] },
 	);
 
 	const orm = app.get(MikroORM);

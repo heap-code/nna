@@ -23,6 +23,8 @@ const {
 		| "allowGlobalContext"
 		| "connect"
 		| "dbName"
+		| "debug"
+		| "host"
 		| "password"
 		| "port"
 		| "user"

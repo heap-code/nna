@@ -176,6 +176,7 @@
 		"office:stylelint": "nx run office:stylelint",
 		"office:stylelint:fix": "npm run office:stylelint -- --configuration fix",
 		"office:test": "nx run office:test",
+		"postinstall": "ts-node tools/npm/postinstall.ts",
 		"storybook:build": "nx run-many --all --target=storybook-build",
 		"stylelint": "nx affected -t stylelint",
 		"stylelint:fix": "npm run stylelint -- --configuration fix",

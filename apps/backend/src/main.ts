@@ -4,17 +4,32 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 import { AppModule } from "./app/app.module";
+import { ConfigurationService } from "./configuration";
+import { ENVIRONMENT } from "./configuration/environments";
 
 void (async () => {
-	const app = await NestFactory.create(AppModule);
-	const globalPrefix = "api";
-	app.setGlobalPrefix(globalPrefix).useGlobalPipes(new ZodValidationPipe());
+	const app = await NestFactory.create(
+		AppModule.forRoot({ orm: { connect: false } }),
+		ENVIRONMENT.logger === true ? {} : { logger: ENVIRONMENT.logger },
+	);
+	const { host, logger, swagger } =
+		app.get(ConfigurationService).configuration;
 
-	const options = new DocumentBuilder().build();
-	const document = SwaggerModule.createDocument(app, options);
-	SwaggerModule.setup("/api", app, document);
+	if (logger !== true) {
+		app.useLogger(logger);
+	}
 
-	const port = process.env.PORT || 3000;
-	await app.listen(port, "127.0.0.1");
+	app.setGlobalPrefix(host.globalPrefix)
+		.useGlobalPipes(new ZodValidationPipe())
+		.enableShutdownHooks()
+		.enableCors({ ...host.cors });
+
+	if (swagger) {
+		const options = new DocumentBuilder().build();
+		const document = SwaggerModule.createDocument(app, options);
+		SwaggerModule.setup(`/${host.globalPrefix}`, app, document);
+	}
+
+	await app.listen(host.port, host.name);
 	Logger.log(`🚀 Application is running on: ${await app.getUrl()}`);
 })();

@@ -10,23 +10,32 @@ import {
 } from "../configuration";
 import { OrmModule } from "../orm/orm.module";
 
+/** Options to run the application */
 export type AppModuleOptions = PartialDeep<Configuration>;
 
+/** The application module */
 @Module({
 	imports: [
-		ConfigurationModule,
 		GroupModule,
 		OrmModule.forRootAsync({
-			useFactory: (service: ConfigurationService) => ({
-				// TODO
-			}),
+			inject: [ConfigurationService],
+			useFactory: (service: ConfigurationService) =>
+				service.getOrmOptions(),
 		}),
 		UserModule,
 	],
 })
 export class AppModule {
+	/**
+	 * Construct the final {@link AppModule} with additional configuration
+	 *
+	 * @param options to run the application
+	 * @returns The dynamic module
+	 */
 	public static forRoot(options?: AppModuleOptions): DynamicModule {
-		// TODO
-		return { module: AppModule };
+		return {
+			imports: [ConfigurationModule.forRoot(options ?? {})],
+			module: AppModule,
+		};
 	}
 }

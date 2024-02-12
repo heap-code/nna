@@ -4,7 +4,9 @@ import path from "path";
 
 import { MIGRATIONS } from "./migrations";
 
+/** Path to the `migrations` folder. They will be created here from the CLI. */
 const pathMigrations = path.join(__dirname, "migrations");
+/** Path to the `seeders` folder. They will be created here from the CLI. */
 const pathSeeders = path.join(__dirname, "seeders");
 
 /** The default configuration from this `OrmModule` for mikro-orm. */

@@ -8,12 +8,12 @@ import { Environment } from "./environment.interface";
  */
 export const ENVIRONMENT_DEFAULT: Environment = {
 	db: {
+		dbName: "nna",
 		debug: false,
 		host: "localhost",
-		name: "nna",
 		password: "LOCAL_PASSWORD",
 		port: 5432,
-		username: "nna",
+		user: "nna",
 	},
 	host: {
 		cors: {
