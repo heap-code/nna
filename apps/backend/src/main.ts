@@ -9,7 +9,7 @@ import { ENVIRONMENT } from "./configuration/environments";
 
 void (async () => {
 	const app = await NestFactory.create(
-		AppModule.forRoot({ orm: { connect: false } }),
+		AppModule.forRoot(),
 		ENVIRONMENT.logger === true ? {} : { logger: ENVIRONMENT.logger },
 	);
 	const { host, logger, swagger } =
