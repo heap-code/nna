@@ -18,6 +18,22 @@
 							{
 								"onlyDependOnLibsWithTags": ["*"],
 								"sourceTag": "*"
+							},
+							{
+								"bannedExternalImports": [
+									"@anatine/zod-nestjs",
+									"@anatine/zod-openapi",
+									"@mikro-orm/**",
+									"@nestjs/**"
+								],
+								"sourceTag": "scope:frontend"
+							},
+							{
+								"bannedExternalImports": [
+									"@angular/**",
+									"zone.js"
+								],
+								"sourceTag": "scope:backend"
 							}
 						],
 						"enforceBuildableLibDependency": true

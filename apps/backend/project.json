@@ -3,7 +3,7 @@
 	"name": "backend",
 	"projectType": "application",
 	"sourceRoot": "apps/backend/src",
-	"tags": [],
+	"tags": ["scope:backend"],
 	"targets": {
 		"build": {
 			"configurations": {

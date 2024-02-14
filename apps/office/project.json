@@ -4,7 +4,7 @@
 	"prefix": "heap-code",
 	"projectType": "application",
 	"sourceRoot": "apps/office/src",
-	"tags": [],
+	"tags": ["scope:frontend"],
 	"targets": {
 		"build": {
 			"configurations": {

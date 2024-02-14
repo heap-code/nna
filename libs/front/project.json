@@ -4,7 +4,7 @@
 	"prefix": "front",
 	"projectType": "library",
 	"sourceRoot": "libs/front/src",
-	"tags": [],
+	"tags": ["scope:frontend"],
 	"targets": {
 		"compodoc": {
 			"options": {
