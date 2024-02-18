@@ -6,13 +6,13 @@ describe("Model schema", () => {
 	const MODELS: readonly Type[] = [
 		{
 			_id: 1,
-			create_at: new Date(),
-			update_at: new Date(),
+			createdAt: new Date(),
+			updatedAt: new Date(),
 		},
 		{
 			_id: 10,
-			create_at: new Date(0),
-			update_at: new Date(),
+			createdAt: new Date(0),
+			updatedAt: new Date(),
 		},
 	];
 

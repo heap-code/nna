@@ -11,5 +11,5 @@ export abstract class EntityBase implements Model.Type {
 	public readonly create_at!: Date;
 	/** The date when this entity has been updated */
 	@Property({ defaultRaw: "NOW()", onUpdate: () => new Date() })
-	public readonly update_at!: Date;
+	public readonly updatedAt!: Date;
 }
