@@ -1,11 +1,11 @@
 import * as z from "zod";
 
-import { schemaBase } from "./model.base";
+import { PRIMARY_KEY, schemaCommon } from "./model.common";
 
 /** Base schema for `Model` with a "string-id". */
-export const schema = schemaBase.extend({
+export const schema = schemaCommon.extend({
 	_id: z.string({ description: "Unique ID defining an entity" }).readonly(),
-});
+} satisfies Record<typeof PRIMARY_KEY, unknown>);
 
 /** Extracted type from the `Model` [schema]{@link schema} */
 export type Type = z.infer<typeof schema>;

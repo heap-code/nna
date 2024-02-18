@@ -7,6 +7,7 @@ import { GroupService } from "./group.service";
 
 @Module({
 	controllers: [GroupController],
+	exports: [GroupService],
 	imports: [MikroOrmModule.forFeature([GroupEntity])],
 	providers: [GroupService],
 })
