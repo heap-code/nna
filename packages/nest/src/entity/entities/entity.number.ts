@@ -1,25 +1,34 @@
 import { PrimaryKey, PrimaryKeyOptions } from "@mikro-orm/core";
-import { Type } from "@nestjs/common";
 import { ModelNumber, ModelPrimaryKey } from "@nna/core";
 import { deepmerge } from "deepmerge-ts";
+import { AbstractConstructor } from "type-fest";
 
-import { EntityCommon, EntityCommonOptions } from "./entity.common";
+import * as Common from "./entity.common";
 
+/**
+ * The model that this [entity constructor]{@link Entity} implements.
+ */
 export type Model = ModelNumber.Type;
 
-export type EntityOptions<T> = EntityCommonOptions<T> &
+/**
+ * Parameters for the `mikro-orm` {@link Property} decorators.
+ * It is merged with the default values.
+ */
+export type EntityOptions<T> = Common.EntityOption<T> &
 	Partial<Record<ModelPrimaryKey, PrimaryKeyOptions<T>>>;
 
 /**
+ * Creates the base class entity.
  *
- * @param options
+ * @param options for the properties
+ * @returns constructed abstract class
  */
 export function Entity<T extends Model>(
 	options: EntityOptions<T> = {},
-): Type<Model> {
+): AbstractConstructor<Model> {
 	const { _id = {}, ...common } = options;
 
-	class EntityNumber extends EntityCommon(common) implements Model {
+	abstract class EntityNumber extends Common.Entity(common) implements Model {
 		/** Primary key */
 		@PrimaryKey(deepmerge({ autoincrement: true }, _id))
 		public readonly _id!: number;
