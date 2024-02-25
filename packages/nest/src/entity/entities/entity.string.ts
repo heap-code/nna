@@ -14,7 +14,7 @@ export type Model = ModelString.Type;
  * It is merged with the default values.
  */
 export type EntityOptions<T> = Common.EntityOption<T> &
-	Partial<Record<ModelPrimaryKey, PrimaryKeyOptions<T>>>;
+	Record<ModelPrimaryKey, PrimaryKeyOptions<T>>;
 
 /**
  * Creates the base class entity.
@@ -22,10 +22,8 @@ export type EntityOptions<T> = Common.EntityOption<T> &
  * @param options for the properties
  * @returns constructed abstract class
  */
-export function Entity<T extends Model>(
-	options: EntityOptions<T> = {},
-): AbstractConstructor<Model> {
-	const { _id = {}, ...common } = options;
+export function Entity<T extends Model>(options: EntityOptions<T>) {
+	const { _id, ...common } = options;
 
 	abstract class EntityString extends Common.Entity(common) implements Model {
 		/** Primary key */
@@ -33,5 +31,5 @@ export function Entity<T extends Model>(
 		public readonly _id!: string;
 	}
 
-	return EntityString;
+	return EntityString satisfies AbstractConstructor<Model>;
 }

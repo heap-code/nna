@@ -1,4 +1,4 @@
-import { Property, PropertyOptions } from "@mikro-orm/core";
+import { Opt, Property, PropertyOptions } from "@mikro-orm/core";
 import { ModelAny, ModelPrimaryKey } from "@nna/core";
 import { deepmerge } from "deepmerge-ts";
 import { AbstractConstructor } from "type-fest";
@@ -20,19 +20,36 @@ export type EntityOption<T> = Partial<
  * @param options for the properties
  * @returns constructed abstract class
  */
-export function Entity<T extends ModelWithoutPK>(
-	options: EntityOption<T> = {},
-): AbstractConstructor<ModelWithoutPK> {
-	const { createdAt = {}, updatedAt = [] } = options;
+export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
+	const { createdAt = {}, updatedAt = {} } = options;
 
 	abstract class EntityCommon implements ModelWithoutPK {
 		/** The date when this entity has been created */
-		@Property(createdAt)
-		public readonly createdAt: Date = new Date();
+		@Property(
+			deepmerge(
+				{
+					onCreate: () => new Date(),
+					// "Forces" a readonly field
+					onUpdate: ({ createdAt }) => createdAt,
+					type: Date,
+				} satisfies PropertyOptions<T>,
+				createdAt,
+			),
+		)
+		public readonly createdAt!: Opt<Date>;
 		/** The date when this entity has been updated */
-		@Property(deepmerge({ onUpdate: () => new Date() }, updatedAt))
-		public readonly updatedAt: Date = new Date();
+		@Property(
+			deepmerge(
+				{
+					onCreate: () => new Date(),
+					onUpdate: () => new Date(),
+					type: Date,
+				} satisfies PropertyOptions<T>,
+				updatedAt,
+			),
+		)
+		public readonly updatedAt!: Opt<Date>;
 	}
 
-	return EntityCommon;
+	return EntityCommon satisfies AbstractConstructor<ModelWithoutPK>;
 }

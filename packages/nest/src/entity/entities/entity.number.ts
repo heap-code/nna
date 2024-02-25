@@ -1,4 +1,8 @@
-import { PrimaryKey, PrimaryKeyOptions } from "@mikro-orm/core";
+import {
+	PrimaryKey,
+	PrimaryKeyOptions,
+	PropertyOptions,
+} from "@mikro-orm/core";
 import { ModelNumber, ModelPrimaryKey } from "@nna/core";
 import { deepmerge } from "deepmerge-ts";
 import { AbstractConstructor } from "type-fest";
@@ -23,16 +27,19 @@ export type EntityOptions<T> = Common.EntityOption<T> &
  * @param options for the properties
  * @returns constructed abstract class
  */
-export function Entity<T extends Model>(
-	options: EntityOptions<T> = {},
-): AbstractConstructor<Model> {
+export function Entity<T extends Model>(options: EntityOptions<T> = {}) {
 	const { _id = {}, ...common } = options;
 
 	abstract class EntityNumber extends Common.Entity(common) implements Model {
 		/** Primary key */
-		@PrimaryKey(deepmerge({ autoincrement: true }, _id))
+		@PrimaryKey(
+			deepmerge(
+				{ autoincrement: true } satisfies PropertyOptions<T>,
+				_id,
+			),
+		)
 		public readonly _id!: number;
 	}
 
-	return EntityNumber;
+	return EntityNumber satisfies AbstractConstructor<Model>;
 }
