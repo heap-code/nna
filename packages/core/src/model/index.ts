@@ -11,5 +11,7 @@ export { ModelNumber as Model };
 
 /** A model, with a stringified or numbered primary key */
 export type ModelAny = ModelNumber.Type | ModelString.Type;
+/** Base of any Model */
+export type ModelBase = Pick<ModelAny, ModelPrimaryKey>;
 /** Const type for the {@link PRIMARY_KEY} */
 export type ModelPrimaryKey = typeof PRIMARY_KEY;
