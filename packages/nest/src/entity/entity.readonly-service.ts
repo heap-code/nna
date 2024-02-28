@@ -5,6 +5,7 @@ import {
 	QueryFilter,
 	QueryOptions,
 	QueryResults,
+	QueryFilterObject,
 } from "@nna/core";
 
 export abstract class EntityReadonlyService<
@@ -26,7 +27,7 @@ export abstract class EntityReadonlyService<
 	): Promise<QueryResults<T>> {
 		const offset = options.skip ?? 0;
 		return this.repository
-			.findAndCount({}, { offset })
+			.findAndCount(where as never, { offset })
 			.then(([data, total]) => ({
 				data,
 				pagination: {
@@ -56,7 +57,7 @@ export abstract class EntityReadonlyService<
 	 * @returns The found entity
 	 */
 	public findOne(where: QueryFilter<T>) {
-		return this.repository.findOneOrFail(where);
+		return this.repository.findOneOrFail(where as never);
 	}
 
 	/**
@@ -66,6 +67,8 @@ export abstract class EntityReadonlyService<
 	 * @returns The found entity
 	 */
 	public findById(id: T[ModelPrimaryKey]) {
-		return this.findOne({ _id: { $eq: id } });
+		return this.findOne({
+			_id: id,
+		} satisfies QueryFilterObject<ModelBase> as never);
 	}
 }

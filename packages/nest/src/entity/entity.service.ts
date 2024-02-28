@@ -9,7 +9,9 @@ export abstract class EntityService<
 	ToUpdate,
 	Repository extends EntityRepository<T> = EntityRepository<T>,
 > extends EntityReadonlyService<T, Repository> {
-	protected constructor(protected readonly repository: Repository) {}
+	protected constructor(repository: Repository) {
+		super(repository);
+	}
 
 	/**
 	 * Creates a new entity
