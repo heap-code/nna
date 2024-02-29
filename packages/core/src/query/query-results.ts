@@ -22,7 +22,7 @@ export interface QueryResultsPagination {
 /** Results from a query */
 export interface QueryResults<T> {
 	/** The data of the results */
-	readonly data: readonly T[];
+	readonly data: T[];
 	/** The pagination of the results */
 	readonly pagination: QueryResultsPagination;
 }

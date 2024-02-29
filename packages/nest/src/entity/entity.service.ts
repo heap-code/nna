@@ -19,8 +19,12 @@ export abstract class EntityService<
 	 * @param toCreate Object to create
 	 * @returns The created entity persisted in the database
 	 */
-	public create(toCreate: ToCreate) {
-		throw new Error("TODO");
+	public async create(toCreate: ToCreate): Promise<T> {
+		const created = this.repository.create(toCreate as never);
+
+		await this.repository.getEntityManager().flush();
+
+		return this.findById(created._id);
 	}
 
 	/**
@@ -30,8 +34,18 @@ export abstract class EntityService<
 	 * @param toUpdate Object to update
 	 * @returns The updated entity
 	 */
-	public updateById(id: T[ModelPrimaryKey], toUpdate: ToUpdate) {
-		throw new Error("TODO");
+	public async updateById(
+		id: T[ModelPrimaryKey],
+		toUpdate: ToUpdate,
+	): Promise<T> {
+		const entity = await this.findById(id);
+		await this.repository.getEntityManager().persistAndFlush(
+			this.repository.assign(entity, toUpdate as never, {
+				updateByPrimaryKey: true,
+			}),
+		);
+
+		return this.findById(id);
 	}
 
 	/**
@@ -40,7 +54,11 @@ export abstract class EntityService<
 	 * @param id of the entity to delete
 	 * @returns The deleted entity (before deletion)
 	 */
-	public deleteById(id: T[ModelPrimaryKey]) {
-		throw new Error("TODO");
+	public async deleteById(id: T[ModelPrimaryKey]): Promise<T> {
+		const entity = await this.findById(id);
+
+		await this.repository.getEntityManager().removeAndFlush(entity);
+
+		return entity;
 	}
 }

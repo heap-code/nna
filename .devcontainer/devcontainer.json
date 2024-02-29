@@ -19,6 +19,7 @@
 				"mhutchie.git-graph",
 				"ms-azuretools.vscode-docker",
 				"mtxr.sqltools",
+				"mtxr.sqltools-driver-sqlite",
 				"nrwl.angular-console",
 				"redhat.vscode-yaml",
 				"streetsidesoftware.code-spell-checker",
@@ -29,7 +30,8 @@
 			],
 			"settings": {
 				// Ensure correct node version
-				"eslint.runtime": "/usr/local/bin/node"
+				"eslint.runtime": "/usr/local/bin/node",
+				"sqltools.useNodeRuntime": "/usr/local/bin/node"
 			}
 		}
 	},

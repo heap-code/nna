@@ -22,12 +22,12 @@ export abstract class EntityReadonlyService<
 	 * @returns All entities found with its pagination
 	 */
 	public findAndCount(
-		where: QueryFilter<T>,
+		where: QueryFilter<T> = {},
 		options: QueryOptions<T> = {},
 	): Promise<QueryResults<T>> {
 		const offset = options.skip ?? 0;
 		return this.repository
-			.findAndCount(where as never, { offset })
+			.findAndCount(where as never, { disableIdentityMap: true, offset })
 			.then(([data, total]) => ({
 				data,
 				pagination: {
@@ -35,6 +35,21 @@ export abstract class EntityReadonlyService<
 					total,
 				},
 			}));
+	}
+
+	/**
+	 * Find many entities
+	 *
+	 * @see findAndCount to also get the pagination
+	 * @param where Filter to apply
+	 * @param options Additional parameters to sort and/or paginate
+	 * @returns All entities found
+	 */
+	public findAll(
+		where: QueryFilter<T> = {},
+		options: QueryOptions<T> = {},
+	): Promise<T[]> {
+		return this.findAndCount(where, options).then(({ data }) => data);
 	}
 
 	/**
@@ -57,7 +72,9 @@ export abstract class EntityReadonlyService<
 	 * @returns The found entity
 	 */
 	public findOne(where: QueryFilter<T>) {
-		return this.repository.findOneOrFail(where as never);
+		return this.repository.findOneOrFail(where as never, {
+			disableIdentityMap: true,
+		});
 	}
 
 	/**
