@@ -58,8 +58,9 @@ jobs:
       - name: Tests
         run: npm run test:ci
 
+      # FIXME: a way to remove `NX_PARALLEL` (currently fails too often in CI, maybe du to lack of CPUs)
       - name: Tests e2e
-        run: npm run test:e2e:ci
+        run: NX_PARALLEL=1 npm run test:e2e:ci
 
       - name: Upload Cypress artifacts in case of error in `frontend`
         uses: actions/upload-artifact@v4
