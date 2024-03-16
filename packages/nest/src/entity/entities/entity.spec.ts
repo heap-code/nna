@@ -2,6 +2,7 @@ import { Entity, MikroORM, Options, Property } from "@mikro-orm/core";
 import { defineConfig } from "@mikro-orm/sqlite";
 
 import { EntityNumber, EntityString } from ".";
+import { ORM_DEFAULT_CONFIGURATION } from "../../orm/orm.default-config";
 
 const ORM_TESTER = new (class {
 	private readonly ORMs: MikroORM[] = [];
@@ -9,11 +10,11 @@ const ORM_TESTER = new (class {
 	public async getORM(entities: Options["entities"]) {
 		const orm = await MikroORM.init(
 			defineConfig({
+				...ORM_DEFAULT_CONFIGURATION,
 				allowGlobalContext: true,
 				connect: true,
-				dbName: "file::memory:?cache=shared",
+				dbName: ":memory:",
 				entities,
-				validate: true,
 			}),
 		);
 

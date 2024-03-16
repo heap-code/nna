@@ -1,14 +1,16 @@
-import { EntityRepository } from "@mikro-orm/core";
+import {
+	EntityData,
+	EntityRepository as OrmEntityRepository,
+	RequiredEntityData,
+} from "@mikro-orm/core";
 import { ModelBase, ModelPrimaryKey } from "@nna/core";
 
-import { EntityReadonlyService } from "./entity.readonly-service";
+import { EntityReadonlyRepository } from "./entity.readonly-repository";
 
-export abstract class EntityService<
+export abstract class EntityRepository<
 	T extends ModelBase,
-	ToCreate,
-	ToUpdate,
-	Repository extends EntityRepository<T> = EntityRepository<T>,
-> extends EntityReadonlyService<T, Repository> {
+	Repository extends OrmEntityRepository<T> = OrmEntityRepository<T>,
+> extends EntityReadonlyRepository<T, Repository> {
 	protected constructor(repository: Repository) {
 		super(repository);
 	}
@@ -19,11 +21,9 @@ export abstract class EntityService<
 	 * @param toCreate Object to create
 	 * @returns The created entity persisted in the database
 	 */
-	public async create(toCreate: ToCreate): Promise<T> {
-		const created = this.repository.create(toCreate as never);
-
-		await this.repository.getEntityManager().flush();
-
+	public async create(toCreate: RequiredEntityData<T>): Promise<T> {
+		const created = this.ormRepository.create(toCreate);
+		await this.ormRepository.getEntityManager().flush();
 		return this.findById(created._id);
 	}
 
@@ -36,11 +36,11 @@ export abstract class EntityService<
 	 */
 	public async updateById(
 		id: T[ModelPrimaryKey],
-		toUpdate: ToUpdate,
+		toUpdate: EntityData<T>,
 	): Promise<T> {
 		const entity = await this.findById(id);
-		await this.repository.getEntityManager().persistAndFlush(
-			this.repository.assign(entity, toUpdate as never, {
+		await this.ormRepository.getEntityManager().persistAndFlush(
+			this.ormRepository.assign(entity, toUpdate as never, {
 				updateByPrimaryKey: true,
 			}),
 		);
@@ -56,9 +56,7 @@ export abstract class EntityService<
 	 */
 	public async deleteById(id: T[ModelPrimaryKey]): Promise<T> {
 		const entity = await this.findById(id);
-
-		await this.repository.getEntityManager().removeAndFlush(entity);
-
+		await this.ormRepository.getEntityManager().removeAndFlush(entity);
 		return entity;
 	}
 }

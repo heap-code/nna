@@ -1,4 +1,4 @@
-import { EntityRepository } from "@mikro-orm/core";
+import { EntityRepository as OrmEntityRepository } from "@mikro-orm/core";
 import {
 	ModelPrimaryKey,
 	ModelBase,
@@ -8,11 +8,11 @@ import {
 	QueryFilterObject,
 } from "@nna/core";
 
-export abstract class EntityReadonlyService<
+export abstract class EntityReadonlyRepository<
 	T extends ModelBase,
-	Repository extends EntityRepository<T> = EntityRepository<T>,
+	Repository extends OrmEntityRepository<T> = OrmEntityRepository<T>,
 > {
-	protected constructor(protected readonly repository: Repository) {}
+	protected constructor(public readonly ormRepository: Repository) {}
 
 	/**
 	 * Find many entities and count them
@@ -26,8 +26,8 @@ export abstract class EntityReadonlyService<
 		options: QueryOptions<T> = {},
 	): Promise<QueryResults<T>> {
 		const offset = options.skip ?? 0;
-		return this.repository
-			.findAndCount(where as never, { disableIdentityMap: true, offset })
+		return this.ormRepository
+			.findAndCount(where as never, { disableIdentityMap: false, offset })
 			.then(([data, total]) => ({
 				data,
 				pagination: {
@@ -72,8 +72,8 @@ export abstract class EntityReadonlyService<
 	 * @returns The found entity
 	 */
 	public findOne(where: QueryFilter<T>) {
-		return this.repository.findOneOrFail(where as never, {
-			disableIdentityMap: true,
+		return this.ormRepository.findOneOrFail(where as never, {
+			disableIdentityMap: false,
 		});
 	}
 

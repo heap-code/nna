@@ -1,2 +1,3 @@
 export * from "./entities";
-export * from "./entity.service";
+export * from "./entity.readonly-repository";
+export * from "./entity.repository";

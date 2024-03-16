@@ -1,4 +1,4 @@
-import { Opt, Property, PropertyOptions } from "@mikro-orm/core";
+import { DateTimeType, Opt, Property, PropertyOptions } from "@mikro-orm/core";
 import { ModelAny, ModelPrimaryKey } from "@nna/core";
 import { deepmerge } from "deepmerge-ts";
 import { AbstractConstructor } from "type-fest";
@@ -31,7 +31,7 @@ export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
 					onCreate: () => new Date(),
 					// "Forces" a readonly field
 					onUpdate: ({ createdAt }) => createdAt,
-					type: Date,
+					type: DateTimeType,
 				} satisfies PropertyOptions<T>,
 				createdAt,
 			),
@@ -43,7 +43,7 @@ export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
 				{
 					onCreate: () => new Date(),
 					onUpdate: () => new Date(),
-					type: Date,
+					type: DateTimeType,
 				} satisfies PropertyOptions<T>,
 				updatedAt,
 			),
