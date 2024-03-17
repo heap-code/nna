@@ -17,7 +17,8 @@ jobs:
 
   job:
     # Ignore the heap-code bot commits and devDependencies
-    if: ${{ github.actor != vars.HC_BOT && !(github.actor == 'renovate[bot]' && contains(github.event.head_commit.message, 'chore(deps):')) }}
+    # if: ${{ github.actor != vars.HC_BOT && !(github.actor == 'renovate[bot]' && contains(github.event.head_commit.message, 'chore(deps):')) }}
+    if: ${{ 1 == 2 }}
     needs: [checks]
 
     runs-on: ubuntu-latest
@@ -41,13 +42,19 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: ./node_modules
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
           restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
 
       - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
         name: Install packages
         run: npm ci
+
+      # If the cache is used
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        run: npm run postinstall
 
       - name: Generate code coverage summary
         run: npm run test:ci

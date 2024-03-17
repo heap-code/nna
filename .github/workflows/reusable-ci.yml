@@ -34,13 +34,19 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: ./node_modules
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
           restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
 
       - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
         name: Install packages
         run: npm ci
+
+      # If the cache is used
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        run: npm run postinstall
 
       # Verify that all mikro-orm versions are correct (useful for renovate)
       - name: Verify Mikro-orm versions
