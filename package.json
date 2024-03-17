@@ -44,7 +44,7 @@
 		"@compodoc/compodoc": "^1.1.23",
 		"@darraghor/eslint-plugin-nestjs-typed": "^4.3.9",
 		"@mikro-orm/cli": "^6.0.0",
-		"@mikro-orm/sqlite": "^6.1.9",
+		"@mikro-orm/sqlite": "^6.0.0",
 		"@nestjs/schematics": "^10.0.1",
 		"@nestjs/testing": "^10.0.2",
 		"@nx/angular": "18.0.8",
