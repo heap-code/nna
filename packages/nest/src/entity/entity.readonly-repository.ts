@@ -8,6 +8,8 @@ import {
 	QueryFilterObject,
 } from "@nna/core";
 
+import { EntityQueryOrders } from "./entity.query-order";
+
 export abstract class EntityReadonlyRepository<
 	T extends ModelBase,
 	Repository extends OrmEntityRepository<T> = OrmEntityRepository<T>,
@@ -25,13 +27,18 @@ export abstract class EntityReadonlyRepository<
 		where: QueryFilter<T> = {},
 		options: QueryOptions<T> = {},
 	): Promise<QueryResults<T>> {
-		const offset = options.skip ?? 0;
+		const { limit, order = [], skip = 0 } = options;
+
 		return this.ormRepository
-			.findAndCount(where as never, { disableIdentityMap: false, offset })
+			.findAndCount(where as never, {
+				limit,
+				offset: skip,
+				orderBy: order.map(EntityQueryOrders.fromQueryOrder),
+			})
 			.then(([data, total]) => ({
 				data,
 				pagination: {
-					range: { end: offset + data.length, start: offset },
+					range: { end: skip + data.length, start: skip },
 					total,
 				},
 			}));
@@ -72,9 +79,7 @@ export abstract class EntityReadonlyRepository<
 	 * @returns The found entity
 	 */
 	public findOne(where: QueryFilter<T>) {
-		return this.ormRepository.findOneOrFail(where as never, {
-			disableIdentityMap: false,
-		});
+		return this.ormRepository.findOneOrFail(where as never);
 	}
 
 	/**

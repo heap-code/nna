@@ -56,7 +56,6 @@ describe("EntityRepository", () => {
 				allowGlobalContext: true,
 				connect: true,
 				dbName: ":memory:",
-				debug: true,
 				entities: [GroupEntity, UserEntity],
 			}),
 		);
@@ -76,7 +75,7 @@ describe("EntityRepository", () => {
 		})();
 	});
 
-	afterAll(() => orm.close(true));
+	afterEach(() => orm.close(true));
 
 	it("should create, read, update and delete entities (basic case)", async () => {
 		const group1 = await groupRepository.create({ name: "group1" });
@@ -128,6 +127,8 @@ describe("EntityRepository", () => {
 		});
 
 		orm.em.clear();
+
+		expect(await userRepository.findAll({}, { limit: 1 })).toHaveLength(1);
 
 		expect(await userRepository.count()).toBe(2);
 		expect(await userRepository.count({ name: createdUser1.name })).toBe(1);
