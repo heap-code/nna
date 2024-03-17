@@ -51,7 +51,7 @@ function fromDiscriminated(
 	// The "complex" schema that works if the discriminated key is clearly defined
 	const unionSchema = z.discriminatedUnion(
 		discriminator,
-		// `as never`: The typing for this one is quite complicate to satisfie from the dynamic `map`
+		// `as never`: The typing for this one is quite complicate to satisfies from the dynamic `map`
 		mapping.map(([key, shape]) =>
 			z
 				.object({

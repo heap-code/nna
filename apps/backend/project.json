@@ -3,11 +3,18 @@
 	"name": "backend",
 	"projectType": "application",
 	"sourceRoot": "apps/backend/src",
-	"tags": [],
+	"tags": ["scope:backend"],
 	"targets": {
 		"build": {
 			"configurations": {
-				"development": {},
+				"development": {
+					"fileReplacements": [
+						{
+							"replace": "apps/backend/src/configuration/environments/environment.ts",
+							"with": "apps/backend/src/configuration/environments/environment.local.ts"
+						}
+					]
+				},
 				"production": {}
 			},
 			"defaultConfiguration": "production",

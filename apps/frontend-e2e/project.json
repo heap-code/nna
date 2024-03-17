@@ -1,6 +1,6 @@
 {
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"implicitDependencies": ["frontend"],
+	"implicitDependencies": ["backend", "frontend"],
 	"name": "frontend-e2e",
 	"projectType": "application",
 	"sourceRoot": "apps/frontend-e2e/src",

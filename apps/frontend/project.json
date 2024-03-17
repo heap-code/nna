@@ -4,7 +4,7 @@
 	"prefix": "nx-nest-js-angular",
 	"projectType": "application",
 	"sourceRoot": "apps/frontend/src",
-	"tags": [],
+	"tags": ["scope:frontend"],
 	"targets": {
 		"build": {
 			"configurations": {

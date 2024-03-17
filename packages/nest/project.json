@@ -3,7 +3,7 @@
 	"name": "nest",
 	"projectType": "library",
 	"sourceRoot": "packages/nest/src",
-	"tags": [],
+	"tags": ["scope:backend"],
 	"targets": {
 		"compodoc": {
 			"options": {

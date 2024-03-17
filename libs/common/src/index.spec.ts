@@ -1,5 +1,3 @@
-describe("test", () => {
-	it("should", () => {
-		expect(1).toBe(1);
-	});
+describe("Dummy test", () => {
+	it("should be done", () => expect(true).toBe(true));
 });

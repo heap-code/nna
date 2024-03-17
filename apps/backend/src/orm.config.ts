@@ -1,25 +1,29 @@
-import { defineConfig } from "@mikro-orm/postgresql";
+import { MikroORM } from "@mikro-orm/core";
+import { NestFactory } from "@nestjs/core";
 
-import { UserEntity } from "./app/user/user.entity";
+import { AppModule } from "./app/app.module";
 
-export const ormConfig = defineConfig({
-	// Configuration
-	dbName: "nna",
-	host: "127.0.0.1",
-	password: "DEV_PASSWORD",
-	port: 5432,
-	user: "nna",
+/**
+ * This exposes the configuration for `mikro-orm` CLI
+ *
+ * @returns the `mikro-orm` CLI configuration
+ */
+export default async () => {
+	// The `MikroOrmModule` constructs all the configuration with auto-loaded entities.
+	const app = await NestFactory.createApplicationContext(
+		AppModule.forRoot({
+			npm: {
+				name: process.env["npm_package_name"],
+				version: process.env["npm_package_version"],
+			},
+			orm: { connect: false },
+		}),
+		{ logger: ["error", "fatal"] },
+	);
 
-	// App usage
-	discovery: { disableDynamicFileAccess: true },
-	entities: [UserEntity],
-	forceUndefined: false,
-	strict: true,
-	validate: true,
+	const orm = app.get(MikroORM);
 
-	// CLI usage
-	migrations: { emit: "ts", snapshot: true, snapshotName: "snapshot" },
-	seeder: { emit: "ts" },
-});
-
-export default ormConfig;
+	// Let be sure to close the app (even if it is not supposed to run until the `listen` call)
+	await app.close();
+	return orm.config.getAll();
+};

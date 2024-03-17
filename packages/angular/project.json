@@ -4,7 +4,7 @@
 	"prefix": "nna",
 	"projectType": "library",
 	"sourceRoot": "packages/angular/src",
-	"tags": [],
+	"tags": ["scope:frontend"],
 	"targets": {
 		"compodoc": {
 			"options": {

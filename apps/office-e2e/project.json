@@ -1,6 +1,6 @@
 {
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"implicitDependencies": ["office"],
+	"implicitDependencies": ["backend", "office"],
 	"name": "office-e2e",
 	"projectType": "application",
 	"sourceRoot": "apps/office-e2e/src",

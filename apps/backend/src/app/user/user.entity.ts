@@ -1,11 +1,9 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, Property } from "@mikro-orm/core";
+import { EntityNumber } from "@nna/nest";
 import { UserModel } from "~/common/user";
 
 @Entity()
-export class UserEntity implements Pick<UserModel, "_id"> {
-	@PrimaryKey()
-	public _id!: number;
-
+export class UserEntity extends EntityNumber.Entity() implements UserModel {
 	@Property({ unique: true })
 	public email!: string;
 }

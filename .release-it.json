@@ -9,6 +9,9 @@
 	"github": {
 		"release": true
 	},
+	"hooks": {
+		"after:bump": "rm -rf dist/apps/ && npm run build"
+	},
 	"npm": {
 		"publish": false
 	},
