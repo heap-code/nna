@@ -1,8 +1,8 @@
 import { Entity, Property } from "@mikro-orm/core";
-import { EntityBase } from "@nna/nest";
+import { EntityNumber } from "@nna/nest";
 
 @Entity()
-export class GroupEntity extends EntityBase {
+export class GroupEntity extends EntityNumber.Entity() {
 	@Property({ unique: true })
 	public name!: string;
 }

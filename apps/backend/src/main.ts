@@ -7,9 +7,17 @@ import { AppModule } from "./app/app.module";
 import { ConfigurationService } from "./configuration";
 import { ENVIRONMENT } from "./configuration/environments";
 
+// Injected from webpack. These are no variables, but "MACROs".
+/** @internal */
+declare const __NPM_NAME__: string;
+/** @internal */
+declare const __NPM_VERSION__: string;
+
 void (async () => {
 	const app = await NestFactory.create(
-		AppModule.forRoot(),
+		AppModule.forRoot({
+			npm: { name: __NPM_NAME__, version: __NPM_VERSION__ },
+		}),
 		ENVIRONMENT.logger === true ? {} : { logger: ENVIRONMENT.logger },
 	);
 	const configService = app.get(ConfigurationService);

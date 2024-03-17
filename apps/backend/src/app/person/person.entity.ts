@@ -1,5 +1,5 @@
 import { Entity } from "@mikro-orm/core";
-import { EntityBase } from "@nna/nest";
+import { EntityNumber } from "@nna/nest";
 
 @Entity()
-export class PersonEntity extends EntityBase {}
+export class PersonEntity extends EntityNumber.Entity() {}
