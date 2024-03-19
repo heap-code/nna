@@ -1,7 +1,6 @@
 import { JestConfigWithTsJest } from "ts-jest";
 
 export default {
-	coverageDirectory: "../../dist/coverage/apps/office",
 	displayName: "office",
 	preset: "../../jest.preset.js",
 	setupFilesAfterEnv: ["<rootDir>/src/test-setup.ts"],

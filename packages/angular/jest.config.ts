@@ -1,7 +1,6 @@
 import { JestConfigWithTsJest } from "ts-jest";
 
 export default {
-	coverageDirectory: "../../dist/coverage/packages/angular",
 	displayName: "angular",
 	preset: "../../jest.preset.js",
 	setupFilesAfterEnv: ["<rootDir>/src/test-setup.ts"],
