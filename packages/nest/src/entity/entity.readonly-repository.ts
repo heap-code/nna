@@ -14,7 +14,30 @@ export abstract class EntityReadonlyRepository<
 	T extends ModelBase,
 	Repository extends OrmEntityRepository<T> = OrmEntityRepository<T>,
 > {
-	protected constructor(public readonly ormRepository: Repository) {}
+	/**
+	 * Converts the default results format from a query given by `mikro-orm`
+	 * to a {@link QueryResults} object.
+	 *
+	 * @param results given by `mikro-orm`
+	 * @param offset that has been applied to the query
+	 * @returns {QueryResults} object of the results
+	 */
+	public static toQueryResults<const T>(
+		results: [T[], number],
+		offset: number,
+	): QueryResults<T> {
+		const [data, total] = results;
+
+		return {
+			data,
+			pagination: {
+				range: { end: offset + data.length, start: offset },
+				total,
+			},
+		};
+	}
+
+	protected constructor(protected readonly ormRepository: Repository) {}
 
 	/**
 	 * Find many entities and count them
@@ -35,13 +58,7 @@ export abstract class EntityReadonlyRepository<
 				offset: skip,
 				orderBy: order.map(EntityQueryOrders.fromQueryOrder),
 			})
-			.then(([data, total]) => ({
-				data,
-				pagination: {
-					range: { end: skip + data.length, start: skip },
-					total,
-				},
-			}));
+			.then(res => EntityReadonlyRepository.toQueryResults(res, skip));
 	}
 
 	/**
