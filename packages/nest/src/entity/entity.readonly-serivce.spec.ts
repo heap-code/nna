@@ -1,9 +1,9 @@
 import { QueryResults, QueryResultsPagination } from "@nna/core";
 
-import { EntityReadonlyRepository } from "./entity.readonly-repository";
+import { EntityReadonlyService } from "./entity.readonly-service";
 
-describe("EntityReadonlyRepository", () => {
-	describe("EntityReadonlyRepository.toQueryResults", () => {
+describe("EntityReadonlyService", () => {
+	describe("EntityReadonlyService.toQueryResults", () => {
 		it("should convert", () => {
 			for (const [[data, total, offset], pagination] of [
 				[[[], 0, 0], { range: { end: 0, start: 0 }, total: 0 }],
@@ -16,10 +16,7 @@ describe("EntityReadonlyRepository", () => {
 				[[unknown[], number, number], QueryResultsPagination]
 			>) {
 				expect(
-					EntityReadonlyRepository.toQueryResults(
-						[data, total],
-						offset,
-					),
+					EntityReadonlyService.toQueryResults([data, total], offset),
 				).toStrictEqual({
 					data,
 					pagination,

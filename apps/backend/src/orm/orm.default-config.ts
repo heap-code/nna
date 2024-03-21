@@ -14,7 +14,7 @@ export const ORM_DEFAULT_CONFIGURATION = {
 	driver: PostgreSqlDriver,
 
 	// The paths will be incorrect once builded
-	// as it is desired that the CLI is no usable on the compiled code
+	// as it is desired that the CLI is not usable on the compiled code
 	migrations: { migrationsList: MIGRATIONS.slice(), pathTs: pathMigrations },
 	seeder: { pathTs: pathSeeders },
 } as const satisfies MikroOrmModuleOptions;
