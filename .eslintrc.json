@@ -172,8 +172,8 @@
 								"protected-static-method",
 								"private-static-method",
 								"public-abstract-field",
-								"protected-abstract-field",
 								"public-instance-field",
+								"protected-abstract-field",
 								"protected-instance-field",
 								"private-instance-field",
 								["public-abstract-get", "public-abstract-set"],
@@ -192,8 +192,8 @@
 								],
 								"constructor",
 								"public-abstract-method",
-								"protected-abstract-method",
 								"public-instance-method",
+								"protected-abstract-method",
 								"protected-instance-method",
 								"private-instance-method"
 							]
@@ -255,6 +255,13 @@
 				"@typescript-eslint/prefer-ts-expect-error": "error",
 				"@typescript-eslint/sort-type-constituents": "error",
 				"@typescript-eslint/type-annotation-spacing": "error",
+				"decorator-position/decorator-position": [
+					"error",
+					{
+						"methods": "above",
+						"properties": "above"
+					}
+				],
 				"etc/no-assign-mutated-array": "error",
 				"etc/prefer-less-than": "warn",
 				"jsdoc/require-param-type": "off",
@@ -452,6 +459,7 @@
 	],
 	"plugins": [
 		"@nx",
+		"decorator-position",
 		"eslint-plugin-import",
 		"etc",
 		"prettier",

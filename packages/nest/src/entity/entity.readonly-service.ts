@@ -1,4 +1,4 @@
-import { EntityRepository as OrmEntityRepository } from "@mikro-orm/core";
+import { EntityRepository } from "@mikro-orm/core";
 import {
 	ModelPrimaryKey,
 	ModelBase,
@@ -10,11 +10,43 @@ import {
 
 import { EntityQueryOrders } from "./entity.query-order";
 
-export abstract class EntityReadonlyRepository<
+/**
+ * A service for entities.
+ * It only contains read operations
+ */
+export abstract class EntityReadonlyService<
 	T extends ModelBase,
-	Repository extends OrmEntityRepository<T> = OrmEntityRepository<T>,
+	Repository extends EntityRepository<T> = EntityRepository<T>,
 > {
-	protected constructor(public readonly ormRepository: Repository) {}
+	/**
+	 * Converts the default results format from a query given by `mikro-orm`
+	 * to a {@link QueryResults} object.
+	 *
+	 * @param results given by `mikro-orm`
+	 * @param offset that has been applied to the query
+	 * @returns {QueryResults} object of the results
+	 */
+	public static toQueryResults<const T>(
+		results: [T[], number],
+		offset: number,
+	): QueryResults<T> {
+		const [data, total] = results;
+
+		return {
+			data,
+			pagination: {
+				range: { end: offset + data.length, start: offset },
+				total,
+			},
+		};
+	}
+
+	/**
+	 * Create this service
+	 *
+	 * @param repository The `mikro-orm` {@link EntityRepository repository}
+	 */
+	protected constructor(protected readonly repository: Repository) {}
 
 	/**
 	 * Find many entities and count them
@@ -29,19 +61,13 @@ export abstract class EntityReadonlyRepository<
 	): Promise<QueryResults<T>> {
 		const { limit, order = [], skip = 0 } = options;
 
-		return this.ormRepository
+		return this.repository
 			.findAndCount(where as never, {
 				limit,
 				offset: skip,
 				orderBy: order.map(EntityQueryOrders.fromQueryOrder),
 			})
-			.then(([data, total]) => ({
-				data,
-				pagination: {
-					range: { end: skip + data.length, start: skip },
-					total,
-				},
-			}));
+			.then(res => EntityReadonlyService.toQueryResults(res, skip));
 	}
 
 	/**
@@ -79,7 +105,7 @@ export abstract class EntityReadonlyRepository<
 	 * @returns The found entity
 	 */
 	public findOne(where: QueryFilter<T>) {
-		return this.ormRepository.findOneOrFail(where as never);
+		return this.repository.findOneOrFail(where as never);
 	}
 
 	/**
