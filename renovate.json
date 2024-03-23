@@ -4,6 +4,8 @@
 	"automergeStrategy": "squash",
 	"extends": ["config:recommended", "group:definitelyTyped"],
 	"labels": ["dependencies", "renovate"],
+	"minimumReleaseAge": "3 days",
+	"osvVulnerabilityAlerts": true,
 	"packageRules": [
 		{
 			"extends": ["packages:jsUnitTest"],
@@ -29,7 +31,16 @@
 			"matchUpdateTypes": ["major"]
 		}
 	],
+	"prHourlyLimit": 1,
 	"rebaseWhen": "behind-base-branch",
-	"stabilityDays": 3,
-	"unicodeEmoji": true
+	"schedule": [
+		"after 11pm every weekday",
+		"before 5am every weekday",
+		"every weekend"
+	],
+	"updateNotScheduled": false,
+	"vulnerabilityAlerts": {
+		"addLabels": ["security"],
+		"enabled": true
+	}
 }
