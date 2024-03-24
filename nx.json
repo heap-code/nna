@@ -111,7 +111,8 @@
 			],
 			"options": {
 				"maxWarnings": 15
-			}
+			},
+			"outputs": ["{options.outputFile}"]
 		},
 		"storybook-build": {
 			"cache": true,
