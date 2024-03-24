@@ -7,7 +7,8 @@
 		"lint": {
 			"configurations": {
 				"fix": {
-					"command": "eslint . --fix --ignore-pattern apps/ --ignore-pattern libs/ --ignore-pattern packages/ --max-warnings 10"
+					"command": "eslint . --fix --ignore-pattern apps/ --ignore-pattern libs/ --ignore-pattern packages/ --max-warnings 10",
+					"fix": null
 				}
 			},
 			"executor": "nx:run-commands",
@@ -18,7 +19,8 @@
 				"{workspaceRoot}/eslint.config.js"
 			],
 			"options": {
-				"command": "eslint . --ignore-pattern apps/ --ignore-pattern libs/ --ignore-pattern packages/ --max-warnings 10"
+				"command": "eslint . --ignore-pattern apps/ --ignore-pattern libs/ --ignore-pattern packages/ --max-warnings 10",
+				"maxWarnings": null
 			}
 		}
 	}
