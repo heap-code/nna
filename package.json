@@ -42,7 +42,7 @@
 		"@angular/compiler-cli": "~17.3.0",
 		"@angular/language-service": "~17.3.0",
 		"@compodoc/compodoc": "^1.1.23",
-		"@darraghor/eslint-plugin-nestjs-typed": "^4.3.9",
+		"@darraghor/eslint-plugin-nestjs-typed": "^5.0.0",
 		"@mikro-orm/cli": "^6.0.0",
 		"@mikro-orm/sqlite": "^6.0.0",
 		"@nestjs/schematics": "^10.0.1",
