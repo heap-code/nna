@@ -40,7 +40,7 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 		dbName: env.NNA_DB_NAME || "nna",
 		debug: false,
 		host: env.NNA_DB_HOST || "localhost",
-		password: env.NNA_DB_PASS || "LOCAL_PASSWORD",
+		password: env.NNA_DB_PASS || "PASSWORD",
 		port: env.NNA_DB_PORT ? Number(env.NNA_DB_PORT) : 5432,
 		user: env.NNA_DB_USER || "nna",
 	},

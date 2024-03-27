@@ -6,6 +6,6 @@ services:
     environment:
       POSTGRES_DB: "nna"
       POSTGRES_USER: "nna"
-      POSTGRES_PASSWORD: LOCAL_PASSWORD
+      POSTGRES_PASSWORD: PASSWORD
     ports:
       - "127.0.0.1:5432:5432"
