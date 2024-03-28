@@ -152,7 +152,9 @@ describe("EntityRepository", () => {
 		expect(await userService.findAll({}, { limit: 1 })).toHaveLength(1);
 
 		expect(await userService.count()).toBe(2);
-		expect(await userService.count({ name: createdUser1.name })).toBe(1);
+		expect(
+			await userService.count({ group: { name: createdGroup1.name } }),
+		).toBe(1);
 
 		await groupService.findAndCount().then(({ data: [group1, group2] }) => {
 			expect(group1._id).toBe(createdGroup1._id);
