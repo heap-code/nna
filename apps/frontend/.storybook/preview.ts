@@ -1,3 +1,11 @@
-import { Preview } from "@storybook/angular";
+import { applicationConfig, Preview } from "@storybook/angular";
 
-export default {} satisfies Preview;
+export default {
+	decorators: [
+		applicationConfig({
+			providers: [],
+
+			// TODO
+		}),
+	],
+} satisfies Preview;
