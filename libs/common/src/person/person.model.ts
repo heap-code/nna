@@ -1,7 +1,7 @@
 import { Model } from "@nna/core";
 import * as z from "zod";
 
-const abc = "abc" as const;
+const abc = "abc";
 const a = z.discriminatedUnion(
 	abc,
 	[

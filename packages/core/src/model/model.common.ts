@@ -11,4 +11,4 @@ export const schemaCommon = z.object({
 });
 
 /** Field of the primary key for the models */
-export const PRIMARY_KEY = "_id" as const;
+export const PRIMARY_KEY = "_id";
