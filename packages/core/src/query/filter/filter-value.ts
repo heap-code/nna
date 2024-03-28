@@ -3,18 +3,19 @@ import type { OperatorMap } from "@mikro-orm/core/typings";
 import { QueryPrimitive } from "../query.types";
 
 /** Filter operators for "Primitive" (+ Date) values */
-export type FilterValueOperatorMap<T> = Omit<
+export type FilterValueOperatorMap<T> = Pick<
 	OperatorMap<T>,
-	| "$and"
-	| "$contained"
-	| "$contains"
-	| "$every"
-	| "$ilike"
-	| "$none"
-	| "$not"
-	| "$or"
-	| "$overlap"
-	| "$some"
+	| "$eq"
+	| "$exists"
+	| "$gt"
+	| "$gte"
+	| "$in"
+	| "$like"
+	| "$lt"
+	| "$lte"
+	| "$ne"
+	| "$nin"
+	| "$re"
 >;
 
 /** Filter for "Primitive" (+ Date) values */
