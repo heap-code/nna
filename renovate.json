@@ -13,10 +13,15 @@
 			"matchPackageNames": ["cypress"]
 		},
 		{
-			"extends": ["packages:eslint", "packages:stylelint"],
+			"extends": ["packages:eslint"],
 			"groupName": "Linting packages",
 			"groupSlug": "linting",
-			"matchPackageNames": ["@cspell/eslint-plugin"]
+			"matchPackageNames": ["@darraghor/eslint-plugin-nestjs-typed"]
+		},
+		{
+			"extends": ["packages:stylelint"],
+			"groupName": "Style-linting packages",
+			"groupSlug": "style-linting"
 		},
 		{
 			"groupName": "Release it",
