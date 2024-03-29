@@ -269,6 +269,7 @@ describe("Filter schema", () => {
 								},
 							},
 							{
+								// @ts-expect-error -- `code` is only valid for `error` type
 								discriminated: { code: { $gte: 400 } },
 							},
 						],
