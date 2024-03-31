@@ -5,11 +5,13 @@ import { isFilterValueConvertible } from "./filter-value.helper";
 import * as FilterValue from "./filter-value.schema";
 import { QueryObjectSchema } from "../query.types";
 
+// FIXME: too much cast
+
 /** @internal */
 function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
 	shape: T["shape"],
 	options: ObjectOptions,
-) {
+): z.AnyZodObject & z.ZodType<z.infer<T>> {
 	// Explore the shape to create the filter
 	const schema = z
 		.object(
@@ -19,7 +21,7 @@ function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
 					.filter(([, schema]) => schema !== null),
 			),
 		)
-		.partial() satisfies z.ZodType<FilterObject<z.infer<T>>>;
+		.partial();
 
 	return options.strict ? schema.strict() : schema;
 }
@@ -53,11 +55,7 @@ function fromDiscriminated(
 		discriminator,
 		// `as never`: The typing for this one is quite complicate to satisfies from the dynamic `map`
 		mapping.map(([key, shape]) =>
-			z
-				.object({
-					[discriminator]: key,
-				})
-				.merge(fromShape(shape, options)),
+			z.object({ [discriminator]: key }).merge(fromShape(shape, options)),
 		) as never,
 	);
 
@@ -119,9 +117,11 @@ function _schema<T extends QueryObjectSchema>(
 	}
 
 	const { _def } = schema;
-	return _def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion
-		? fromDiscriminated(_def, options)
-		: fromShape(_def.shape(), options);
+	return (
+		_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion
+			? fromDiscriminated(_def, options)
+			: fromShape(_def.shape(), options)
+	) as never;
 }
 
 export { _schema as object };
