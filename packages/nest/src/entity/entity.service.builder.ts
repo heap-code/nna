@@ -138,11 +138,14 @@ class EntityServiceBuilder<
 				toUpdate: ToUpdate,
 			): Promise<T> {
 				const entity = await this.findById(id);
-				const x = await this.transformToUpdate(id, toUpdate);
 				await this.repository.getEntityManager().persistAndFlush(
-					this.repository.assign(entity as T, x, {
-						updateByPrimaryKey: true,
-					}),
+					this.repository.assign(
+						entity as T,
+						await this.transformToUpdate(id, toUpdate),
+						{
+							updateByPrimaryKey: true,
+						},
+					),
 				);
 
 				return this.findById(id);

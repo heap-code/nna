@@ -10,7 +10,7 @@
 		"jest.config.ts",
 		"src/**/*.spec.ts",
 		"src/**/*.test.ts",
-		"src/test-setup.ts"
+		"test/setup.ts"
 	],
 	"extends": "./tsconfig.json",
 	"include": ["src/**/*.ts"]

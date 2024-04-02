@@ -6,12 +6,7 @@
 		"strictTemplates": true
 	},
 	"compilerOptions": {
-		"forceConsistentCasingInFileNames": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
-		"strict": true,
 		"target": "es2022",
 		"useDefineForClassFields": false
 	},

@@ -2,12 +2,12 @@ import { EntityRepository } from "@mikro-orm/core";
 import {
 	ModelPrimaryKey,
 	ModelBase,
-	QueryFilter,
 	QueryOptions,
 	QueryResults,
 	QueryFilterObject,
 } from "@nna/core";
 
+import { EntityQueryFilter } from "./entity.query-filter";
 import { EntityQueryOrders } from "./entity.query-order";
 
 /**
@@ -56,7 +56,7 @@ export abstract class EntityReadonlyService<
 	 * @returns All entities found with its pagination
 	 */
 	public findAndCount(
-		where: QueryFilter<T> = {},
+		where: EntityQueryFilter<T> = {},
 		options: QueryOptions<T> = {},
 	): Promise<QueryResults<T>> {
 		const { limit, order = [], skip = 0 } = options;
@@ -79,7 +79,7 @@ export abstract class EntityReadonlyService<
 	 * @returns All entities found
 	 */
 	public findAll(
-		where: QueryFilter<T> = {},
+		where: EntityQueryFilter<T> = {},
 		options: QueryOptions<T> = {},
 	): Promise<T[]> {
 		return this.findAndCount(where, options).then(({ data }) => data);
@@ -91,7 +91,7 @@ export abstract class EntityReadonlyService<
 	 * @param where Filter to apply
 	 * @returns The count of the entities found
 	 */
-	public count(where: QueryFilter<T> = {}) {
+	public count(where: EntityQueryFilter<T> = {}) {
 		return this.findAndCount(where, { limit: 0 }).then(
 			({ pagination: { total } }) => total,
 		);
@@ -104,7 +104,7 @@ export abstract class EntityReadonlyService<
 	 * @param where filter
 	 * @returns The found entity
 	 */
-	public findOne(where: QueryFilter<T>) {
+	public findOne(where: EntityQueryFilter<T>) {
 		return this.repository.findOneOrFail(where as never);
 	}
 

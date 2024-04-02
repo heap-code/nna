@@ -3,7 +3,7 @@ import { JestConfigWithTsJest } from "ts-jest";
 export default {
 	displayName: "office",
 	preset: "../../jest.preset.js",
-	setupFilesAfterEnv: ["<rootDir>/src/test-setup.ts"],
+	setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
 	snapshotSerializers: [
 		"jest-preset-angular/build/serializers/no-ng-attributes",
 		"jest-preset-angular/build/serializers/ng-snapshot",

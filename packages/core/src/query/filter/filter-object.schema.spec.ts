@@ -209,8 +209,11 @@ describe("ObjectFilter schema", () => {
 			const filters: Array<
 				[FilterObject<SchemaWithDiscrimination>, number]
 			> = [
+				// @ts-expect-error -- Missing discrimination property
 				[{ discriminated: { code: 400 } }, 1],
+				// @ts-expect-error -- `code` is only valid for `error` type
 				[{ discriminated: { code: 400, type: "success" } }, 1],
+				// @ts-expect-error -- `data` is only valid for `success` type
 				[{ discriminated: { data: { $gt: "abc" }, type: "idle" } }, 1],
 			];
 
@@ -231,6 +234,7 @@ describe("ObjectFilter schema", () => {
 
 			const tests: Array<[z.infer<typeof filterSchema>, boolean]> = [
 				[{ type: { $ne: "error" } }, true],
+				// @ts-expect-error -- `code` is only valid for `error` type
 				[{ code: 400, type: "success" }, false],
 			];
 			for (const [filter, expected] of tests) {

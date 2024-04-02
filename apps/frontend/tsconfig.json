@@ -1,22 +1,8 @@
 {
-	"angularCompilerOptions": {
-		"enableI18nLegacyMessageIdFormat": false,
-		"strictInjectionParameters": true,
-		"strictInputAccessModifiers": true,
-		"strictTemplates": true
-	},
 	"compilerOptions": {
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noPropertyAccessFromIndexSignature": true,
-		"strict": true,
-		"target": "es2022",
-		"useDefineForClassFields": false
+		"esModuleInterop": true
 	},
-	"extends": "../../tsconfig.base.json",
+	"extends": "../../libs/front/tsconfig.json",
 	"files": [],
 	"include": [],
 	"references": [

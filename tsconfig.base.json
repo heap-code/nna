@@ -5,10 +5,12 @@
 		"declaration": false,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
 		"importHelpers": true,
 		"lib": ["dom", "es2022"],
 		"module": "esnext",
 		"moduleResolution": "node",
+		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
 		"paths": {
 			"@nna/angular": ["packages/angular/src/index.ts"],
