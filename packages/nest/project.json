@@ -1,0 +1,30 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "nest",
+	"projectType": "library",
+	"sourceRoot": "packages/nest/src",
+	"tags": ["scope:backend"],
+	"targets": {
+		"compodoc": {
+			"options": {
+				"port": 10001
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"options": {
+				"jestConfig": "packages/nest/jest.config.ts"
+			},
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p packages/nest/tsconfig.spec.json"
+			}
+		}
+	}
+}

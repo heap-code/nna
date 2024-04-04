@@ -1,5 +1,6 @@
-import { getJestProjects } from '@nx/jest';
+import { getJestProjects } from "@nx/jest";
+import { JestConfigWithTsJest } from "ts-jest";
 
 export default {
-  projects: getJestProjects(),
-};
+	projects: getJestProjects(),
+} satisfies JestConfigWithTsJest;

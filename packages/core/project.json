@@ -1,0 +1,30 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "core",
+	"projectType": "library",
+	"sourceRoot": "packages/core/src",
+	"tags": [],
+	"targets": {
+		"compodoc": {
+			"options": {
+				"port": 10000
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"options": {
+				"jestConfig": "packages/core/jest.config.ts"
+			},
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p packages/core/tsconfig.spec.json"
+			}
+		}
+	}
+}

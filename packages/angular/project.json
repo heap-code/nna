@@ -1,0 +1,38 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "angular",
+	"prefix": "nna",
+	"projectType": "library",
+	"sourceRoot": "packages/angular/src",
+	"tags": ["scope:frontend"],
+	"targets": {
+		"compodoc": {
+			"options": {
+				"port": 10002
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		},
+		"stylelint": {
+			"executor": "nx-stylelint:lint",
+			"options": {
+				"lintFilePatterns": ["packages/angular/**/*.{css,scss}"]
+			},
+			"outputs": ["{options.outputFile}"]
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"options": {
+				"jestConfig": "packages/angular/jest.config.ts"
+			},
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p packages/angular/tsconfig.spec.json"
+			}
+		}
+	}
+}

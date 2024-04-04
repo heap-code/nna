@@ -1,0 +1,77 @@
+name: Release & Publish
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: "${{ github.workflow }} - ${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    uses: ./.github/workflows/reusable-ci.yml
+    secrets:
+      NX_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
+
+  job:
+    # Ignore the heap-code bot commits and devDependencies
+    # if: ${{ github.actor != vars.HC_BOT && !(github.actor == 'renovate[bot]' && contains(github.event.head_commit.message, 'chore(deps):')) }}
+    if: ${{ 1 == 2 }}
+    needs: [checks]
+
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.HC_TOKEN }}
+      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
+        name: Install packages
+        run: npm ci
+
+      # If the cache is used
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        run: npm run postinstall
+
+      - name: Generate code coverage summary
+        run: npm run test:ci
+
+      - name: Generate code coverage badges
+        run: for path in ./dist/coverage/*/*; do npx node-jest-badges -c "$path/coverage-summary.json" -o ".badges/${path:16}/code/"; done
+      - name: Set default code coverage badges
+        run: for path in .badges/*/*/code; do cp $path/coverage-jest\ coverage.svg $path/coverage.svg; done
+
+      - name: Generate comment coverage badges
+        run: npm run compodoc:build
+      - name: Move comment coverage badges
+        run: for path in ./dist/compodoc/*/*; do mkdir -p "./.badges/${path:16}/comment" && cp "$path/images/coverage-badge-documentation.svg" "./.badges/${path:16}/comment/coverage.svg"; done
+
+      - name: Add badges
+        run: git add .badges/
+
+      # TODO
+      # - name: Release and publish
+      #   run: npx release-it --ci --no-git.requireCleanWorkingDir
