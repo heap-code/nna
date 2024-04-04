@@ -1,0 +1,60 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Angular.ng-template",
+				"EditorConfig.EditorConfig",
+				"GitHub.vscode-pull-request-github",
+				"Gruntfuggly.todo-tree",
+				"dbaeumer.vscode-eslint",
+				"exiasr.hadolint",
+				"firsttris.vscode-jest-runner",
+				"formulahendry.auto-close-tag",
+				"formulahendry.auto-rename-tag",
+				"github.vscode-github-actions",
+				"hediet.vscode-drawio",
+				"mhutchie.git-graph",
+				"ms-azuretools.vscode-docker",
+				"mtxr.sqltools",
+				"mtxr.sqltools-driver-sqlite",
+				"nrwl.angular-console",
+				"redhat.vscode-yaml",
+				"streetsidesoftware.code-spell-checker",
+				"stylelint.vscode-stylelint",
+				"vivaxy.vscode-conventional-commits",
+				"waderyan.gitblame",
+				"yoavbls.pretty-ts-errors"
+			],
+			"settings": {
+				// Ensure correct node version
+				"eslint.runtime": "/usr/local/bin/node",
+				"sqltools.useNodeRuntime": "/usr/local/bin/node"
+			}
+		}
+	},
+	"features": {
+		// TODO: enable when some E2E tests will be set
+		// "ghcr.io/devcontainers/features/desktop-lite:1": {}
+		// TODO: determine better options and configure
+		// "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+		// "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/dhoeric/features/hadolint:1": {}
+	},
+	"name": "Dev environment",
+	"onCreateCommand": "npm install && echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc",
+	"postCreateCommand": "echo 'export NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")' >> ~/.bashrc",
+	"postStartCommand": "npx nx reset"
+	// TODO: with desktop-lite
+	// "forwardPorts": [5901, 6080],
+	// "portsAttributes": {
+	// 	"5091": {
+	// 		"label": "desktop web"
+	// 	},
+	// 	"6080": {
+	// 		"label": "desktop web"
+	// 	}
+	// },
+}

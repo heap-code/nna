@@ -1,0 +1,104 @@
+{
+	"extends": ["../../.eslintrc.json"],
+	"overrides": [
+		{
+			"extends": [
+				"plugin:@angular-eslint/recommended",
+				"plugin:@angular-eslint/template/process-inline-templates",
+				"plugin:@nx/angular"
+			],
+			"files": ["*.ts"],
+			"parserOptions": {
+				"project": ["./packages/angular/tsconfig.*?.json"]
+			},
+			"rules": {
+				"@angular-eslint/component-class-suffix": [
+					"error",
+					{
+						"suffixes": [
+							"Component",
+							"Card",
+							"Dialog",
+							"SnackBar",
+							"View"
+						]
+					}
+				],
+				"@angular-eslint/component-selector": [
+					"error",
+					{
+						"prefix": "nna",
+						"style": "kebab-case",
+						"type": "element"
+					}
+				],
+				"@angular-eslint/directive-selector": [
+					"error",
+					{
+						"prefix": "nna",
+						"style": "camelCase",
+						"type": "attribute"
+					}
+				],
+				"@angular-eslint/no-attribute-decorator": "error",
+				"@angular-eslint/no-conflicting-lifecycle": "error",
+				"@angular-eslint/no-empty-lifecycle-method": "error",
+				"@angular-eslint/no-input-prefix": "error",
+				"@angular-eslint/no-input-rename": "error",
+				"@angular-eslint/no-pipe-impure": "error",
+				"@angular-eslint/prefer-output-readonly": "error",
+				"@angular-eslint/prefer-standalone-component": "error",
+				"@angular-eslint/relative-url-prefix": "error",
+				"@angular-eslint/sort-lifecycle-methods": "error",
+				"@angular-eslint/sort-ngmodule-metadata-arrays": "error",
+				"@angular-eslint/use-component-selector": "error",
+				"@angular-eslint/use-lifecycle-interface": "error",
+				"@angular-eslint/use-pipe-transform-interface": "error",
+				"@typescript-eslint/unbound-method": [
+					"error",
+					{
+						"ignoreStatic": true
+					}
+				]
+			}
+		},
+		{
+			"extends": [
+				"plugin:@angular-eslint/template/accessibility",
+				"plugin:@angular-eslint/template/recommended",
+				"plugin:@nx/angular-template"
+			],
+			"files": ["*.html"],
+			"plugins": ["prettier", "sort-attribute-content"],
+			"rules": {
+				"@angular-eslint/template/attributes-order": [
+					"warn",
+					{
+						"alphabetical": true
+					}
+				],
+				"@angular-eslint/template/button-has-type": "error",
+				"@angular-eslint/template/eqeqeq": "error",
+				"@angular-eslint/template/no-autofocus": "error",
+				"@angular-eslint/template/no-distracting-elements": "error",
+				"@angular-eslint/template/no-interpolation-in-attributes": "error",
+				"@angular-eslint/template/prefer-self-closing-tags": ["error"],
+				"prettier/prettier": [
+					"error",
+					{
+						"parser": "angular"
+					}
+				],
+				"sort-attribute-content/sort-attribute-content": [
+					"warn",
+					[
+						{
+							"attributes": "class"
+						}
+					]
+				],
+				"spaced-comment": "off"
+			}
+		}
+	]
+}

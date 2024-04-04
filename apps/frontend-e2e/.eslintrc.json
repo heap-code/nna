@@ -1,10 +1,11 @@
 {
-  "extends": ["plugin:cypress/recommended", "../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
-    }
-  ]
+	"extends": ["../../.eslintrc.json", "plugin:cypress/recommended"],
+	"overrides": [
+		{
+			"files": ["*.ts", "*.tsx"],
+			"parserOptions": {
+				"project": "./apps/frontend-e2e/tsconfig.json"
+			}
+		}
+	]
 }

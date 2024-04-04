@@ -1,0 +1,27 @@
+{
+	"$schema": "../node_modules/nx/schemas/project-schema.json",
+	"name": "project",
+	"sourceRoot": "./",
+	"tags": [],
+	"targets": {
+		"lint": {
+			"configurations": {
+				"fix": {
+					"command": "eslint . --fix --ignore-pattern apps/ --ignore-pattern libs/ --ignore-pattern packages/ --max-warnings 10",
+					"fix": null
+				}
+			},
+			"executor": "nx:run-commands",
+			"inputs": [
+				"workspace",
+				"{workspaceRoot}/.eslintignore",
+				"{workspaceRoot}/.eslintrc.json",
+				"{workspaceRoot}/eslint.config.js"
+			],
+			"options": {
+				"command": "eslint . --ignore-pattern apps/ --ignore-pattern libs/ --ignore-pattern packages/ --max-warnings 10",
+				"maxWarnings": null
+			}
+		}
+	}
+}

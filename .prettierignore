@@ -1,5 +1,1 @@
-# Add files here to ignore them from prettier formatting
-/dist
-/coverage
-/.nx/cache
-.angular
+# Ignored: Prettier is called from eslint

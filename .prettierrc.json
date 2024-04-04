@@ -1,0 +1,50 @@
+{
+	"arrowParens": "avoid",
+	"htmlWhitespaceSensitivity": "css",
+	"overrides": [
+		{
+			"files": "*.json",
+			"options": {
+				"trailingComma": "none"
+			}
+		},
+		{
+			"files": "*.html",
+			"options": {
+				"parser": "html"
+			}
+		},
+		{
+			"files": "*.md",
+			"options": {
+				"parser": "markdown"
+			}
+		},
+		{
+			"files": "*.sql",
+			"options": {
+				"commaPosition": "after",
+				"expressionWidth": 80,
+				"indentStyle": "standard",
+				"keywordCase": "upper",
+				"language": "postgresql",
+				"linesBetweenQueries": 1,
+				"logicalOperatorNewline": "after",
+				"tabulateAlias": false
+			}
+		},
+		{
+			"files": "*.yml",
+			"options": {
+				"parser": "yaml",
+				"tabWidth": 2,
+				"useTabs": false
+			}
+		}
+	],
+	"semi": true,
+	"singleQuote": false,
+	"tabWidth": 4,
+	"trailingComma": "all",
+	"useTabs": true
+}

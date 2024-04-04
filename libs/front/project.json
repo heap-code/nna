@@ -1,0 +1,31 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "front",
+	"prefix": "front",
+	"projectType": "library",
+	"sourceRoot": "libs/front/src",
+	"tags": ["scope:frontend"],
+	"targets": {
+		"compodoc": {
+			"options": {
+				"port": 11001
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"options": {
+				"jestConfig": "libs/front/jest.config.ts"
+			},
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p libs/front/tsconfig.spec.json"
+			}
+		}
+	}
+}

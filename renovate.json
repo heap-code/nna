@@ -1,0 +1,51 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"automerge": true,
+	"automergeStrategy": "squash",
+	"extends": ["config:recommended", "group:definitelyTyped"],
+	"labels": ["dependencies", "renovate"],
+	"minimumReleaseAge": "3 days",
+	"osvVulnerabilityAlerts": true,
+	"packageRules": [
+		{
+			"extends": ["packages:jsUnitTest"],
+			"groupName": "testing packages",
+			"matchPackageNames": ["cypress"]
+		},
+		{
+			"extends": ["packages:eslint"],
+			"groupName": "Linting packages",
+			"groupSlug": "linting",
+			"matchPackageNames": ["@darraghor/eslint-plugin-nestjs-typed"]
+		},
+		{
+			"extends": ["packages:stylelint"],
+			"groupName": "Style-linting packages",
+			"groupSlug": "style-linting"
+		},
+		{
+			"groupName": "Release it",
+			"groupSlug": "release-it",
+			"matchPackageNames": ["release-it"],
+			"matchPackagePrefixes": ["@release-it/"]
+		},
+		{
+			"addLabels": ["dependency-major"],
+			"automerge": false,
+			"matchDepTypes": ["dependencies"],
+			"matchUpdateTypes": ["major"]
+		}
+	],
+	"prHourlyLimit": 1,
+	"rebaseWhen": "behind-base-branch",
+	"schedule": [
+		"after 11pm every weekday",
+		"before 5am every weekday",
+		"every weekend"
+	],
+	"updateNotScheduled": false,
+	"vulnerabilityAlerts": {
+		"addLabels": ["security"],
+		"enabled": true
+	}
+}

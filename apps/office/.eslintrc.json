@@ -1,0 +1,46 @@
+{
+	"extends": ["../../libs/front/.eslintrc.json"],
+	"overrides": [
+		{
+			"extends": [
+				"plugin:@angular-eslint/template/process-inline-templates",
+				"plugin:@nx/angular"
+			],
+			"files": ["*.ts"],
+			"parserOptions": {
+				"project": [
+					"./apps/office/tsconfig.*?.json",
+					"apps/office/.storybook/tsconfig.json"
+				]
+			},
+			"rules": {
+				"@angular-eslint/component-selector": [
+					"error",
+					{
+						"prefix": "office",
+						"style": "kebab-case",
+						"type": "element"
+					}
+				],
+				"@angular-eslint/directive-selector": [
+					"error",
+					{
+						"prefix": "office",
+						"style": "camelCase",
+						"type": "attribute"
+					}
+				]
+			}
+		},
+		{
+			"files": [
+				"./src/main.server.ts",
+				".storybook/main.ts",
+				".storybook/preview.ts"
+			],
+			"rules": {
+				"import/no-default-export": "off"
+			}
+		}
+	]
+}

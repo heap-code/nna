@@ -1,0 +1,30 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "common",
+	"projectType": "library",
+	"sourceRoot": "libs/common/src",
+	"tags": [],
+	"targets": {
+		"compodoc": {
+			"options": {
+				"port": 11000
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"options": {
+				"jestConfig": "libs/common/jest.config.ts"
+			},
+			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p libs/common/tsconfig.spec.json"
+			}
+		}
+	}
+}
