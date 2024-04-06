@@ -22,10 +22,13 @@ function schema<T extends FilterZodEqType>(
 	const fn = (
 		zodType: FilterZodEqType,
 		nullable: boolean,
-	): z.ZodType<FilterValue<z.infer<T>>> => {
+	): z.ZodType<FilterValue<NonNullable<z.infer<T>>>> => {
 		switch (zodType._def.typeName) {
 			case z.ZodFirstPartyTypeKind.ZodNullable:
 				return fn(zodType._def.innerType, true);
+			case z.ZodFirstPartyTypeKind.ZodOptional:
+			case z.ZodFirstPartyTypeKind.ZodReadonly:
+				return fn(zodType._def.innerType, nullable);
 
 			case z.ZodFirstPartyTypeKind.ZodBoolean:
 				return FilterValues.boolean({ ...options, nullable });

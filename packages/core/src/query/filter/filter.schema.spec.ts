@@ -4,12 +4,12 @@ import { Filter } from "./filter";
 import { filter as schema } from "./filter.schema";
 
 const schemaFlat = z.object({
-	boolean: z.boolean(),
+	boolean: z.boolean().readonly(),
 	booleanNullable: z.boolean().nullable(),
 	date: z.date(),
 	dateNullable: z.date().nullable(),
 	number: z.number(),
-	numberNullable: z.number().nullable(),
+	numberNullable: z.number().nullable().readonly(),
 	string: z.string(),
 	stringNullable: z.string().nullable(),
 });

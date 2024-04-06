@@ -1,6 +1,17 @@
 import * as z from "zod";
 
 import type { FilterZodEqType } from "./values/common";
+import { isZodSchemaFirstPartyNestedType } from "../../zod/is-first-party-nested-type";
+
+/** @internal */
+const TYPES = [
+	z.ZodFirstPartyTypeKind.ZodBoolean,
+	z.ZodFirstPartyTypeKind.ZodDate,
+	z.ZodFirstPartyTypeKind.ZodNumber,
+	z.ZodFirstPartyTypeKind.ZodString,
+	z.ZodFirstPartyTypeKind.ZodEnum,
+	z.ZodFirstPartyTypeKind.ZodNativeEnum,
+] as const;
 
 /**
  * Determines if a schema can be used to created its {@link FilterValue} validation schema
@@ -11,22 +22,5 @@ import type { FilterZodEqType } from "./values/common";
 export function isFilterValueConvertible(
 	schema: z.ZodTypeAny,
 ): schema is FilterZodEqType {
-	const definition = schema._def as FilterZodEqType["_def"] | z.ZodUnknownDef;
-
-	switch (definition.typeName) {
-		case z.ZodFirstPartyTypeKind.ZodNullable:
-			return isFilterValueConvertible(definition.innerType);
-
-		case z.ZodFirstPartyTypeKind.ZodBoolean:
-		case z.ZodFirstPartyTypeKind.ZodDate:
-		case z.ZodFirstPartyTypeKind.ZodNumber:
-		case z.ZodFirstPartyTypeKind.ZodString:
-			return true;
-
-		case z.ZodFirstPartyTypeKind.ZodEnum:
-		case z.ZodFirstPartyTypeKind.ZodNativeEnum:
-			return true;
-	}
-
-	return false;
+	return isZodSchemaFirstPartyNestedType(schema, TYPES);
 }

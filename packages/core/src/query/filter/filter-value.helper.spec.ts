@@ -12,14 +12,17 @@ describe("FilterValue schema", () => {
 	it("isFilterValueConvertible", () => {
 		const tests: Array<[z.ZodTypeAny, boolean]> = [
 			[z.string(), true],
+			[z.string().readonly(), true],
 			[z.number(), true],
 			[z.date(), true],
 			[z.date().nullable(), true],
 			[z.boolean(), true],
+			[z.boolean().optional(), true],
 			[z.enum(["a", "b", "c"]), true],
 			[z.enum(["a", "b", "c"]).nullable(), true],
 			[z.nativeEnum(MyEnum), true],
 			[z.number().max(10).min(1), true],
+			[z.number().max(10).min(1).readonly(), true],
 			[z.string().min(3), true],
 			[z.object({}), false],
 			[z.object({}).nullable(), false],

@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import type { EnumSchema } from "./enum";
+import type { ZodNestedType } from "../../../zod";
 import type { FilterValue, FilterValueOperatorMap } from "../filter-value";
 
 /** Zod schema for FilterValue ordernable type */
@@ -10,10 +11,9 @@ export type FilterZodOrdType =
 	| z.ZodDate
 	| z.ZodNumber
 	| z.ZodString;
+
 /** Zod schema for FilterValue comparable type */
-export type FilterZodEqType =
-	| FilterZodOrdType
-	| z.ZodNullable<FilterZodOrdType>;
+export type FilterZodEqType = ZodNestedType<FilterZodOrdType>;
 
 /**
  * Creates a validation schema for a value query filter operators
@@ -100,7 +100,7 @@ export type SchemaOptionsNullable = Record<
 >;
 
 /**
- * Creates a validation schema for (mostly primitime like) nullable type
+ * Creates a validation schema for (mostly primitive like) nullable type
  *
  * @param ordType type that can be ordered (>, >=, <, <=).
  * Some coerce options must be set before receiving this parameter.
@@ -112,7 +112,7 @@ export function schema<T extends FilterZodOrdType>(
 	options: SchemaOptions & SchemaOptionsNullable,
 ): z.ZodType<FilterValue<z.infer<T> | null>>;
 /**
- * Creates a validation schema for (mostly primitime like) type
+ * Creates a validation schema for (mostly primitive like) type
  *
  * @param ordType type that can be ordered (>, >=, <, <=).
  * Some coerce options must be set before receiving this parameter.
@@ -125,7 +125,7 @@ export function schema<T extends FilterZodOrdType>(
 ): z.ZodType<FilterValue<z.infer<T>>>;
 
 /**
- * Creates a validation schema for (mostly primitime like) type
+ * Creates a validation schema for (mostly primitive like) type
  *
  * @param ordType type that can be ordered (>, >=, <, <=).
  * Some coerce options must be set before receiving this parameter.
