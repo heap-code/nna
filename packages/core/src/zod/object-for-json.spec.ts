@@ -1,9 +1,9 @@
 import { Jsonify } from "type-fest";
 import * as z from "zod";
 
-import { zodObjectForJson } from "./object-for-json";
+import { objectForJson } from "./object-for-json";
 
-describe("zodObjectForJson", () => {
+describe("ObjectForJson", () => {
 	const schemaBase = z
 		.object({
 			a: z.number(),
@@ -13,8 +13,13 @@ describe("zodObjectForJson", () => {
 		})
 		.partial();
 
+	it("should not modify the schema when there is no need", () => {
+		const schema = schemaBase.pick({ a: true, b: true });
+		expect(objectForJson(schema)).toBe(schema);
+	});
+
 	describe("On flat objects", () => {
-		const schema = zodObjectForJson(schemaBase);
+		const schema = objectForJson(schemaBase);
 		type Schema = z.infer<typeof schema>;
 		type SchemaJson = Jsonify<Schema>;
 
@@ -42,7 +47,7 @@ describe("zodObjectForJson", () => {
 	});
 
 	describe("On nested objects", () => {
-		const schema = zodObjectForJson(
+		const schema = objectForJson(
 			schemaBase.extend({
 				n: schemaBase.optional(),
 				z: z.object({ a: z.number() }).optional(),
@@ -79,7 +84,7 @@ describe("zodObjectForJson", () => {
 	});
 
 	describe("On discriminated objects", () => {
-		const schema = zodObjectForJson(
+		const schema = objectForJson(
 			z.discriminatedUnion("_type", [
 				z.object({ _type: z.literal("a"), a: z.date().optional() }),
 				z.object({ _type: z.literal("b"), n: schemaBase.optional() }),
@@ -113,7 +118,7 @@ describe("zodObjectForJson", () => {
 		});
 
 		it("should be ok with nested discrimination", () => {
-			const schema = zodObjectForJson(
+			const schema = objectForJson(
 				z
 					.object({
 						a: z.number(),

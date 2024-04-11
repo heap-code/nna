@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 import type { EnumSchema } from "./enum";
-import type { ZodNestedType } from "../../../zod";
+import type { NestedType } from "../../../zod";
 import type { FilterValue, FilterValueOperatorMap } from "../filter-value";
 
 /** Zod schema for FilterValue ordernable type */
@@ -13,7 +13,7 @@ export type FilterZodOrdType =
 	| z.ZodString;
 
 /** Zod schema for FilterValue comparable type */
-export type FilterZodEqType = ZodNestedType<FilterZodOrdType>;
+export type FilterZodEqType = NestedType<FilterZodOrdType>;
 
 /**
  * Creates a validation schema for a value query filter operators

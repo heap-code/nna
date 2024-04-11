@@ -1,26 +1,26 @@
 import * as z from "zod";
 
 import {
-	ExploreZodSchemaFirstPartyNestedResultFound,
-	ZodAnyFirstPartySchemaTypeName,
-	findZodSchemaFirstPartyNested,
-	isZodSchemaFirstPartyNestedType,
+	ExploreSchemaFirstPartyNestedResultFound,
+	AnyFirstPartySchemaTypeName,
+	findSchemaFirstPartyNested,
+	isSchemaFirstPartyNestedType,
 } from "./first-party-nested-type";
 
-describe("ZodSchemaFirstPartyNestedType", () => {
-	describe("findZodSchemaFirstPartyNested", () => {
+describe("SchemaFirstPartyNestedType", () => {
+	describe("findSchemaFirstPartyNested", () => {
 		it("should not found types", () => {
 			expect(
-				findZodSchemaFirstPartyNested(z.date(), () => false).found,
+				findSchemaFirstPartyNested(z.date(), () => false).found,
 			).toBe(false);
 		});
 
 		it("should explore and return correctly on first level", () => {
 			for (const schema of [z.number(), z.string()]) {
-				const result = findZodSchemaFirstPartyNested(
+				const result = findSchemaFirstPartyNested(
 					schema,
 					({ _def }) => _def.typeName === schema._def.typeName,
-				) as ExploreZodSchemaFirstPartyNestedResultFound<
+				) as ExploreSchemaFirstPartyNestedResultFound<
 					typeof schema,
 					typeof schema
 				>;
@@ -33,7 +33,7 @@ describe("ZodSchemaFirstPartyNestedType", () => {
 
 		it("should explore and be able to replace", () => {
 			for (const schema of [z.date(), z.enum(["a", "b"])]) {
-				const _result = findZodSchemaFirstPartyNested(
+				const _result = findSchemaFirstPartyNested(
 					schema.nullable().optional().readonly(),
 					({ _def }) => _def.typeName === schema._def.typeName,
 				);
@@ -54,7 +54,7 @@ describe("ZodSchemaFirstPartyNestedType", () => {
 
 	it("should determine type", () => {
 		const tests: Array<
-			[z.ZodTypeAny, ZodAnyFirstPartySchemaTypeName[], boolean]
+			[z.ZodTypeAny, AnyFirstPartySchemaTypeName[], boolean]
 		> = [
 			[z.string(), [z.ZodFirstPartyTypeKind.ZodString], true],
 			[z.object({}), [z.ZodFirstPartyTypeKind.ZodString], false],
@@ -77,9 +77,7 @@ describe("ZodSchemaFirstPartyNestedType", () => {
 		];
 
 		for (const [schema, types, expected] of tests) {
-			expect(isZodSchemaFirstPartyNestedType(schema, types)).toBe(
-				expected,
-			);
+			expect(isSchemaFirstPartyNestedType(schema, types)).toBe(expected);
 		}
 	});
 });

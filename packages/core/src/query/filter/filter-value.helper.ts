@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 import type { FilterZodEqType } from "./values/common";
-import { isZodSchemaFirstPartyNestedType } from "../../zod/first-party-nested-type";
+import { isSchemaFirstPartyNestedType } from "../../zod";
 
 /** @internal */
 const TYPES = [
@@ -22,5 +22,5 @@ const TYPES = [
 export function isFilterValueConvertible(
 	schema: z.ZodTypeAny,
 ): schema is FilterZodEqType {
-	return isZodSchemaFirstPartyNestedType(schema, TYPES);
+	return isSchemaFirstPartyNestedType(schema, TYPES);
 }

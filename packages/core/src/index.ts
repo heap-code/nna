@@ -1,3 +1,3 @@
 export * from "./model";
 export * from "./query";
-export * from "./zod";
+export * as Zod from "./zod";

@@ -2,8 +2,8 @@ import * as z from "zod";
 
 import { dateString } from "./date-string";
 import {
-	ZodAnyFirstPartySchemaType,
-	findZodSchemaFirstPartyNested,
+	AnyFirstPartySchemaType,
+	findSchemaFirstPartyNested,
 } from "./first-party-nested-type";
 
 /** @internal */
@@ -15,9 +15,9 @@ const ZOD_OFJ_TYPE = [
 ] as const;
 /** @internal */
 function isOFJ(
-	schema: ZodAnyFirstPartySchemaType,
+	schema: AnyFirstPartySchemaType,
 ): schema is Extract<
-	ZodAnyFirstPartySchemaType,
+	AnyFirstPartySchemaType,
 	{ _def: { typeName: (typeof ZOD_OFJ_TYPE)[number] } }
 > {
 	return ZOD_OFJ_TYPE.includes(schema._def.typeName as never);
@@ -25,7 +25,7 @@ function isOFJ(
 
 /** @internal */
 function fromProperty<T extends z.ZodTypeAny>(propertySchema: T): T | false {
-	const result = findZodSchemaFirstPartyNested(propertySchema, isOFJ);
+	const result = findSchemaFirstPartyNested(propertySchema, isOFJ);
 	if (!result.found) {
 		return false;
 	}
@@ -96,7 +96,7 @@ type ZodDiscriminated = z.ZodDiscriminatedUnion<
 /** @internal */
 type ZodObject = z.ZodObject<z.ZodRawShape>;
 /** Zod Object schemas that can be made "JSON compatible */
-export type ZodObjectForJson = ZodDiscriminated | ZodObject;
+export type ObjectForJson = ZodDiscriminated | ZodObject;
 
 /**
  * Makes a given Zod schema compatible for JSON use.
@@ -107,9 +107,7 @@ export type ZodObjectForJson = ZodDiscriminated | ZodObject;
  * @param schema to make "JSON-compatible"
  * @returns a new schema "JSON-compatible" or the given input if no change is needed
  */
-export function zodObjectForJson<const T extends ZodObjectForJson>(
-	schema: T,
-): T {
+export function objectForJson<const T extends ObjectForJson>(schema: T): T {
 	const schemaJSON = fromProperty(schema);
 	return schemaJSON === false ? schema : (schemaJSON as T);
 }

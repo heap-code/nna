@@ -1,24 +1,24 @@
 import * as z from "zod";
 
-import { ZodNestedType } from "./types";
+import { NestedType } from "./types";
 
 /** Mostly any known Zod type */
-export type ZodAnyFirstPartySchemaType =
+export type AnyFirstPartySchemaType =
 	| z.ZodFirstPartySchemaTypes
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- to use logic as the library one
 	| z.ZodReadonly<any>;
 
 /** @internal */
-interface ExploreZodSchemaFirstPartyNestedBase<T extends boolean> {
+interface ExploreSchemaFirstPartyNestedBase<T extends boolean> {
 	/** Has the schema been found */
 	found: T;
 }
 
 /** When a schema was found */
-export interface ExploreZodSchemaFirstPartyNestedResultFound<
-	T extends ZodAnyFirstPartySchemaType, // Found schema
-	U extends ZodAnyFirstPartySchemaType, // schema that replaces
-> extends ExploreZodSchemaFirstPartyNestedBase<true> {
+export interface ExploreSchemaFirstPartyNestedResultFound<
+	T extends AnyFirstPartySchemaType, // Found schema
+	U extends AnyFirstPartySchemaType, // schema that replaces
+> extends ExploreSchemaFirstPartyNestedBase<true> {
 	/**
 	 * Replace the found schema in the "tree".
 	 * It re-apply the modification of the parents.
@@ -29,21 +29,21 @@ export interface ExploreZodSchemaFirstPartyNestedResultFound<
 	 * @param schema to replace the current for
 	 * @returns the tree of with the replaced schema
 	 */
-	replace: (schema: U) => ZodNestedType<U>;
+	replace: (schema: U) => NestedType<U>;
 	/** Schema found from the {@link ExploreZodSchemaFirstPartyNestedOptions.lookFor} */
 	schema: T;
 }
 /** When no schema was found */
-export type ExploreZodSchemaFirstPartyNestedResultNotFound =
-	ExploreZodSchemaFirstPartyNestedBase<false>;
+export type ExploreSchemaFirstPartyNestedResultNotFound =
+	ExploreSchemaFirstPartyNestedBase<false>;
 
-/** Result for {@link findZodSchemaFirstPartyNested} */
-export type ExploreZodSchemaFirstPartyNestedResult<
-	T extends ZodAnyFirstPartySchemaType,
-	U extends ZodAnyFirstPartySchemaType,
+/** Result for {@link findSchemaFirstPartyNested} */
+export type ExploreSchemaFirstPartyNestedResult<
+	T extends AnyFirstPartySchemaType,
+	U extends AnyFirstPartySchemaType,
 > =
-	| ExploreZodSchemaFirstPartyNestedResultFound<T, U>
-	| ExploreZodSchemaFirstPartyNestedResultNotFound;
+	| ExploreSchemaFirstPartyNestedResultFound<T, U>
+	| ExploreSchemaFirstPartyNestedResultNotFound;
 
 /**
  * Explores first-level type of Zod schema.
@@ -57,16 +57,14 @@ export type ExploreZodSchemaFirstPartyNestedResult<
  * 	It can use a 'type-predicate' to determine the returned type
  * @returns result of the exploration
  */
-export function findZodSchemaFirstPartyNested<
-	S extends ZodNestedType<ZodAnyFirstPartySchemaType>,
+export function findSchemaFirstPartyNested<
+	S extends NestedType<AnyFirstPartySchemaType>,
 	R extends
-		ZodNestedType<ZodAnyFirstPartySchemaType> = ZodNestedType<ZodAnyFirstPartySchemaType>,
+		NestedType<AnyFirstPartySchemaType> = NestedType<AnyFirstPartySchemaType>,
 >(
-	schema: ZodNestedType<ZodAnyFirstPartySchemaType>,
-	predicate: (
-		schema: ZodNestedType<ZodAnyFirstPartySchemaType>,
-	) => schema is S,
-): ExploreZodSchemaFirstPartyNestedResult<S, R>;
+	schema: NestedType<AnyFirstPartySchemaType>,
+	predicate: (schema: NestedType<AnyFirstPartySchemaType>) => schema is S,
+): ExploreSchemaFirstPartyNestedResult<S, R>;
 /**
  * Explores first-level type of Zod schema.
  * That means than any object related schema is untouched
@@ -76,16 +74,13 @@ export function findZodSchemaFirstPartyNested<
  * @param predicate A function to determine when the wanted schema is found
  * @returns result of the exploration
  */
-export function findZodSchemaFirstPartyNested<
+export function findSchemaFirstPartyNested<
 	R extends
-		ZodNestedType<ZodAnyFirstPartySchemaType> = ZodNestedType<ZodAnyFirstPartySchemaType>,
+		NestedType<AnyFirstPartySchemaType> = NestedType<AnyFirstPartySchemaType>,
 >(
-	schema: ZodNestedType<ZodAnyFirstPartySchemaType>,
-	predicate: (schema: ZodNestedType<ZodAnyFirstPartySchemaType>) => boolean,
-): ExploreZodSchemaFirstPartyNestedResult<
-	ZodNestedType<ZodAnyFirstPartySchemaType>,
-	R
->;
+	schema: NestedType<AnyFirstPartySchemaType>,
+	predicate: (schema: NestedType<AnyFirstPartySchemaType>) => boolean,
+): ExploreSchemaFirstPartyNestedResult<NestedType<AnyFirstPartySchemaType>, R>;
 /**
  * Explores first-level type of Zod schema.
  * That means than any object related schema is untouched
@@ -98,16 +93,13 @@ export function findZodSchemaFirstPartyNested<
  * 	It can use a 'type-predicate' to determine the returned type
  * @returns result of the exploration
  */
-export function findZodSchemaFirstPartyNested<
+export function findSchemaFirstPartyNested<
 	R extends
-		ZodNestedType<ZodAnyFirstPartySchemaType> = ZodNestedType<ZodAnyFirstPartySchemaType>,
+		NestedType<AnyFirstPartySchemaType> = NestedType<AnyFirstPartySchemaType>,
 >(
-	schema: ZodNestedType<ZodAnyFirstPartySchemaType>,
-	predicate: (schema: ZodNestedType<ZodAnyFirstPartySchemaType>) => boolean,
-): ExploreZodSchemaFirstPartyNestedResult<
-	ZodNestedType<ZodAnyFirstPartySchemaType>,
-	R
-> {
+	schema: NestedType<AnyFirstPartySchemaType>,
+	predicate: (schema: NestedType<AnyFirstPartySchemaType>) => boolean,
+): ExploreSchemaFirstPartyNestedResult<NestedType<AnyFirstPartySchemaType>, R> {
 	const found = predicate(schema);
 	if (found) {
 		return { found, replace: schema => schema, schema };
@@ -117,14 +109,11 @@ export function findZodSchemaFirstPartyNested<
 	const nestedReplace = (
 		{ innerType }: z.ZodNullableDef | z.ZodOptionalDef | z.ZodReadonlyDef,
 		replace: (
-			schema: ZodAnyFirstPartySchemaType,
-		) => ZodNestedType<ZodAnyFirstPartySchemaType>,
-	): ExploreZodSchemaFirstPartyNestedResult<
-		ZodAnyFirstPartySchemaType,
-		R
-	> => {
-		const res = findZodSchemaFirstPartyNested(
-			innerType as ZodAnyFirstPartySchemaType,
+			schema: AnyFirstPartySchemaType,
+		) => NestedType<AnyFirstPartySchemaType>,
+	): ExploreSchemaFirstPartyNestedResult<AnyFirstPartySchemaType, R> => {
+		const res = findSchemaFirstPartyNested(
+			innerType as AnyFirstPartySchemaType,
 			predicate,
 		);
 
@@ -146,9 +135,9 @@ export function findZodSchemaFirstPartyNested<
 	return { found: false };
 }
 
-/** Typename definition from {@link ZodAnyFirstPartySchemaType} */
-export type ZodAnyFirstPartySchemaTypeName =
-	ZodAnyFirstPartySchemaType["_def"]["typeName"];
+/** Typename definition from {@link AnyFirstPartySchemaType} */
+export type AnyFirstPartySchemaTypeName =
+	AnyFirstPartySchemaType["_def"]["typeName"];
 
 /**
  * Determines if the given schema if of type or given nested type
@@ -157,15 +146,15 @@ export type ZodAnyFirstPartySchemaTypeName =
  * @param types that the schema should be directly or on a nested level
  * @returns if the schema satisfy one the given types
  */
-export function isZodSchemaFirstPartyNestedType<
-	const T extends ZodAnyFirstPartySchemaTypeName,
+export function isSchemaFirstPartyNestedType<
+	const T extends AnyFirstPartySchemaTypeName,
 >(
-	schema: ZodAnyFirstPartySchemaType,
+	schema: AnyFirstPartySchemaType,
 	types: readonly T[],
-): schema is ZodNestedType<
-	Extract<ZodAnyFirstPartySchemaType, { _def: { typeName: T } }>
+): schema is NestedType<
+	Extract<AnyFirstPartySchemaType, { _def: { typeName: T } }>
 > {
-	return findZodSchemaFirstPartyNested(schema, ({ _def }) =>
+	return findSchemaFirstPartyNested(schema, ({ _def }) =>
 		types.includes(_def.typeName as never),
 	).found;
 }
