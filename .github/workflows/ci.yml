@@ -4,20 +4,95 @@ on:
   pull_request:
     branches:
       - master
-      - release/v*
     types: [opened, synchronize, ready_for_review]
+  workflow_call: {}
 
 concurrency:
-  group: "${{ github.workflow }} - ${{ github.head_ref || github.ref }}"
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
   cancel-in-progress: true
 
 jobs:
   checks:
+    # To not run on draft PRs
     if: github.event.pull_request.draft == false
 
-    uses: ./.github/workflows/reusable-ci.yml
-    secrets:
-      NX_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
-    with:
-      # NX token not used to limit its usage (credits)
+    runs-on: ubuntu-latest
+    env:
+      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
       NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: master
+      - name: Use Node.js ${{ vars.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./package.json', './package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
+        name: Install packages
+        run: npm ci
+
+      # If the cache is used
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        run: npm run postinstall
+
+      # Verify that all mikro-orm versions are correct (useful for renovate)
+      - name: Verify Mikro-orm versions
+        run: npx mikro-orm debug
+
+      - name: Lint
+        run: npm run lint
+      - name: Stylelint
+        run: npm run stylelint
+
+      - name: Comments coverage
+        run: npm run compodoc:coverage
+
+      # To verify test files and if some compilers ignore typechecking
+      - name: Run typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Tests
+        run: npm run test:ci
+
+      # FIXME: a way to remove `NX_PARALLEL` (currently fails too often in CI, maybe du to lack of CPUs)
+      - name: Tests e2e
+        run: NX_PARALLEL=1 npm run test:e2e:ci
+
+      - name: Upload Cypress artifacts in case of error in `frontend`
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          if-no-files-found: warn
+          name: cypress-logs
+          path: dist/cypress/apps/frontend-e2e/
+          retention-days: 7
+
+      - name: Upload Cypress artifacts in case of error in `office`
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          if-no-files-found: warn
+          name: cypress-logs
+          path: dist/cypress/apps/office-e2e/
+          retention-days: 7

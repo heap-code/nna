@@ -4,6 +4,9 @@
 	"automergeStrategy": "squash",
 	"extends": ["config:recommended", "group:definitelyTyped"],
 	"labels": ["dependencies", "renovate"],
+	"lockFileMaintenance": {
+		"enabled": true
+	},
 	"minimumReleaseAge": "3 days",
 	"osvVulnerabilityAlerts": true,
 	"packageRules": [

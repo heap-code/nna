@@ -11,9 +11,8 @@ concurrency:
 
 jobs:
   checks:
-    uses: ./.github/workflows/reusable-ci.yml
-    secrets:
-      NX_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
 
   job:
     # Ignore the heap-code bot commits and devDependencies
@@ -45,8 +44,8 @@ jobs:
           path: |
             ./node_modules
             ~/.cache/Cypress
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
-          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./package.json', './package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
 
       - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
         name: Install packages
