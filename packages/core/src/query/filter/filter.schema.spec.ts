@@ -117,7 +117,7 @@ describe("Filter schema", () => {
 						],
 						date: { $eq: "" as unknown as Date },
 					},
-					1, // Due to complexity only one error is reported in that case
+					4,
 				],
 			];
 
