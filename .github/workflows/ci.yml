@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
-      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') }}
+      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') || github.actor == 'dependabot[bot]' }}
 
     steps:
       - uses: actions/checkout@v4
