@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/typescript-node:20
+FROM mcr.microsoft.com/devcontainers/typescript-node:22
 
 # Add some utilities
 # `bash-completion` some tools (e.g. git) can use this
