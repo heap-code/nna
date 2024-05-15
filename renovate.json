@@ -11,6 +11,13 @@
 	"osvVulnerabilityAlerts": true,
 	"packageRules": [
 		{
+			"matchDatasources": ["docker"],
+			"matchPackageNames": ["node"],
+			"matchPackagePatterns": ["/node$/"],
+			"versionCompatibility": "^(?<version>[^-]+)(?<compatibility>-.*)?$",
+			"versioning": "node"
+		},
+		{
 			"extends": ["packages:jsUnitTest"],
 			"groupName": "testing packages",
 			"matchPackageNames": ["cypress"]

@@ -133,7 +133,7 @@
 		"url-loader": "^4.1.1"
 	},
 	"engines": {
-		"node": ">=18.0.0"
+		"node": "^20"
 	},
 	"homepage": "https://github.com/heap-code/nna",
 	"license": "MIT",
