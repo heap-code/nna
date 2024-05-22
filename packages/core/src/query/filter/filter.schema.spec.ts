@@ -341,4 +341,108 @@ describe("Filter schema", () => {
 			});
 		});
 	});
+
+	describe("With lazy content", () => {
+		const schemaBase = schemaFlat.extend({
+			lazyNumber: z.lazy(() => z.number()),
+		});
+
+		// TODO: transform this to a type-helper (and make it better, e.g. with optional)
+		type SchemaCircularItself = "__zod_circular_";
+		type SchemaCircular<
+			Base extends z.AnyZodObject,
+			Out extends object = z.infer<Base>,
+		> = z.ZodObject<
+			z.objectUtil.extendShape<
+				Base["shape"],
+				{
+					[K in keyof Out]: z.ZodType<
+						Out[K] extends SchemaCircularItself
+							? z.infer<SchemaCircular<Base, Out>>
+							: Out[K]
+					>;
+				}
+			>,
+			Base["_def"]["unknownKeys"],
+			Base["_def"]["catchall"],
+			Base["_output"] & {
+				[K in keyof Out]: Out[K] extends SchemaCircularItself
+					? z.infer<SchemaCircular<Base, Out>>
+					: Out[K];
+			}
+		>;
+
+		const schemaLoop: SchemaCircular<
+			typeof schemaBase,
+			{
+				lazyObject: SchemaCircularItself;
+				lazyObject2: SchemaCircularItself;
+			}
+		> = schemaBase.extend({
+			lazyObject: z.lazy(() => schemaLoop),
+			lazyObject2: z.lazy(() => schemaLoop),
+		});
+
+		type SchemaWithLazy = z.infer<typeof schemaLoop>;
+		const filterSchema = schema(schemaLoop, { strict: true });
+
+		it("should be valid", () => {
+			const orders: Array<Filter<SchemaWithLazy>> = [
+				{ boolean: true, lazyNumber: { $gt: 2 } },
+				{ lazyObject: { date: new Date(), string: "" } },
+				{ lazyObject: { lazyNumber: { $ne: 0 } } },
+				{ lazyObject: { lazyObject: {} } },
+				{
+					lazyObject: {
+						lazyObject: {
+							lazyNumber: { $in: [1] },
+							lazyObject: { lazyNumber: 0 },
+						},
+					},
+				},
+			];
+
+			for (const order of orders) {
+				expect(filterSchema.parse(order)).toStrictEqual(order);
+			}
+		});
+
+		it("should not be valid", () => {
+			// @ts-expect-error -- desired to be a wrong value
+			const invalidValue: number = "__";
+			const orders: Array<[Filter<SchemaWithLazy>, number]> = [
+				[{ lazyNumber: invalidValue }, 1],
+				[
+					{
+						lazyObject: {
+							lazyNumber: invalidValue,
+							number: { $ne: invalidValue },
+						},
+					},
+					2,
+				],
+				[{ lazyObject: { lazyObject: { lazyObject: 1 as never } } }, 1],
+				[
+					{
+						lazyObject: {
+							lazyObject: {
+								lazyNumber: { $in: [invalidValue] },
+								number: invalidValue,
+							},
+						},
+					},
+					2,
+				],
+			];
+
+			for (const [order, nError] of orders) {
+				const result = filterSchema.safeParse(
+					order,
+				) as z.SafeParseError<never>;
+
+				expect(result.success).toBe(false);
+				expect(result.error.errors).toHaveLength(nError);
+			}
+		});
+	});
 });
