@@ -16,9 +16,10 @@ function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
 	const schema = z
 		.object(
 			Object.fromEntries(
-				Object.entries(shape)
-					.map(([key, schema]) => [key, fromType(schema, options)])
-					.filter(([, schema]) => schema !== null),
+				Object.entries(shape).map(([key, schema]) => [
+					key,
+					fromType(schema, options),
+				]),
 			),
 		)
 		.partial();
@@ -63,10 +64,7 @@ function fromDiscriminated(
 }
 
 /** @internal */
-function fromType(
-	zodType: z.ZodTypeAny,
-	options: ObjectOptions,
-): z.ZodType | null {
+function fromType(zodType: z.ZodTypeAny, options: ObjectOptions): z.ZodType {
 	if (isFilterValueConvertible(zodType)) {
 		// The schema use `QueryPrimitive`
 		return z.lazy(() => FilterValue.value(zodType, options));
@@ -75,24 +73,26 @@ function fromType(
 	const { _def } = zodType as
 		| QueryObjectSchema
 		| z.ZodArray<z.ZodTypeAny>
+		| z.ZodLazy<z.ZodTypeAny>
 		| z.ZodUnknown;
 
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodArray) {
-		// For an array, explore its type
-		return z.lazy(() => fromType(_def.type, options) || z.never());
-	}
+	switch (_def.typeName) {
+		case z.ZodFirstPartyTypeKind.ZodArray:
+			// For an array, explore its type
+			return z.lazy(() => fromType(_def.type, options));
+		case z.ZodFirstPartyTypeKind.ZodLazy:
+			return z.lazy(() => fromType(_def.getter(), options));
 
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
-		// For a nested object, it simply needs to explore its shape
-		return z.lazy(() => fromShape(_def.shape(), options));
-	}
+		case z.ZodFirstPartyTypeKind.ZodObject:
+			// For a nested object, it simply needs to explore its shape
+			return z.lazy(() => fromShape(_def.shape(), options));
+		case z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
+			return z.lazy(() => fromDiscriminated(_def, options));
 
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
-		return z.lazy(() => fromDiscriminated(_def, options));
+		default:
+			// Unmanaged/unknown type
+			return z.never();
 	}
-
-	// Unmanaged/unknown type
-	return null;
 }
 
 /** Options to create an object filter validation schema */
