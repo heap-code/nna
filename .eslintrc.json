@@ -39,11 +39,35 @@
 						"enforceBuildableLibDependency": true
 					}
 				],
+				"jsdoc/multiline-blocks": [
+					"error",
+					{
+						"minimumLengthForMultiline": 40,
+						"noMultilineBlocks": true
+					}
+				],
+				"jsdoc/no-blank-blocks": [
+					"error",
+					{
+						"enableFixer": true
+					}
+				],
 				"jsdoc/no-undefined-types": "off",
+				"jsdoc/require-asterisk-prefix": ["error", "always"],
 				/* Hyphen is considered as a bullet point in compodoc */
 				"jsdoc/require-hyphen-before-param-description": [
 					"error",
 					"never"
+				],
+				"jsdoc/require-jsdoc": [
+					"warn",
+					{
+						"contexts": [
+							"TSEnumDeclaration",
+							"TSInterfaceDeclaration"
+						],
+						"publicOnly": true
+					}
 				],
 				"jsdoc/require-param": [
 					"warn",

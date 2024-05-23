@@ -1,3 +1,4 @@
+import { Migrator } from "@mikro-orm/migrations";
 import { MikroOrmModuleOptions } from "@mikro-orm/nestjs";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import path from "path";
@@ -12,6 +13,7 @@ const pathSeeders = path.join(__dirname, "seeders");
 /** The default configuration from this `OrmModule` for mikro-orm. */
 export const ORM_DEFAULT_CONFIGURATION = {
 	driver: PostgreSqlDriver,
+	extensions: [Migrator],
 
 	// The paths will be incorrect once builded
 	// as it is desired that the CLI is not usable on the compiled code

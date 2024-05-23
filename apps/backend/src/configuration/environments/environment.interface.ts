@@ -5,6 +5,13 @@ import { OrmModuleSyncOptions } from "../../orm/orm.module";
 
 /** The environment contains the information to run the application. */
 export interface Environment {
+	/** All information related to authentication */
+	auth: {
+		/** Default duration (in seconds) of an authenticated session */
+		duration: number;
+		/** The secret string (for JWT encoding) */
+		secret: string;
+	};
 	/** All information related to the database */
 	db: Pick<
 		OrmModuleSyncOptions,

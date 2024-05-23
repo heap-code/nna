@@ -2,6 +2,7 @@ import { ZodValidationPipe } from "@anatine/zod-nestjs";
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import helmet from "helmet";
 
 import { AppModule } from "./app/app.module";
 import { ConfigurationService } from "./configuration";
@@ -20,6 +21,7 @@ void (async () => {
 		}),
 		ENVIRONMENT.logger === true ? {} : { logger: ENVIRONMENT.logger },
 	);
+
 	const configService = app.get(ConfigurationService);
 	const { host, logger, swagger } = configService.configuration;
 
@@ -28,12 +30,14 @@ void (async () => {
 	}
 
 	app.setGlobalPrefix(host.globalPrefix)
+		.use(helmet({}))
 		.useGlobalPipes(new ZodValidationPipe())
 		.enableShutdownHooks()
 		.enableCors({ ...host.cors });
 
 	if (swagger) {
 		const options = new DocumentBuilder()
+			.addBearerAuth()
 			.setTitle(`${configService.APP_NAME} API`)
 			.setVersion(configService.APP_VERSION)
 			.build();

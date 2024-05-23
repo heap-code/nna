@@ -10,7 +10,12 @@ export const ORM_DEFAULT_CONFIGURATION = {
 	validate: true,
 	validateRequired: true,
 
-	// CLI usage
-	migrations: { emit: "ts", snapshot: true, snapshotName: "snapshot" },
+	// CLI usage (the migrations can also be used programmatically)
+	migrations: {
+		emit: "ts",
+		snapshot: true,
+		snapshotName: "snapshot",
+		tableName: "_orm_migrations_",
+	},
 	seeder: { emit: "ts" },
 } as const satisfies MikroOrmModuleOptions;

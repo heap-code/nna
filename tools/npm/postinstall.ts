@@ -1,9 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-/**
- * Run the npm postinstall command
- */
+/** Run the npm postinstall command */
 (() => {
 	const pathRoot = path.join(__dirname, "../../");
 	const pathApps = path.join(pathRoot, "apps");
