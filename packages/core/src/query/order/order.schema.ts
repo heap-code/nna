@@ -45,19 +45,24 @@ function fromType(zodType: z.ZodTypeAny, options: OrderOptions): z.ZodType {
 	const { _def } = zodType as
 		| QueryObjectSchema
 		| z.ZodArray<z.ZodTypeAny>
+		| z.ZodLazy<z.ZodTypeAny>
 		| z.ZodUnknown;
 
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodArray) {
-		return z.lazy(() => fromType(_def.type, options));
-	}
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodObject) {
-		return z.lazy(() => fromShape(_def.shape(), options));
-	}
-	if (_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion) {
-		return z.lazy(() => fromDiscriminated(_def, options));
-	}
+	switch (_def.typeName) {
+		case z.ZodFirstPartyTypeKind.ZodArray:
+			// For an array, explore its type
+			return z.lazy(() => fromType(_def.type, options));
+		case z.ZodFirstPartyTypeKind.ZodLazy:
+			return z.lazy(() => fromType(_def.getter(), options));
+		case z.ZodFirstPartyTypeKind.ZodObject:
+			// For a nested object, it simply needs to explore its shape
+			return z.lazy(() => fromShape(_def.shape(), options));
+		case z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
+			return z.lazy(() => fromDiscriminated(_def, options));
 
-	return OrderValue.orderValue;
+		default:
+			return OrderValue.orderValue;
+	}
 }
 
 /** Options to create a query order validation schema */

@@ -194,4 +194,87 @@ describe("Order schema", () => {
 			}
 		});
 	});
+
+	describe("With lazy content", () => {
+		const schemaBase = schemaFlat.extend({
+			lazyNumber: z.lazy(() => z.number()),
+		});
+
+		type SchemaLoop<Base extends z.AnyZodObject> = z.ZodObject<
+			z.objectUtil.extendShape<
+				Base["shape"],
+				{ lazyObject: z.ZodLazy<SchemaLoop<Base>> }
+			>,
+			Base["_def"]["unknownKeys"],
+			Base["_def"]["catchall"],
+			z.infer<Base> & { lazyObject: z.infer<SchemaLoop<Base>> },
+			z.infer<Base> & { lazyObject: z.infer<SchemaLoop<Base>> }
+		>;
+
+		const schemaLoop: SchemaLoop<typeof schemaBase> = schemaBase.extend({
+			lazyObject: z.lazy(() => schemaLoop),
+		});
+
+		type SchemaWithLazy = z.infer<typeof schemaLoop>;
+		const orderSchema = Order.order(schemaLoop, { strict: true });
+
+		it("should be valid", () => {
+			const orders: Array<QueryOrder<SchemaWithLazy>> = [
+				{ boolean: "asc", lazyNumber: "desc" },
+				{ lazyObject: { date: "asc_nl", string: "desc_nf" } },
+				{ lazyObject: { lazyNumber: "desc" } },
+				{ lazyObject: { lazyObject: {} } },
+				{
+					lazyObject: {
+						lazyObject: {
+							lazyNumber: "asc",
+							lazyObject: { lazyNumber: "desc" },
+						},
+					},
+				},
+			];
+
+			for (const order of orders) {
+				expect(orderSchema.parse(order)).toStrictEqual(order);
+			}
+		});
+
+		it("should not be valid", () => {
+			// @ts-expect-error -- desired to be a wrong value
+			const invalidValue: OrderValue = "__";
+			const orders: Array<[QueryOrder<SchemaWithLazy>, number]> = [
+				[{ lazyNumber: invalidValue }, 1],
+				[
+					{
+						lazyObject: {
+							lazyNumber: invalidValue,
+							number: invalidValue,
+						},
+					},
+					2,
+				],
+				[{ lazyObject: { lazyObject: { lazyObject: 1 as never } } }, 1],
+				[
+					{
+						lazyObject: {
+							lazyObject: {
+								lazyNumber: invalidValue,
+								number: invalidValue,
+							},
+						},
+					},
+					2,
+				],
+			];
+
+			for (const [order, nError] of orders) {
+				const result = orderSchema.safeParse(
+					order,
+				) as z.SafeParseError<never>;
+
+				expect(result.success).toBe(false);
+				expect(result.error.errors).toHaveLength(nError);
+			}
+		});
+	});
 });
