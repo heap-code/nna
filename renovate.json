@@ -7,7 +7,7 @@
 	"lockFileMaintenance": {
 		"enabled": true
 	},
-	"minimumReleaseAge": "3 days",
+	"minimumReleaseAge": "5 days",
 	"osvVulnerabilityAlerts": true,
 	"packageRules": [
 		{
