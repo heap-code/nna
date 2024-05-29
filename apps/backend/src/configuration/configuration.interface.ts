@@ -7,7 +7,7 @@ import { OrmModuleSyncOptions } from "../orm/orm.module";
  * It can be overridden for specific usages (such as testing).
  */
 export interface Configuration extends Omit<Environment, "db"> {
-	/** NPM information */
+	/** NPM information (it may not come from NPM) */
 	npm: {
 		/** Name of the app */
 		name: string;

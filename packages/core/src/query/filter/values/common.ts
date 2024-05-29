@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 import type { EnumSchema } from "./enum";
-import type { NestedType } from "../../../zod";
+import type { NestedType } from "../../../schema";
 import type { FilterValue, FilterValueOperatorMap } from "../filter-value";
 
 /** Zod schema for FilterValue ordernable type */

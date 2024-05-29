@@ -1,10 +1,9 @@
 import { DynamicModule, Module } from "@nestjs/common";
+import { RouterModule } from "@nestjs/core";
+import { extractModulesFromRoutes } from "@nna/nest";
 import { PartialDeep } from "type-fest";
 
-import { APP_ROUTER } from "./app.router";
-import { GroupModule } from "./group/group.module";
-import { PersonModule } from "./person/person.module";
-import { UserModule } from "./user/user.module";
+import { APP_ROUTES } from "./app.routes";
 import {
 	Configuration,
 	ConfigurationModule,
@@ -18,15 +17,13 @@ export type AppModuleOptions = PartialDeep<Configuration>;
 /** The application module */
 @Module({
 	imports: [
-		APP_ROUTER,
-		GroupModule,
+		...extractModulesFromRoutes(APP_ROUTES),
 		OrmModule.forRootAsync({
 			inject: [ConfigurationService],
 			useFactory: (service: ConfigurationService) =>
 				service.getOrmOptions(),
 		}),
-		PersonModule,
-		UserModule,
+		RouterModule.register(APP_ROUTES),
 	],
 })
 export class AppModule {

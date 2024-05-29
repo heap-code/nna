@@ -1,9 +1,7 @@
 import { QueryOrder } from "@mikro-orm/core";
 import { QueryOrderValue } from "@nna/core";
 
-/**
- * Order Values (subset of Mikro-orm ones)
- */
+/** Order Values (subset of Mikro-orm ones) */
 export type OrderValue =
 	| QueryOrder.ASC
 	| QueryOrder.ASC_NULLS_FIRST

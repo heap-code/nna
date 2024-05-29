@@ -1,8 +1,6 @@
 import axios from "axios";
 
-/**
- * Setup for backend e2e testing
- */
+/** Setup for backend e2e testing */
 export default function () {
 	// Configure axios for tests to use.
 	const host = process.env.HOST ?? "localhost";

@@ -1,3 +1,6 @@
+import { Schemas } from "@nna/core";
+import * as z from "zod";
+
 import { Environment } from "./environment.interface";
 
 /**
@@ -6,27 +9,30 @@ import { Environment } from "./environment.interface";
  * For other environments, prefer using a custom `environment.<env>.ts` file.
  * Even if it also uses `process.env.<...>`.
  */
-interface EnvironmentShellDefault {
+export interface EnvironmentShellDefault {
+	/** Override auth secret */
+	BE_AUTH_SECRET?: string;
+
 	/** Override DB host */
-	NNA_DB_HOST?: string;
+	BE_DB_HOST?: string;
 	/** Override DB name */
-	NNA_DB_NAME?: string;
+	BE_DB_NAME?: string;
 	/** Override DB pass */
-	NNA_DB_PASS?: string;
+	BE_DB_PASS?: string;
 	/** Override DB port */
-	NNA_DB_PORT?: string;
+	BE_DB_PORT?: string;
 	/** Override DB user */
-	NNA_DB_USER?: string;
+	BE_DB_USER?: string;
 
 	/** Override HTTP hostname */
-	NNA_HTTP_HOST?: string;
+	BE_HTTP_HOST?: string;
 	/** Override HTTP port */
-	NNA_HTTP_PORT?: string;
+	BE_HTTP_PORT?: string;
 	/** Override HTTP prefix */
-	NNA_HTTP_PREFIX?: string;
+	BE_HTTP_PREFIX?: string;
 }
 
-/** @internal */
+/** The environment typed with defaults */
 const env = process.env as EnvironmentShellDefault;
 
 /**
@@ -36,13 +42,19 @@ const env = process.env as EnvironmentShellDefault;
  * Can also be used to be merged to any other environment
  */
 export const ENVIRONMENT_DEFAULT: Environment = {
+	auth: {
+		duration: 60 * 60, // 1 hour
+		secret: z.string().min(1).default("a secret").parse(env.BE_AUTH_SECRET),
+	},
 	db: {
-		dbName: env.NNA_DB_NAME || "nna",
+		dbName: z.string().min(1).default("nna").parse(env.BE_DB_NAME),
 		debug: false,
-		host: env.NNA_DB_HOST || "localhost",
-		password: env.NNA_DB_PASS || "PASSWORD",
-		port: env.NNA_DB_PORT ? Number(env.NNA_DB_PORT) : 5432,
-		user: env.NNA_DB_USER || "nna",
+		host: z.string().min(1).default("localhost").parse(env.BE_DB_NAME),
+		password: z.string().default("PASSWORD").parse(env.BE_DB_PASS),
+		port: Schemas.port(z.coerce.number())
+			.default(5432)
+			.parse(env.BE_DB_PORT),
+		user: z.string().default("nna").parse(env.BE_DB_USER),
 	},
 	host: {
 		cors: {
@@ -55,9 +67,11 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 				/\/\/172.(1[6-9]|2\d|3[01])(?:.\d{1,3}){2}/,
 			],
 		},
-		globalPrefix: env.NNA_HTTP_PREFIX || "api",
-		name: env.NNA_HTTP_HOST || "127.0.0.1",
-		port: env.NNA_HTTP_PORT ? Number(env.NNA_DB_PORT) : 3000,
+		globalPrefix: z.string().default("api").parse(env.BE_HTTP_PREFIX),
+		name: z.string().ip().default("127.0.0.1").parse(env.BE_HTTP_HOST),
+		port: Schemas.port(z.coerce.number())
+			.default(3000)
+			.parse(env.BE_HTTP_PORT),
 	},
 	logger: ["debug", "error", "warn"],
 	swagger: true,

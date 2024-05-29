@@ -10,10 +10,7 @@ import {
 import { EntityQueryFilter } from "./entity.query-filter";
 import { EntityQueryOrders } from "./entity.query-order";
 
-/**
- * A service for entities.
- * It only contains read operations
- */
+/** A service for entities. It only contains read operations */
 export abstract class EntityReadonlyService<
 	T extends ModelBase,
 	Repository extends EntityRepository<T> = EntityRepository<T>,

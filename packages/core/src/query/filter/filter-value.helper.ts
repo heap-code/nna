@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 import type { FilterZodEqType } from "./values/common";
-import { isSchemaFirstPartyNestedType } from "../../zod";
+import { isSchemaFirstPartyNestedType } from "../../schema";
 
 /** @internal */
 const TYPES = [

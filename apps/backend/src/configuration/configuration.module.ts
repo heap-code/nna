@@ -1,6 +1,6 @@
 import { ConfigurableModuleBuilder, Global, Module } from "@nestjs/common";
 import { Inject, Injectable } from "@nestjs/common";
-import { deepmerge } from "deepmerge-ts";
+import { deepmergeCustom } from "deepmerge-ts";
 import { PartialDeep } from "type-fest";
 
 import { Configuration } from "./configuration.interface";
@@ -40,7 +40,7 @@ export class ConfigurationService {
 	) {
 		const { db, ...env } = ENVIRONMENT;
 
-		this.configuration = deepmerge(
+		this.configuration = deepmergeCustom({ mergeArrays: false })(
 			{
 				...env,
 				npm: { name: "unknown", version: "unknown" },
@@ -50,7 +50,7 @@ export class ConfigurationService {
 		);
 
 		this.APP_NAME = this.configuration.npm.name;
-		this.APP_VERSION = this.configuration.npm.name;
+		this.APP_VERSION = this.configuration.npm.version;
 	}
 
 	/**

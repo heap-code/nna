@@ -7,9 +7,7 @@ import * as z from "zod";
  */
 export type QueryPrimitive = Date | boolean | number | string | null;
 
-/**
- * Zod Object schemas managed by this `Query` "package"
- */
+/** Zod Object schemas managed by this `Query` "package" */
 export type QueryObjectSchema =
 	| z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>>
 	| z.ZodObject<z.ZodRawShape>;

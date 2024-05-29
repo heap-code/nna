@@ -15,7 +15,14 @@
 						}
 					]
 				},
-				"production": {}
+				"production": {
+					"fileReplacements": [
+						{
+							"replace": "apps/backend/src/configuration/environments/environment.ts",
+							"with": "apps/backend/src/configuration/environments/environment.prod.ts"
+						}
+					]
+				}
 			},
 			"defaultConfiguration": "production",
 			"executor": "@nx/webpack:webpack",
