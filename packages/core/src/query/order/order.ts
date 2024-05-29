@@ -1,9 +1,7 @@
 import { OrderValue } from "./order-value";
 import { QueryPrimitive } from "../query.types";
 
-/**
- * Object type representing an ordering query.
- */
+/** Object type representing an ordering query. */
 export type Order<T> = {
 	[K in keyof T]?: T[K] extends QueryPrimitive
 		? OrderValue

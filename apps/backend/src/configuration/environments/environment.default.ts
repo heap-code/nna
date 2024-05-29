@@ -1,4 +1,4 @@
-import { CoreZod } from "@nna/core";
+import { Schemas } from "@nna/core";
 import * as z from "zod";
 
 import { Environment } from "./environment.interface";
@@ -51,7 +51,7 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 		debug: false,
 		host: z.string().min(1).default("localhost").parse(env.BE_DB_NAME),
 		password: z.string().default("PASSWORD").parse(env.BE_DB_PASS),
-		port: CoreZod.port(z.coerce.number())
+		port: Schemas.port(z.coerce.number())
 			.default(5432)
 			.parse(env.BE_DB_PORT),
 		user: z.string().default("nna").parse(env.BE_DB_USER),
@@ -69,7 +69,7 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 		},
 		globalPrefix: z.string().default("api").parse(env.BE_HTTP_PREFIX),
 		name: z.string().ip().default("127.0.0.1").parse(env.BE_HTTP_HOST),
-		port: CoreZod.port(z.coerce.number())
+		port: Schemas.port(z.coerce.number())
 			.default(3000)
 			.parse(env.BE_HTTP_PORT),
 	},

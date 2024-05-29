@@ -3,9 +3,7 @@ import { QueryOrder, QueryPrimitive } from "@nna/core";
 
 import { OrderValue, fromQueryOrderValue } from "./order-value";
 
-/**
- * Object type representing an ordering query for an entity.
- */
+/** Object type representing an ordering query for an entity. */
 export type Order<T extends object> = {
 	[K in EntityKey<T>]?: T[K] extends QueryPrimitive
 		? OrderValue

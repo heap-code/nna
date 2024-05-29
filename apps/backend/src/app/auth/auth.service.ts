@@ -1,14 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
-import { AuthConfig } from "./auth.config";
-
 @Injectable()
 export class AuthService {
-	public constructor(
-		public readonly config: AuthConfig,
-		private readonly jwtService: JwtService,
-	) {}
+	public constructor(private readonly jwtService: JwtService) {}
 
 	/**
 	 * Validates a given payload

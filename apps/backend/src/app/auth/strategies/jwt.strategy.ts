@@ -31,7 +31,8 @@ export class AuthJwtStrategy
 			ignoreExpiration: false,
 			jwtFromRequest: ExtractJwt.fromExtractors<Request>([
 				ExtractJwt.fromAuthHeaderAsBearerToken(),
-				req => req.signedCookies,
+				// req => req.signedCookies, // TODO
+				req => null,
 			]),
 			secretOrKeyProvider: () => this.config.config.secret,
 		} satisfies StrategyOptions);
@@ -43,15 +44,10 @@ export class AuthJwtStrategy
 	}
 }
 
-interface B<T extends string> {
-	type: T;
-}
-
-type A = B<"local">;
-
 interface JWTPlayload {
 	// TODO
-	method: A;
+	/** What is/was the methods used to connect */
+	method: null;
 	/** Id of the user connected */
 	userId: UserEntity[ModelPrimaryKey];
 	/**

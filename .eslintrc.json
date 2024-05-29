@@ -42,7 +42,7 @@
 				"jsdoc/multiline-blocks": [
 					"error",
 					{
-						"minimumLengthForMultiline": 40,
+						"minimumLengthForMultiline": 60,
 						"noMultilineBlocks": true
 					}
 				],
