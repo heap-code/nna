@@ -10,6 +10,10 @@ import { Environment } from "./environment.interface";
  * Even if it also uses `process.env.<...>`.
  */
 export interface EnvironmentShellDefault {
+	/** Override auth cookie, set `false` to disable (enabled by default) */
+	BE_AUTH_COOKIE?: "false" | "true";
+	/** Override auth cookie name, useless without {@link BE_AUTH_COOKIE} */
+	BE_AUTH_COOKIE_NAME?: string;
 	/** Override auth secret */
 	BE_AUTH_SECRET?: string;
 
@@ -43,7 +47,17 @@ const env = process.env as EnvironmentShellDefault;
  */
 export const ENVIRONMENT_DEFAULT: Environment = {
 	auth: {
-		duration: 60 * 60, // 1 hour
+		cookie:
+			env.BE_AUTH_COOKIE === "false"
+				? false
+				: {
+						name: z
+							.string()
+							.default("auth_cookie")
+							.parse(env.BE_AUTH_COOKIE_NAME),
+					},
+		// 1 hour
+		duration: 60 * 60,
 		secret: z.string().min(1).default("a secret").parse(env.BE_AUTH_SECRET),
 	},
 	db: {

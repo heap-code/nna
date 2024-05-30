@@ -3,10 +3,20 @@ import { CorsOptions } from "@nestjs/common/interfaces/external/cors-options.int
 
 import { OrmModuleSyncOptions } from "../../orm/orm.module";
 
+/** Environment data for authCookie */
+export interface EnvironmentAuthCookie {
+	/** Name of the HTTP-only cookie */
+	name: string;
+
+	// TODO: secure?
+}
+
 /** The environment contains the information to run the application. */
 export interface Environment {
 	/** All information related to authentication */
 	auth: {
+		/** Information for the cookie, `false` to disable */
+		cookie: EnvironmentAuthCookie | false;
 		/** Default duration (in seconds) of an authenticated session */
 		duration: number;
 		/** The secret string (for JWT encoding) */
