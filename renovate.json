@@ -23,10 +23,15 @@
 			"matchPackageNames": ["cypress"]
 		},
 		{
+			"excludePackageNames": ["eslint"],
 			"extends": ["packages:eslint"],
 			"groupName": "Linting packages",
 			"groupSlug": "linting",
 			"matchPackageNames": ["@darraghor/eslint-plugin-nestjs-typed"]
+		},
+		{
+			"allowedVersions": "<9",
+			"matchPackageNames": ["eslint"]
 		},
 		{
 			"extends": ["packages:stylelint"],
