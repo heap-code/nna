@@ -13,7 +13,7 @@ const ENVIRONMENT_PROD: PartialDeep<Environment> = {
 			],
 		},
 	},
-	logger: true,
+	logger: "pino",
 };
 
 /** This export the default environment with prod overrides */

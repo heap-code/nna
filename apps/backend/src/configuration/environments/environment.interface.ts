@@ -49,8 +49,8 @@ export interface Environment {
 		/** The port this application will listen to */
 		port: number;
 	};
-	/** NestJS logger */
-	logger: LogLevel[] | boolean;
+	/** Logger configuration */
+	logger: LogLevel[] | boolean | "pino";
 	/** Activates the swagger interface */
 	swagger: boolean;
 }

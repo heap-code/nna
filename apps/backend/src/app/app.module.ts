@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { RouterModule } from "@nestjs/core";
 import { extractModulesFromRoutes } from "@nna/nest";
+import { LoggerModule } from "nestjs-pino";
 import { PartialDeep } from "type-fest";
 
 import { APP_ROUTES } from "./app.routes";
@@ -18,6 +19,7 @@ export type AppModuleOptions = PartialDeep<Configuration>;
 @Module({
 	imports: [
 		...extractModulesFromRoutes(APP_ROUTES),
+		LoggerModule.forRoot({ pinoHttp: { level: "debug" } }),
 		OrmModule.forRootAsync({
 			inject: [ConfigurationService],
 			useFactory: (service: ConfigurationService) =>

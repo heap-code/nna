@@ -9,7 +9,8 @@ export class AuthService {
 	public constructor(private readonly jwtService: JwtService) {}
 
 	/**
-	 * Validates a given payload
+	 * Validates a JWT payload.
+	 * The JWT payload is supposed to come from a validated session
 	 *
 	 * @param payload the JWT payload to validate
 	 * @returns the user if validated
