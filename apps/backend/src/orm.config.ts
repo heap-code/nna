@@ -1,5 +1,7 @@
 import { MikroORM } from "@mikro-orm/core";
+import { SeedManager } from "@mikro-orm/seeder";
 import { NestFactory } from "@nestjs/core";
+import { deepmerge } from "deepmerge-ts";
 
 import { AppModule } from "./app/app.module";
 
@@ -25,5 +27,10 @@ export default async () => {
 
 	// Let be sure to close the app (even if it is not supposed to run until the `listen` call)
 	await app.close();
-	return orm.config.getAll();
+	const config = orm.config.getAll();
+
+	// The seeder is only enabled for the CLI
+	return deepmerge(config, { extensions: [SeedManager] } satisfies Partial<
+		typeof config
+	>);
 };

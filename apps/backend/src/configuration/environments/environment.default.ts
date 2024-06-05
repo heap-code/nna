@@ -7,7 +7,7 @@ import { Environment } from "./environment.interface";
  * Possible override from env shell (local).
  *
  * For other environments, prefer using a custom `environment.<env>.ts` file.
- * Even if it also uses `process.env.<...>`.
+ * Even if it re-uses this content.
  */
 export interface EnvironmentShellDefault {
 	/** Override auth cookie, set `false` to disable (enabled by default) */
@@ -47,28 +47,25 @@ const env = process.env as EnvironmentShellDefault;
  */
 export const ENVIRONMENT_DEFAULT: Environment = {
 	auth: {
-		cookie:
-			env.BE_AUTH_COOKIE === "false"
-				? false
-				: {
-						name: z
-							.string()
-							.default("auth_cookie")
-							.parse(env.BE_AUTH_COOKIE_NAME),
-					},
+		cookie: {
+			name: z
+				.string()
+				.default("authToken")
+				.parse(env.BE_AUTH_COOKIE_NAME),
+		},
 		// 1 hour
 		duration: 60 * 60,
-		secret: z.string().min(1).default("a secret").parse(env.BE_AUTH_SECRET),
+		secret: z.string().default("Keep it secret!").parse(env.BE_AUTH_SECRET),
 	},
 	db: {
-		dbName: z.string().min(1).default("nna").parse(env.BE_DB_NAME),
+		dbName: z.string().min(1).default("db").parse(env.BE_DB_NAME),
 		debug: false,
-		host: z.string().min(1).default("localhost").parse(env.BE_DB_NAME),
+		host: z.string().min(1).default("localhost").parse(env.BE_DB_HOST),
 		password: z.string().default("PASSWORD").parse(env.BE_DB_PASS),
 		port: Schemas.port(z.coerce.number())
 			.default(5432)
 			.parse(env.BE_DB_PORT),
-		user: z.string().default("nna").parse(env.BE_DB_USER),
+		user: z.string().default("user").parse(env.BE_DB_USER),
 	},
 	host: {
 		cors: {

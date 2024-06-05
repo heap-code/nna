@@ -19,7 +19,15 @@ export type AppModuleOptions = PartialDeep<Configuration>;
 @Module({
 	imports: [
 		...extractModulesFromRoutes(APP_ROUTES),
-		LoggerModule.forRoot({ pinoHttp: { level: "debug" } }),
+		LoggerModule.forRootAsync({
+			inject: [ConfigurationService],
+			useFactory: ({ configuration }: ConfigurationService) => ({
+				pinoHttp: {
+					enabled: configuration.logger === "pino",
+					level: "debug",
+				},
+			}),
+		}),
 		OrmModule.forRootAsync({
 			inject: [ConfigurationService],
 			useFactory: (service: ConfigurationService) =>

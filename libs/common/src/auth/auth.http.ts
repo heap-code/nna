@@ -1,4 +1,9 @@
-import { AuthLoginDto } from "./dtos";
+import {
+	AuthLoginDto,
+	AuthProfileDto,
+	AuthRefreshDto,
+	AuthSuccessDto,
+} from "./dtos";
 
 export const AUTH_HTTP_CONFIG = {
 	path: "auth",
@@ -16,13 +21,13 @@ export interface AuthHttp {
 	// TODO
 
 	/** @returns the information of the connected session */
-	getProfile(): Promise<void>;
+	getProfile(): Promise<AuthProfileDto>;
 	/**
 	 * Logs in a user
 	 *
 	 * @param body containing the credentials
 	 */
-	login(body: AuthLoginDto): Promise<void>;
+	login(body: AuthLoginDto): Promise<AuthSuccessDto>;
 	/** Logout a user (only useful with cookies) */
 	logout(): Promise<void>;
 	/**
@@ -30,5 +35,5 @@ export interface AuthHttp {
 	 *
 	 * @param body the options when refreshing
 	 */
-	refresh(body: unknown): Promise<void>;
+	refresh(body: AuthRefreshDto): Promise<AuthSuccessDto>;
 }

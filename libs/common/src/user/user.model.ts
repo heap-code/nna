@@ -2,7 +2,7 @@ import { Model } from "@nna/core";
 import * as z from "zod";
 
 export const userSchema = Model.schema.extend({
-	email: z.string({ description: "Email of the user" }).email(),
+	username: z.string({ description: "Identifier of the user" }),
 });
 
 export type UserModel = z.infer<typeof userSchema>;

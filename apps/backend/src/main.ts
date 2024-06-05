@@ -2,6 +2,7 @@ import { ZodValidationPipe } from "@anatine/zod-nestjs";
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import * as cookieParser from "cookie-parser";
 import helmet from "helmet";
 import * as Pino from "nestjs-pino";
 
@@ -29,7 +30,7 @@ void (async () => {
 
 	const { APP_NAME, APP_VERSION, configuration } =
 		app.get(ConfigurationService);
-	const { host, logger, swagger } = configuration;
+	const { auth, host, logger, swagger } = configuration;
 
 	// Refine logger
 	if (logger === "pino") {
@@ -39,6 +40,7 @@ void (async () => {
 	}
 
 	app.setGlobalPrefix(host.globalPrefix)
+		.use(cookieParser.default(auth.secret))
 		.use(helmet({}))
 		.useGlobalPipes(new ZodValidationPipe())
 		.enableShutdownHooks()
@@ -47,6 +49,12 @@ void (async () => {
 	if (swagger) {
 		const options = new DocumentBuilder()
 			.addBearerAuth()
+			.addCookieAuth(auth.cookie.name, {
+				description:
+					"As described <a href='https://swagger.io/docs/specification/authentication/cookie-authentication/' target='_blank' >here</a>, it does not work with the Swagger UI." +
+					"<br>However, the <i>Curl</i> example works fine and the cookie itself is stored in the browser",
+				type: "apiKey",
+			})
 			.setTitle(`${APP_NAME} API`)
 			.setVersion(APP_VERSION)
 			.build();

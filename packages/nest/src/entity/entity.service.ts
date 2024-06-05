@@ -35,6 +35,7 @@ export interface EntityServiceWithCreate<
 	 */
 	create(toCreate: ToCreate): Promise<T>;
 }
+
 /** An {@link EntityService} with update functionality */
 export interface EntityServiceWithUpdate<
 	T extends ModelBase,
@@ -49,6 +50,7 @@ export interface EntityServiceWithUpdate<
 	 */
 	updateById(id: T[ModelPrimaryKey], toUpdate: ToUpdate): Promise<T>;
 }
+
 /** An {@link EntityService} with delete functionality */
 export interface EntityServiceWithDelete<T extends ModelBase> {
 	/**

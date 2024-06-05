@@ -29,6 +29,10 @@
 		"*.yaml": "yaml",
 		"*.yml": "yaml"
 	},
+	"sqltools.autoOpenSessionFiles": false,
+	"sqltools.flattenGroupsIfOne": true,
+	"sqltools.queryParams.enableReplace": true,
+	"sqltools.results.reuseTabs": "connection",
 	"stylelint.enable": true,
 	"stylelint.snippet": ["css", "scss"],
 	"stylelint.validate": ["css", "scss"]

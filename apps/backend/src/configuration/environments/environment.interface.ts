@@ -8,7 +8,7 @@ export interface EnvironmentAuthCookie {
 	/** Name of the HTTP-only cookie */
 	name: string;
 
-	// TODO: secure?
+	// TODO: secure (for HTTPS)?
 }
 
 /** The environment contains the information to run the application. */
@@ -16,7 +16,7 @@ export interface Environment {
 	/** All information related to authentication */
 	auth: {
 		/** Information for the cookie, `false` to disable */
-		cookie: EnvironmentAuthCookie | false;
+		cookie: EnvironmentAuthCookie;
 		/** Default duration (in seconds) of an authenticated session */
 		duration: number;
 		/** The secret string (for JWT encoding) */
