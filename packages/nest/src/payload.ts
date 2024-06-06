@@ -8,9 +8,8 @@ import * as z from "zod";
  * @param schema to create the class from
  * @returns A class usable with NestJS Validation Pipe
  */
-export function createValidationClass<T extends z.ZodTypeAny>(schema: T) {
+export function createPayload<T extends z.ZodTypeAny>(schema: T) {
 	return createZodDto(extendApi(schema));
 }
 
-// TODO
-export { ZodValidationPipe as AppValidationPipe } from "@anatine/zod-nestjs";
+export { ZodValidationPipe as PayloadValidationPipe } from "@anatine/zod-nestjs";

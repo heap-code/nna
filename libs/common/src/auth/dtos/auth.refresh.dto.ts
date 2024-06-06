@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const authRefreshSchema = z.object({
+export const schema = z.object({
 	cookie: z
 		.boolean()
 		.default(false)
@@ -8,4 +8,4 @@ export const authRefreshSchema = z.object({
 		.optional(),
 });
 
-export type AuthRefreshDto = z.infer<typeof authRefreshSchema>;
+export type Dto = z.infer<typeof schema>;

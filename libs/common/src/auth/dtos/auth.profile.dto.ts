@@ -1,7 +1,8 @@
-import { AuthSuccessDto } from "./auth.success.dto";
+import * as z from "zod";
 
-export interface AuthProfileDto
-	extends Pick<AuthSuccessDto, "emitted_at" | "expire_at"> {
-	// TODO
-	id: number;
-}
+import { schema as successSchema } from "./auth.success.dto";
+
+// TODO
+export const schema = successSchema.pick({ expireOn: true, issuedAt: true });
+
+export type Dto = z.infer<typeof schema>;

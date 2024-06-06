@@ -2,13 +2,19 @@ import { NotFoundError } from "@mikro-orm/core";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcryptjs from "bcryptjs";
-import { JwtPayload } from "jsonwebtoken";
+import { AuthSuccess } from "~/common/auth/dtos";
 
 import { JWT } from "./jwt";
 import { AuthSession } from "./session";
 import { ConfigurationService } from "../../configuration";
 import { UserEntity } from "../user/user.entity";
 import { UserService } from "../user/user.service";
+
+/** The result of the JWT signature */
+export type AuthJwtSignResult = Pick<
+	AuthSuccess.Dto,
+	"expireOn" | "issuedAt" | "token"
+>;
 
 /** Service for authentication operations */
 @Injectable()
@@ -33,6 +39,22 @@ export class AuthService {
 	public static hash(password: string) {
 		// Random salt size
 		return bcryptjs.hash(password, 10 + Math.round(Math.random() * 3));
+	}
+
+	/**
+	 * Extracts the dates from the JWT payload, usable withing JS.
+	 *
+	 * @param payload to get the dates from
+	 * @returns the date (for JS)
+	 */
+	public static extractDateRange(
+		payload: JWT.PayloadFull,
+	): Pick<AuthSuccess.Dto, "expireOn" | "issuedAt"> {
+		const { exp, iat } = payload;
+		return {
+			expireOn: new Date(exp * 1000),
+			issuedAt: new Date(iat * 1000),
+		};
 	}
 
 	public constructor(
@@ -102,8 +124,8 @@ export class AuthService {
 	 * @param payload payload to validate
 	 * @returns A payload (possibly cleaned)
 	 */
-	public validateJwtPayload(payload: unknown): Promise<JWT.Payload> {
-		const parseResult = JWT.payloadSchema.safeParse(payload);
+	public validateJwtPayload(payload: unknown): Promise<JWT.PayloadFull> {
+		const parseResult = JWT.payloadFullSchema.safeParse(payload);
 		if (!parseResult.success) {
 			// TODO: It may be wanted to return information(s) about what invalidated the payload
 			return Promise.reject(new UnauthorizedException());
@@ -119,8 +141,9 @@ export class AuthService {
 	 * @param payload the JWT payload to hydrate (supposed to come from a validated session)
 	 * @returns The {@link AuthSession} from the {@link JWT.Payload}
 	 */
-	public hydrateJwt(payload: JWT.Payload): Promise<AuthSession> {
+	public hydrateJwt(payload: JWT.PayloadFull): Promise<AuthSession> {
 		return Promise.resolve({
+			...AuthService.extractDateRange(payload),
 			getUser: () => this.userService.findById(payload.userId),
 			payload,
 		});
@@ -132,19 +155,15 @@ export class AuthService {
 	 * @param payload to sign
 	 * @returns an object with a JWT token
 	 */
-	public async signJwtPayload(payload: JWT.Payload) {
+	public async signJwtPayload(
+		payload: JWT.Payload,
+	): Promise<AuthJwtSignResult> {
 		const token = await this.jwtService.signAsync(payload);
-		// These values DOES exist in the payload
-		// The browser could decode theses, but lets avoid any browser operation for authentication
-		const { exp, iat } =
-			this.jwtService.decode<Required<JwtPayload>>(token);
+		const dates = AuthService.extractDateRange(
+			this.jwtService.decode<JWT.PayloadFull>(token),
+		);
 
-		return {
-			// * 1000 for JS Dates
-			emitted_at: new Date(iat * 1000),
-			expire_at: new Date(exp * 1000),
-			token,
-		};
+		return { ...dates, token };
 	}
 
 	private constructJwtPayload(

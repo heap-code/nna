@@ -1,33 +1,39 @@
-import {
-	AuthLoginDto,
-	AuthProfileDto,
-	AuthRefreshDto,
-	AuthSuccessDto,
-} from "./dtos";
+import { HttpRoute } from "@nna/core";
+
+import { AuthLogin, AuthProfile, AuthRefresh, AuthSuccess } from "./dtos";
 
 export const AUTH_HTTP_CONFIG = {
 	path: "auth",
-	// TODO
-	paths: {
-		getProfile: "profile",
-		login: "login",
-		logout: "logout",
-		refresh: "refresh",
-	} satisfies Record<keyof AuthHttp, unknown>,
+	routes: {
+		getProfile: {
+			method: "GET",
+			path: "profile",
+		},
+		login: {
+			method: "POST",
+			path: "login",
+		},
+		logout: {
+			method: "POST",
+			path: "logout",
+		},
+		refresh: {
+			method: "POST",
+			path: "refresh",
+		},
+	} satisfies Record<keyof AuthHttp, HttpRoute>,
 } as const;
 
 /** HTTP specification for the Auth feature */
 export interface AuthHttp {
-	// TODO
-
 	/** @returns the information of the connected session */
-	getProfile(): Promise<AuthProfileDto>;
+	getProfile(): Promise<AuthProfile.Dto>;
 	/**
 	 * Logs in a user
 	 *
 	 * @param body containing the credentials
 	 */
-	login(body: AuthLoginDto): Promise<AuthSuccessDto>;
+	login(body: AuthLogin.Dto): Promise<AuthSuccess.Dto>;
 	/** Logout a user (only useful with cookies) */
 	logout(): Promise<void>;
 	/**
@@ -35,5 +41,5 @@ export interface AuthHttp {
 	 *
 	 * @param body the options when refreshing
 	 */
-	refresh(body: AuthRefreshDto): Promise<AuthSuccessDto>;
+	refresh(body: AuthRefresh.Dto): Promise<AuthSuccess.Dto>;
 }

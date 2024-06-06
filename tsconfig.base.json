@@ -17,7 +17,8 @@
 			"@nna/core": ["packages/core/src/index.ts"],
 			"@nna/nest": ["packages/nest/src/index.ts"],
 			"~/common/*": ["libs/common/src/*"],
-			"~/front/*": ["libs/front/src/*"]
+			"~/front/*": ["libs/front/src/*"],
+			"~/testing/seeds": ["libs/common/seeds/index.ts"]
 		},
 		"resolveJsonModule": true,
 		"rootDir": ".",

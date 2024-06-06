@@ -1,7 +1,7 @@
-import { ZodValidationPipe } from "@anatine/zod-nestjs";
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { PayloadValidationPipe } from "@nna/nest";
 import * as cookieParser from "cookie-parser";
 import helmet from "helmet";
 import * as Pino from "nestjs-pino";
@@ -41,8 +41,8 @@ void (async () => {
 
 	app.setGlobalPrefix(host.globalPrefix)
 		.use(cookieParser.default(auth.secret))
-		.use(helmet({}))
-		.useGlobalPipes(new ZodValidationPipe())
+		.use(helmet({ contentSecurityPolicy: false }))
+		.useGlobalPipes(new PayloadValidationPipe())
 		.enableShutdownHooks()
 		.enableCors({ ...host.cors });
 

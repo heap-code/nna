@@ -7,8 +7,8 @@ import { OrmModuleSyncOptions } from "../../orm/orm.module";
 export interface EnvironmentAuthCookie {
 	/** Name of the HTTP-only cookie */
 	name: string;
-
-	// TODO: secure (for HTTPS)?
+	/** Use secure cookie (HTTPS) */
+	secure: boolean;
 }
 
 /** The environment contains the information to run the application. */

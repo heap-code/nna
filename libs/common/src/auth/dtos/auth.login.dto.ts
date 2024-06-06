@@ -1,10 +1,10 @@
 import * as z from "zod";
 
-import { authRefreshSchema } from "./auth.refresh.dto";
+import { schema as refreshSchema } from "./auth.refresh.dto";
 
-export const authLoginSchema = authRefreshSchema.extend({
+export const schema = refreshSchema.extend({
 	password: z.string().describe("The password of the credentials"),
 	username: z.string().describe("The username of the credentials"),
 });
 
-export type AuthLoginDto = z.infer<typeof authLoginSchema>;
+export type Dto = z.infer<typeof schema>;

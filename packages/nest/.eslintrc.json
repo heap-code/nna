@@ -11,6 +11,14 @@
 				"@darraghor/nestjs-typed/provided-injected-should-match-factory-parameters": "error",
 				"@darraghor/nestjs-typed/sort-module-metadata-arrays": "error"
 			}
+		},
+		{
+			"files": ["*.controller.ts"],
+			"rules": {
+				// No need, it mainly only is decorators (and comments can be read from schemas)
+				"jsdoc/require-param": "off",
+				"jsdoc/require-returns": "off"
+			}
 		}
 	],
 	"plugins": ["@darraghor/nestjs-typed"]

@@ -1,4 +1,5 @@
 import { type ModelPrimaryKey } from "@nna/core";
+import { JwtPayload } from "jsonwebtoken";
 import * as z from "zod";
 
 import { payloadSourceSchema } from "./source";
@@ -17,11 +18,20 @@ export const payloadSchema = z.object({
 	version: z.string(),
 });
 
+/** Schema for {@link PayloadFull} */
+export const payloadFullSchema = payloadSchema.extend({
+	// !! Simple number values (* 1000 for JS dates)
+	exp: z.number(),
+	iat: z.number(),
+} satisfies Record<keyof Pick<Required<JwtPayload>, "exp" | "iat">, unknown>);
+
 /**
  * Decoded data inside a JWT (or to encoded to a JWT).
  * The data is "raw" and then can be hydrated for an {@link AuthSession}
  */
-
 export type Payload = z.infer<typeof payloadSchema>;
+
+/** The full payload with JWT date included */
+export type PayloadFull = z.infer<typeof payloadFullSchema>;
 
 export * from "./source";

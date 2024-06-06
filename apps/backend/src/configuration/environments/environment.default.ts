@@ -52,6 +52,7 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 				.string()
 				.default("authToken")
 				.parse(env.BE_AUTH_COOKIE_NAME),
+			secure: false,
 		},
 		// 1 hour
 		duration: 60 * 60,

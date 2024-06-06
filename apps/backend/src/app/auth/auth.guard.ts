@@ -32,7 +32,12 @@ export class AuthGuard extends PassportGuard(AUTH_DEFAULT_STRATEGY_NAME) {
 			context.getHandler(),
 		);
 
-		return canActivate || optional;
+		if (!(canActivate || optional)) {
+			// Returning false actually sends a forbidden error
+			throw new UnauthorizedException();
+		}
+
+		return true;
 	}
 
 	private async isJwtValid(context: ExecutionContext) {
