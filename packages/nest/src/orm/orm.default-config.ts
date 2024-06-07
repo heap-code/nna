@@ -7,6 +7,7 @@ class NamingStrategy extends UnderscoreNamingStrategy {
 	public override classToTableName(entityName: string): string {
 		const tableName = super.classToTableName(entityName);
 
+		// Remove the suffix on classes (e.g. UserEntity)
 		const suffix = "_entity";
 		return tableName.endsWith(suffix)
 			? tableName.slice(0, -suffix.length)
@@ -14,6 +15,8 @@ class NamingStrategy extends UnderscoreNamingStrategy {
 	}
 }
 
+/** @internal */
+const ormSeederSuffix = "Seeder";
 /** @internal */
 const seederSuffix = "seeder";
 
@@ -39,7 +42,13 @@ export const ORM_DEFAULT_CONFIGURATION = {
 	},
 	seeder: {
 		emit: "ts",
-		fileName: className =>
-			`${kebabCase(className).slice(0, -seederSuffix.length - 1)}.${seederSuffix}`,
+		fileName: className => {
+			const name = className.endsWith(ormSeederSuffix)
+				? // Remove default suffix from the ORM
+					className.slice(0, -ormSeederSuffix.length)
+				: className;
+
+			return `${kebabCase(name)}.${seederSuffix}`;
+		},
 	},
 } as const satisfies MikroOrmModuleOptions;

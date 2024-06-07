@@ -1,7 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { ExtendFunctions } from "@nna/core";
-import { HttpHandleRoute } from "@nna/nest";
+import { ControllerFor, HttpHandleRoute } from "@nna/nest";
 import { Response } from "express";
 import { AUTH_HTTP_CONFIG, AuthHttp } from "~/common/auth";
 
@@ -19,7 +18,7 @@ import { AuthSession, AuthSessionParam } from "./session";
 
 @ApiTags("Auth")
 @Controller()
-export class AuthController implements ExtendFunctions<AuthHttp> {
+export class AuthController implements ControllerFor<AuthHttp> {
 	public constructor(
 		private readonly config: AuthConfig,
 		private readonly service: AuthService,

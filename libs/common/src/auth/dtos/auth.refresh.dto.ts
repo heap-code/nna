@@ -1,5 +1,6 @@
 import * as z from "zod";
 
+/** Validation schema for {@link Dto} */
 export const schema = z.object({
 	cookie: z
 		.boolean()

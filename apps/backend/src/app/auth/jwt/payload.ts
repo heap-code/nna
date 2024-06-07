@@ -5,7 +5,7 @@ import * as z from "zod";
 import { payloadSourceSchema } from "./source";
 import { type UserEntity } from "../../user/user.entity";
 
-/** Schema for {@link Payload} */
+/** Validation schema for {@link Payload} */
 export const payloadSchema = z.object({
 	/** What is/was the method/source used to connect (and some additional infos) */
 	source: payloadSourceSchema,
@@ -18,7 +18,7 @@ export const payloadSchema = z.object({
 	version: z.string(),
 });
 
-/** Schema for {@link PayloadFull} */
+/** Validation schema for {@link PayloadFull} */
 export const payloadFullSchema = payloadSchema.extend({
 	// !! Simple number values (* 1000 for JS dates)
 	exp: z.number(),

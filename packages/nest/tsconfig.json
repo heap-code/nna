@@ -1,12 +1,8 @@
 {
 	"compilerOptions": {
-		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
 		"module": "commonjs",
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noPropertyAccessFromIndexSignature": true,
-		"strict": true
+		"noPropertyAccessFromIndexSignature": true
 	},
 	"extends": "../../tsconfig.base.json",
 	"files": [],

@@ -7,7 +7,7 @@ import {
 import { SqliteDriver } from "@mikro-orm/sqlite";
 import { Controller, Get, INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import * as supertest from "supertest";
+import supertest from "supertest";
 
 import { OrmModule } from "./orm.module";
 import { EntityNumber } from "../entity/entities";

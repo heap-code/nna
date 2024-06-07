@@ -1,12 +1,7 @@
 {
 	"compilerOptions": {
 		"declaration": true,
-		"forceConsistentCasingInFileNames": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitAny": true,
 		"outDir": "../../dist/out-tsc",
-		"strictBindCallApply": true,
-		"strictNullChecks": true,
 		"target": "es2021",
 		"types": ["node"]
 	},

@@ -11,7 +11,9 @@
 		"module": "esnext",
 		"moduleResolution": "node",
 		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
 		"noImplicitOverride": true,
+		"noImplicitReturns": true,
 		"paths": {
 			"@nna/angular": ["packages/angular/src/index.ts"],
 			"@nna/core": ["packages/core/src/index.ts"],
@@ -26,6 +28,8 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
+		"strictBindCallApply": true,
+		"strictNullChecks": true,
 		"target": "es2021"
 	},
 	"exclude": ["node_modules", "tmp"]
