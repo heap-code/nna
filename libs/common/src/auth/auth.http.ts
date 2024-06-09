@@ -4,7 +4,7 @@ import { AuthLogin, AuthProfile, AuthRefresh, AuthSuccess } from "./dtos";
 
 /** HTTP configuration for the Auth feature */
 export const AUTH_HTTP_CONFIG = {
-	path: "auth",
+	entrypoint: "auth",
 	routes: {
 		/** Returns the information of the connected session */
 		getProfile:
