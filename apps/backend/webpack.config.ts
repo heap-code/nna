@@ -10,8 +10,8 @@ export default composePlugins(withNx({ target: "node" }), config =>
 	deepmerge(config, {
 		plugins: [
 			new DefinePlugin({
-				__NPM_NAME__: JSON.stringify(name),
-				__NPM_VERSION__: JSON.stringify(version),
+				__APP_NAME__: JSON.stringify(name),
+				__APP_VERSION__: JSON.stringify(version),
 			}),
 		],
 	} satisfies typeof config),

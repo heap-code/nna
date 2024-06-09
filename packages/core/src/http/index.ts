@@ -1,2 +1,4 @@
 export * from "./http.method";
-export * from "./http.route";
+export * as HttpRoute from "./route";
+export type { Handlers as HttpRouteHandlers } from "./route";
+export { builder as httpRouteBuilder } from "./route";

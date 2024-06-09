@@ -15,6 +15,17 @@
 						}
 					]
 				},
+				"e2e": {
+					"debug": false,
+					"fileReplacements": [
+						{
+							"replace": "apps/backend/src/main.ts",
+							"with": "apps/backend/src/main.e2e.ts"
+						}
+					],
+					"inspect": false,
+					"optimization": false
+				},
 				"production": {
 					"fileReplacements": [
 						{
@@ -61,6 +72,9 @@
 			"configurations": {
 				"development": {
 					"buildTarget": "backend:build:development"
+				},
+				"e2e": {
+					"buildTarget": "backend:build:e2e"
 				},
 				"production": {
 					"buildTarget": "backend:build:production"

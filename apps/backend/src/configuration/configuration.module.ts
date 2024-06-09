@@ -43,14 +43,14 @@ export class ConfigurationService {
 		this.configuration = deepmergeCustom({ mergeArrays: false })(
 			{
 				...env,
-				npm: { name: "unknown", version: "unknown" },
+				app: { name: "unknown", version: "unknown" },
 				orm: db,
 			} satisfies Configuration,
 			options as Configuration,
 		);
 
-		this.APP_NAME = this.configuration.npm.name;
-		this.APP_VERSION = this.configuration.npm.version;
+		this.APP_NAME = this.configuration.app.name;
+		this.APP_VERSION = this.configuration.app.version;
 	}
 
 	/**

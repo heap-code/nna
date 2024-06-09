@@ -2,7 +2,6 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"AbhijoyBasak.nestjs-files",
 				"Angular.ng-template",
 				"EditorConfig.EditorConfig",
 				"GitHub.vscode-pull-request-github",

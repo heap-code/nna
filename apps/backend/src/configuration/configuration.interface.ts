@@ -8,7 +8,7 @@ import { OrmModuleSyncOptions } from "../orm/orm.module";
  */
 export interface Configuration extends Omit<Environment, "db"> {
 	/** NPM information (it may not come from NPM) */
-	npm: {
+	app: {
 		/** Name of the app */
 		name: string;
 		/** Version of the app */

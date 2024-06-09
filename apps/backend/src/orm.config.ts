@@ -14,7 +14,7 @@ export default async () => {
 	// The `MikroOrmModule` constructs all the configuration with auto-loaded entities.
 	const app = await NestFactory.createApplicationContext(
 		AppModule.forRoot({
-			npm: {
+			app: {
 				name: process.env["npm_package_name"],
 				version: process.env["npm_package_version"],
 			},

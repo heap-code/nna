@@ -1,4 +1,5 @@
 import { HttpRoute } from "@nna/core";
+import { joinSegments } from "packages/core/src/http/route";
 
 import { HttpHandleMethod } from "./http.handle-method";
 
@@ -8,6 +9,14 @@ import { HttpHandleMethod } from "./http.handle-method";
  * @param route definition to handle
  * @returns a method decorator that handles a HTTP request
  */
-export function HttpHandleRoute(route: HttpRoute): MethodDecorator {
-	return HttpHandleMethod(route.method, route.path);
+export function HttpHandleRoute(
+	route: HttpRoute.AnyDefinition,
+): MethodDecorator {
+	return HttpHandleMethod(
+		route.method,
+		joinSegments(
+			route.segments as HttpRoute.Segment[],
+			({ param }) => `:${param}`,
+		),
+	);
 }
