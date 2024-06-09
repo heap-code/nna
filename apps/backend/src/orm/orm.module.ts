@@ -4,8 +4,8 @@ import {
 	Module,
 } from "@nestjs/common";
 import {
-	OrmModule as NnaOrmModule,
-	OrmModuleSyncOptions as NnaOrmModuleSyncOptions,
+	OrmModule as NestOrmModule,
+	OrmModuleSyncOptions as NestOrmModuleSyncOptions,
 } from "@nna/nest";
 import { deepmerge } from "deepmerge-ts";
 
@@ -19,7 +19,7 @@ const {
 	OPTIONS_TYPE,
 } = new ConfigurableModuleBuilder<
 	Pick<
-		NnaOrmModuleSyncOptions["orm"],
+		NestOrmModuleSyncOptions["orm"],
 		| "allowGlobalContext"
 		| "connect"
 		| "dbName"
@@ -39,7 +39,7 @@ export type OrmModuleSyncOptions = typeof OPTIONS_TYPE;
 export type OrmModuleAsyncOptions = typeof ASYNC_OPTIONS_TYPE;
 
 /**
- * Module that extends or overrides the default {@link NnaOrmModule} for app & CLI usage.
+ * Module that extends or overrides the default {@link NestOrmModule} for app & CLI usage.
  */
 @Module({ exports: [MODULE_OPTIONS_TOKEN] })
 export class OrmModule extends ConfigurableModuleClass {
@@ -58,7 +58,7 @@ export class OrmModule extends ConfigurableModuleClass {
 			...module,
 			imports: [
 				...imports,
-				NnaOrmModule.forRootAsync({
+				NestOrmModule.forRootAsync({
 					imports: [dynamicModule],
 					inject: [MODULE_OPTIONS_TOKEN],
 					useFactory: (options: OrmModuleSyncOptions) => ({

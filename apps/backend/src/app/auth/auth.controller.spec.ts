@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { AuthController } from "./auth.controller";
 import { AuthModule } from "./auth.module";
+import { OrmTestingModule } from "../../../test";
 import { ConfigurationModule } from "../../configuration";
 
 describe("AuthController", () => {
@@ -9,7 +10,11 @@ describe("AuthController", () => {
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			imports: [AuthModule, ConfigurationModule.forRoot({})],
+			imports: [
+				AuthModule,
+				ConfigurationModule.forRoot({}),
+				OrmTestingModule,
+			],
 		}).compile();
 
 		controller = module.get<AuthController>(AuthController);
