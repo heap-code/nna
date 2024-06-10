@@ -14,3 +14,56 @@
 | `packages/angular` | ![./.badges/packages/angular](./.badges/packages/angular/code/coverage.svg) | ![./.badges/packages/angular](./.badges/packages/angular/comment/coverage.svg) |
 | `packages/core`    | ![./.badges/packages/core](./.badges/packages/core/code/coverage.svg)       | ![./.badges/packages/core](./.badges/packages/core/comment/coverage.svg)       |
 | `packages/nest`    | ![./.badges/packages/nest](./.badges/packages/nest/code/coverage.svg)       | ![./.badges/packages/nest](./.badges/packages/nest/comment/coverage.svg)       |
+
+## Table of contents
+
+<!-- toc -->
+
+- [Description](#description)
+- [Requirements](#requirements)
+  - [DevContainer](#devcontainer)
+- [Commands](#commands)
+  - [Run the `backend`](#run-the-backend)
+  - [Run the `frontend`](#run-the-frontend)
+  - [Run the `office`](#run-the-office)
+
+<!-- tocstop -->
+
+## Description
+
+!! Description of your project !!
+
+## Requirements
+
+TODO
+
+### DevContainer
+
+TODO
+
+## Commands
+
+Some commands to quickly run the code:
+
+> There is some other global [commands](./docs/commands.md) and
+> some specific for the applications.
+
+TODO
+
+### Run the `backend`
+
+```bash
+npm run backend:start
+```
+
+### Run the `frontend`
+
+```bash
+npm run frontend:start
+```
+
+### Run the `office`
+
+```bash
+npm run office:start
+```

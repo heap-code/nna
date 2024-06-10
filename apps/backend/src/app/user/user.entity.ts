@@ -1,9 +1,20 @@
-import { Entity, Property } from "@mikro-orm/core";
+import { Entity, Property, Ref, StringType } from "@mikro-orm/core";
 import { EntityNumber } from "@nna/nest";
 import { UserModel } from "~/common/user";
 
-@Entity()
+import { UserRepository } from "./user.repository";
+
+@Entity({ repository: () => UserRepository })
 export class UserEntity extends EntityNumber.Entity() implements UserModel {
 	@Property({ unique: true })
-	public email!: string;
+	public username!: string;
+
+	@Property({
+		hidden: true,
+		lazy: true,
+		nullable: false,
+		ref: true,
+		type: StringType,
+	})
+	public password!: Ref<string>;
 }

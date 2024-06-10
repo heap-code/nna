@@ -55,7 +55,7 @@ jobs:
 
       # Verify that all mikro-orm versions are correct (useful for renovate)
       - name: Verify Mikro-orm versions
-        run: npx mikro-orm debug
+        run: npx mikro-orm debug && npx mikro-orm seeder:create TestCI && git clean ./apps --force
 
       - name: Lint
         run: npm run lint

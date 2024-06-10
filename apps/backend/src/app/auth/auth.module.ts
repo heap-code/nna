@@ -6,6 +6,7 @@ import { AuthConfig } from "./auth.config";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { AUTH_DEFAULT_STRATEGY_NAME, AUTH_STRATEGIES } from "./strategies";
+import { UserModule } from "../user/user.module";
 
 @Module({
 	controllers: [AuthController],
@@ -14,14 +15,15 @@ import { AUTH_DEFAULT_STRATEGY_NAME, AUTH_STRATEGIES } from "./strategies";
 		JwtModule.registerAsync({
 			extraProviders: [AuthConfig],
 			inject: [AuthConfig],
-			useFactory: ({ config }: AuthConfig) => ({
-				secret: config.secret,
+			useFactory: ({ config, secret }: AuthConfig) => ({
+				secret,
 				signOptions: { expiresIn: config.duration },
 			}),
 		}),
 		PassportModule.register({
 			defaultStrategy: AUTH_DEFAULT_STRATEGY_NAME,
 		}),
+		UserModule,
 	],
 	providers: [...AUTH_STRATEGIES, AuthConfig, AuthService],
 })

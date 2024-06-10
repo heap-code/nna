@@ -1,34 +1,27 @@
-import { AuthLoginDto } from "./dtos";
+import { HttpRoute } from "@nna/core";
 
+import { AuthLogin, AuthProfile, AuthRefresh, AuthSuccess } from "./dtos";
+
+/** HTTP configuration for the Auth feature */
 export const AUTH_HTTP_CONFIG = {
-	path: "auth",
-	// TODO
-	paths: {
-		getProfile: "profile",
-		login: "login",
-		logout: "logout",
-		refresh: "refresh",
-	} satisfies Record<keyof AuthHttp, unknown>,
+	entrypoint: "auth",
+	routes: {
+		/** Returns the information of the connected session */
+		getProfile:
+			HttpRoute.builder("profile").get<() => Promise<AuthProfile.Dto>>(),
+		/** Logs in a user */
+		login: HttpRoute.builder("login").post<
+			(body: AuthLogin.Dto) => Promise<AuthSuccess.Dto>
+		>(),
+		/** Logout a user (only useful with cookies) */
+		logout: HttpRoute.builder("logout").post<() => Promise<void>>(),
+		/** Refresh an existing token */
+		refresh:
+			HttpRoute.builder("refresh").post<
+				(body: AuthRefresh.Dto) => Promise<AuthSuccess.Dto>
+			>(),
+	} satisfies HttpRoute.Definitions,
 } as const;
 
 /** HTTP specification for the Auth feature */
-export interface AuthHttp {
-	// TODO
-
-	/** @returns the information of the connected session */
-	getProfile(): Promise<void>;
-	/**
-	 * Logs in a user
-	 *
-	 * @param body containing the credentials
-	 */
-	login(body: AuthLoginDto): Promise<void>;
-	/** Logout a user (only useful with cookies) */
-	logout(): Promise<void>;
-	/**
-	 * Refresh an existing token
-	 *
-	 * @param body the options when refreshing
-	 */
-	refresh(body: unknown): Promise<void>;
-}
+export type AuthHttp = HttpRoute.Handlers<typeof AUTH_HTTP_CONFIG.routes>;

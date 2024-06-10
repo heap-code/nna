@@ -10,9 +10,6 @@ export type FilterOptions = FilterObject.ObjectOptions;
 /**
  * Creates a query validation schema for an object schema.
  *
- * Be aware that, due to the intersection of the `FilterObject` and the logical operators (`$and`, `$or`, `$not`),
- * only the errors of one "side" of that intersection are returned (`FilterObject` first)
- *
  * @param schema the object schema to create this filter
  * @param options for the creation of the schema
  * @returns the filter validation schema for the given schema

@@ -1,5 +1,8 @@
 import { Routes } from "@nestjs/core";
 import { AUTH_HTTP_CONFIG } from "~/common/auth";
+import { GROUP_HTTP_CONFIG } from "~/common/group";
+import { PERSON_HTTP_CONFIG } from "~/common/person";
+import { USER_HTTP_CONFIG } from "~/common/user";
 
 import { AuthModule } from "./auth/auth.module";
 import { GroupModule } from "./group/group.module";
@@ -10,8 +13,8 @@ import { HealthModule } from "../health";
 export const APP_ROUTES: Routes = [
 	{ module: HealthModule, path: "_health" },
 
-	{ module: AuthModule, path: AUTH_HTTP_CONFIG.path },
-	{ module: GroupModule, path: "groups" },
-	{ module: PersonModule, path: "persons" },
-	{ module: UserModule, path: "users" },
+	{ module: AuthModule, path: AUTH_HTTP_CONFIG.entrypoint },
+	{ module: GroupModule, path: GROUP_HTTP_CONFIG.entrypoint },
+	{ module: PersonModule, path: PERSON_HTTP_CONFIG.entrypoint },
+	{ module: UserModule, path: USER_HTTP_CONFIG.entrypoint },
 ];

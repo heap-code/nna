@@ -15,7 +15,7 @@ const peopleType = z.discriminatedUnion(
 );
 
 export const personSchema = Model.schema.extend({
-	name: z.string({ description: "Name of the person" }).min(3),
+	name: z.string().describe("Name of the person").min(3),
 	peopleType,
 });
 
