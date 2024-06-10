@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
-      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') || github.actor == 'dependabot[bot]' }}
+      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') }}
 
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
         run: npx mikro-orm debug && npx mikro-orm seeder:create TestCI && git clean ./apps --force
       # `test -f ...` => Only if there is initial migrations
       - name: Check ORM migrations
-        run: test -f ./apps/backend/src/orm/migrations/snapshot.json && npx mikro-orm migration:check
+        run: if [ -f ./apps/backend/src/orm/migrations/snapshot.json ]; then npx mikro-orm migration:check; fi
 
       - name: Lint
         run: npm run lint

@@ -45,14 +45,14 @@ jobs:
         if: ${{ steps.prettier-package-check.outputs.was-changed == 'true' }}
         env:
           # We cannot use secrets.GITHUB_TOKEN for this because it is not permitted to kick off subsequent actions worfklow runs, so we use a PAT instead
-          GITHUB_TOKEN: ${{ secrets.HC_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BOT_GIT_TOKEN }}
         run: |
           npm ci
           npm run lint:fix
 
           # Commit all the changes to the PR (see note on not being able to use secrets.GITHUB_TOKEN for this)
-          git config user.name "heap-code[bot]"
-          git config user.email "${{ vars.HC_BOT }}@users.noreply.github.com"
+          git config user.name "${{ vars.BOT_NAME }}"
+          git config user.email "${{ vars.BOT_NAME }}@users.noreply.github.com"
 
           # If the status is empty, there are no uncommitted changes
           if [[ -z $(git status --porcelain) ]]; then

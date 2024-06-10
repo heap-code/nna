@@ -1,0 +1,80 @@
+# A workflow that directly merges a PR if possible
+#   else it creates a PR with auto-merge option
+# The user (from GIT_TOKEN) should have the rights to write (and possibly by-pass some rules)
+
+name: "[CALLABLE] Merge or PR"
+
+on:
+  workflow_call:
+    inputs:
+      always-pr:
+        description: Always use a PR (no "direct-merge")
+        type: boolean
+        default: false
+      ref_from:
+        description: The source (branch or tag (or commit)) that should be merge into (without `origin/`)
+        type: string
+        required: true
+      ref_from_tag:
+        description: Is the ref from a tag?
+        type: boolean
+        default: false
+      ref_to:
+        description: The target (branch) of the merge (without `origin/`)
+        type: string
+        required: true
+      pr_title:
+        description: 'A title for the PR if a "direct-merge" is not possible'
+        type: string
+    secrets:
+      GIT_TOKEN:
+        required: true
+
+jobs:
+  merge-back:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+      REF_FROM: ${{ (inputs.ref_from_tag && inputs.ref_from) || format('origin/{0}', inputs.ref_from) }}
+
+    steps:
+      - name: Checkout git
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+      - name: Set git config
+        run: |
+          git config user.name "${{ vars.BOT_NAME }}"
+          git config user.email "${{ vars.BOT_NAME }}@users.noreply.github.com"
+
+      - if: ${{ !inputs.always-pr }}
+        id: branch-state
+        name: Get commit behind/ahead
+        run: |
+          FULL=$(git rev-list --left-right --count origin/${{ inputs.ref_to }}...$REF_FROM)
+          BEHIND=${FULL::1}
+          echo "FULL=$FULL" >> $GITHUB_OUTPUT
+          echo "BEHIND=$BEHIND" >> $GITHUB_OUTPUT
+
+      - if: ${{ !inputs.always-pr && steps.branch-state.outputs.BEHIND == '0' }}
+        name: Simple merge to `${{ inputs.ref_to }}`
+        run: git checkout ${{ inputs.ref_to }} && git merge $REF_FROM && git push
+
+      - if: ${{ inputs.always-pr || steps.branch-state.outputs.BEHIND != '0' }}
+        name: Create auto-PR for potential conflicts
+        # - Close a potentially already opened PR
+        # - Create an intermediate branch
+        # - Tries to merge, but abort on any conflict
+        # - Push the branch
+        # - Create (auto-merge) PR
+        run: |
+          PR_BRANCH=merge-back/${{ inputs.ref_from }}
+          PR_TITLE="${{ inputs.pr_title || format('chore(merge-back): update from {0} to {1}', inputs.ref_from, inputs.ref_to) }}"
+          gh pr close $PR_BRANCH -d -c "Another PR will be opened" || echo "OK"
+          git checkout -b $PR_BRANCH
+          git merge origin/${{ inputs.ref_to }} || git merge --abort
+          git push -u origin $PR_BRANCH
+          gh pr create --head ${{ inputs.ref_from }} --base ${{ inputs.ref_to }} --title "$PR_TITLE" --body "This PR will be auto-merged if everything succeed" -r ${{ vars.AUTO_PR_REVIEWERS }}
+          gh pr merge --auto -m -d
