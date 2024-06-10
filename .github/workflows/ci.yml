@@ -77,6 +77,10 @@ jobs:
       - name: Tests
         run: npm run test:ci
 
+      - name: "[docker-compose] Prepare for E2E testing"
+        uses: hoverkraft-tech/compose-action@v1.5.1
+        with:
+          compose-file: "./docker-compose.yml"
       - name: Tests e2e
         run: NX_PARALLEL=1 npm run test:e2e:ci
 
