@@ -29,18 +29,6 @@
 			"settings": {
 				// Ensure correct node version
 				"eslint.runtime": "/usr/local/bin/node",
-				"sqltools.connections": [
-					{
-						"database": "db",
-						"driver": "PostgreSQL",
-						"name": "DB",
-						"password": "PASSWORD",
-						"port": 5432,
-						"previewLimit": 50,
-						"server": "db",
-						"username": "user"
-					}
-				],
 				"sqltools.useNodeRuntime": "/usr/local/bin/node"
 			}
 		}
@@ -57,10 +45,6 @@
 	"postCreateCommand": {
 		"set npx path": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc",
 		"set nx parallel": "echo 'export NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")' >> ~/.bashrc"
-	},
-	"postStartCommand": {
-		"npm": "npm install",
-		"nx": "npx nx reset"
 	},
 	"remoteEnv": {
 		"BE_DB_HOST": "db"

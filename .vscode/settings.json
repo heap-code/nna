@@ -30,6 +30,25 @@
 		"*.yml": "yaml"
 	},
 	"sqltools.autoOpenSessionFiles": false,
+	"sqltools.connections": [
+		{
+			"database": "db",
+			"driver": "PostgreSQL",
+			"name": "🗄️ DB",
+			"password": "PASSWORD",
+			"port": 5432,
+			"previewLimit": 50,
+			"server": "127.0.0.1",
+			"username": "user"
+		},
+		{
+			// For test debuging
+			"database": "./tmp/db.backend-test.sqlite",
+			"driver": "SQLite",
+			"name": "💉 Backend",
+			"previewLimit": 50
+		}
+	],
 	"sqltools.flattenGroupsIfOne": true,
 	"sqltools.queryParams.enableReplace": true,
 	"sqltools.results.reuseTabs": "connection",

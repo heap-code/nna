@@ -1,11 +1,25 @@
-import { OrmModule } from "../src/orm/orm.module";
+import { SqliteDriver } from "@mikro-orm/sqlite";
+import { Module } from "@nestjs/common";
+import { OrmModule as NestOrmModule } from "@nna/nest";
+import * as path from "path";
 
-// TODO
+const dbPath = path.join(
+	__dirname,
+	"..",
+	"..",
+	"tmp",
+	"db.backend-test.sqlite",
+);
 
-export const OrmTestingModule = OrmModule.forRoot({
-	allowGlobalContext: true,
-	dbName: "db-test",
-	host: "db",
-	password: "PASSWORD",
-	user: "user",
-});
+@Module({
+	imports: [
+		NestOrmModule.forRoot({
+			orm: {
+				allowGlobalContext: true,
+				dbName: dbPath,
+				driver: SqliteDriver,
+			},
+		}),
+	],
+})
+export class OrmTestingModule {}

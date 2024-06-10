@@ -7,9 +7,10 @@ import { ConfigurationModule } from "../../configuration";
 
 describe("AuthController", () => {
 	let controller: AuthController;
+	let module: TestingModule;
 
 	beforeEach(async () => {
-		const module: TestingModule = await Test.createTestingModule({
+		module = await Test.createTestingModule({
 			imports: [
 				AuthModule,
 				ConfigurationModule.forRoot({}),
@@ -19,6 +20,8 @@ describe("AuthController", () => {
 
 		controller = module.get<AuthController>(AuthController);
 	});
+
+	afterEach(() => module.close());
 
 	it("should be defined", () => {
 		expect(controller).toBeDefined();

@@ -6,14 +6,17 @@ import { OrmTestingModule } from "../../../test";
 
 describe("UserService", () => {
 	let service: UserService;
+	let module: TestingModule;
 
 	beforeEach(async () => {
-		const module: TestingModule = await Test.createTestingModule({
+		module = await Test.createTestingModule({
 			imports: [OrmTestingModule, UserModule],
 		}).compile();
 
 		service = module.get<UserService>(UserService);
 	});
+
+	afterEach(() => module.close());
 
 	it("should be defined", () => {
 		expect(service).toBeDefined();

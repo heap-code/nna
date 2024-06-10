@@ -1,4 +1,4 @@
-import { Test } from "@nestjs/testing";
+import { Test, TestingModule } from "@nestjs/testing";
 
 import { AuthGuard } from "./auth.guard";
 import { AuthModule } from "./auth.module";
@@ -7,9 +7,10 @@ import { ConfigurationModule } from "../../configuration";
 
 describe("AuthGuard", () => {
 	let guard: AuthGuard;
+	let module: TestingModule;
 
 	beforeEach(async () => {
-		const module = await Test.createTestingModule({
+		module = await Test.createTestingModule({
 			imports: [
 				AuthModule,
 				ConfigurationModule.forRoot({}),
@@ -20,6 +21,8 @@ describe("AuthGuard", () => {
 
 		guard = module.get(AuthGuard);
 	});
+
+	afterEach(() => module.close());
 
 	it("should be defined", () => {
 		expect(guard).toBeDefined();
