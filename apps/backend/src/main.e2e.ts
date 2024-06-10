@@ -11,11 +11,16 @@ declare const __APP_NAME__: string;
 /** @internal */
 declare const __APP_VERSION__: string;
 
+/** @internal */
+const APP_NAME = __APP_NAME__;
+/** @internal */
+const APP_VERSION = __APP_VERSION__;
+
 void (async () => {
 	const logger: LogLevel[] = ["debug", "error", "fatal"];
-	const [app, { APP_NAME, APP_VERSION, host }] = await NestFactory.create(
+	const [app, { host }] = await NestFactory.create(
 		AppModule.forRoot({
-			app: { name: __APP_NAME__, version: `${__APP_VERSION__}-e2e` },
+			app: { name: APP_NAME, version: `${APP_VERSION}-e2e` },
 			auth: {
 				cookie: { name: "e2e-cookie" },
 				duration: 10 * 60,

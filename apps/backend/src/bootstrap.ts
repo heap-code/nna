@@ -48,5 +48,5 @@ export function bootstrap(app: INestApplication) {
 		SwaggerModule.setup(`/${host.globalPrefix}`, app, document);
 	}
 
-	return [app, { APP_NAME, APP_VERSION, ...configuration }] as const;
+	return [app, configuration] as const;
 }

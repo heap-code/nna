@@ -1,5 +1,5 @@
 import { Logger } from "@nestjs/common";
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, repl } from "@nestjs/core";
 
 import { AppModule } from "./app/app.module";
 import { bootstrap } from "./bootstrap";
@@ -11,16 +11,33 @@ declare const __APP_NAME__: string;
 /** @internal */
 declare const __APP_VERSION__: string;
 
+/** @internal */
+const APP_NAME = __APP_NAME__;
+/** @internal */
+const APP_VERSION = __APP_VERSION__;
+
 void (async () => {
-	const [app, { APP_NAME, APP_VERSION, host }] = await NestFactory.create(
-		AppModule.forRoot({
-			app: { name: __APP_NAME__, version: __APP_VERSION__ },
-		}),
-		ENVIRONMENT.logger === "pino"
+	// Enabled if `--repl` appears in the arguments
+	const isREPL = process.argv.slice(1).includes("--repl");
+
+	const module = AppModule.forRoot({
+		app: { name: APP_NAME, version: APP_VERSION },
+		orm: { allowGlobalContext: isREPL },
+	});
+
+	if (isREPL) {
+		await repl(module, { prompt: `REPL[${APP_NAME}@v${APP_VERSION}]> ` });
+		return;
+	}
+
+	const { logger } = ENVIRONMENT;
+	const [app, { host }] = await NestFactory.create(
+		module,
+		logger === "pino"
 			? { bufferLogs: true }
-			: ENVIRONMENT.logger === true
+			: logger === true
 				? {} // All logs
-				: { logger: ENVIRONMENT.logger },
+				: { logger },
 	).then(app => bootstrap(app));
 
 	await app.listen(host.port, host.name);

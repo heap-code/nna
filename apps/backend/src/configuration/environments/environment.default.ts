@@ -11,33 +11,33 @@ import { Environment } from "./environment.interface";
  */
 export interface EnvironmentShellDefault {
 	/** Override auth cookie, set `false` to disable (enabled by default) */
-	BE_AUTH_COOKIE?: "false" | "true";
+	readonly BE_AUTH_COOKIE?: "false" | "true";
 	/** Override auth cookie name, useless without {@link BE_AUTH_COOKIE} */
-	BE_AUTH_COOKIE_NAME?: string;
+	readonly BE_AUTH_COOKIE_NAME?: string;
 	/** Override auth secret */
-	BE_AUTH_SECRET?: string;
+	readonly BE_AUTH_SECRET?: string;
 
 	/** Override DB host */
-	BE_DB_HOST?: string;
+	readonly BE_DB_HOST?: string;
 	/** Override DB name */
-	BE_DB_NAME?: string;
+	readonly BE_DB_NAME?: string;
 	/** Override DB pass */
-	BE_DB_PASS?: string;
+	readonly BE_DB_PASS?: string;
 	/** Override DB port */
-	BE_DB_PORT?: string;
+	readonly BE_DB_PORT?: string;
 	/** Override DB user */
-	BE_DB_USER?: string;
+	readonly BE_DB_USER?: string;
 
 	/** Override HTTP hostname */
-	BE_HTTP_HOST?: string;
+	readonly BE_HTTP_HOST?: string;
 	/** Override HTTP port */
-	BE_HTTP_PORT?: string;
+	readonly BE_HTTP_PORT?: string;
 	/** Override HTTP prefix */
-	BE_HTTP_PREFIX?: string;
+	readonly BE_HTTP_PREFIX?: string;
 }
 
 /** The environment typed with defaults */
-const env = process.env as EnvironmentShellDefault;
+export const envDefault = process.env as EnvironmentShellDefault;
 
 /**
  * Default environment.
@@ -51,22 +51,29 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 			name: z
 				.string()
 				.default("authToken")
-				.parse(env.BE_AUTH_COOKIE_NAME),
+				.parse(envDefault.BE_AUTH_COOKIE_NAME),
 			secure: false,
 		},
 		// 1 hour
 		duration: 60 * 60,
-		secret: z.string().default("Keep it secret!").parse(env.BE_AUTH_SECRET),
+		secret: z
+			.string()
+			.default("Keep it secret!")
+			.parse(envDefault.BE_AUTH_SECRET),
 	},
 	db: {
-		dbName: z.string().min(1).default("db").parse(env.BE_DB_NAME),
+		dbName: z.string().min(1).default("db").parse(envDefault.BE_DB_NAME),
 		debug: false,
-		host: z.string().min(1).default("localhost").parse(env.BE_DB_HOST),
-		password: z.string().default("PASSWORD").parse(env.BE_DB_PASS),
+		host: z
+			.string()
+			.min(1)
+			.default("localhost")
+			.parse(envDefault.BE_DB_HOST),
+		password: z.string().default("PASSWORD").parse(envDefault.BE_DB_PASS),
 		port: Schemas.port(z.coerce.number())
 			.default(5432)
-			.parse(env.BE_DB_PORT),
-		user: z.string().default("user").parse(env.BE_DB_USER),
+			.parse(envDefault.BE_DB_PORT),
+		user: z.string().default("user").parse(envDefault.BE_DB_USER),
 	},
 	host: {
 		cors: {
@@ -79,11 +86,18 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 				/\/\/172.(1[6-9]|2\d|3[01])(?:.\d{1,3}){2}/,
 			],
 		},
-		globalPrefix: z.string().default("api").parse(env.BE_HTTP_PREFIX),
-		name: z.string().ip().default("127.0.0.1").parse(env.BE_HTTP_HOST),
+		globalPrefix: z
+			.string()
+			.default("api")
+			.parse(envDefault.BE_HTTP_PREFIX),
+		name: z
+			.string()
+			.ip()
+			.default("127.0.0.1")
+			.parse(envDefault.BE_HTTP_HOST),
 		port: Schemas.port(z.coerce.number())
 			.default(3000)
-			.parse(env.BE_HTTP_PORT),
+			.parse(envDefault.BE_HTTP_PORT),
 	},
 	logger: ["debug", "error", "warn"],
 	swagger: true,
