@@ -7,4 +7,5 @@
 import { ENVIRONMENT_DEFAULT } from "./environment.default";
 import { Environment } from "./environment.interface";
 
+/** Default exported environment, replaced on builds */
 export const ENVIRONMENT: Environment = ENVIRONMENT_DEFAULT;

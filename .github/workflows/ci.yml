@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+      - environments/*
     types: [opened, synchronize, ready_for_review]
   workflow_call: {}
 
@@ -19,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
-      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') || github.actor == 'dependabot[bot]' }}
+      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') }}
 
     steps:
       - uses: actions/checkout@v4
@@ -53,14 +54,15 @@ jobs:
       - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
         run: npm run postinstall
 
-      # Verify that all mikro-orm versions are correct (useful for renovate)
-      - name: Verify Mikro-orm versions
+      # Verify that all mikro-orm versions are correct and CLI is usable (TS-node resolution)
+      - name: Verify ORM versions
         run: npx mikro-orm debug && npx mikro-orm seeder:create TestCI && git clean ./apps --force
+      # `test -f ...` => Only if there is initial migrations
+      - name: Check ORM migrations
+        run: if [ -f ./apps/backend/src/orm/migrations/snapshot.json ]; then npx mikro-orm migration:check; fi
 
       - name: Lint
         run: npm run lint
-      - name: Stylelint
-        run: npm run stylelint
 
       - name: Comments coverage
         run: npm run compodoc:coverage
@@ -75,7 +77,10 @@ jobs:
       - name: Tests
         run: npm run test:ci
 
-      # FIXME: a way to remove `NX_PARALLEL` (currently fails too often in CI, maybe du to lack of CPUs)
+      - name: "[docker-compose] Prepare for E2E testing"
+        uses: hoverkraft-tech/compose-action@v1.5.1
+        with:
+          compose-file: "./docker-compose.yml"
       - name: Tests e2e
         run: NX_PARALLEL=1 npm run test:e2e:ci
 

@@ -1,5 +1,6 @@
 import { LogLevel, Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import * as z from "zod";
 
 import { AppModule } from "./app/app.module";
 import { bootstrap } from "./bootstrap";
@@ -10,17 +11,35 @@ declare const __APP_NAME__: string;
 /** @internal */
 declare const __APP_VERSION__: string;
 
+/** @internal */
+const APP_NAME = __APP_NAME__;
+/** @internal */
+const APP_VERSION = __APP_VERSION__;
+
 void (async () => {
 	const logger: LogLevel[] = ["debug", "error", "fatal"];
-	const [app, { APP_NAME, APP_VERSION, host }] = await NestFactory.create(
+	const [app, { host }] = await NestFactory.create(
 		AppModule.forRoot({
-			app: { name: __APP_NAME__, version: `${__APP_VERSION__}-e2e` },
+			app: { name: APP_NAME, version: `${APP_VERSION}-e2e` },
 			auth: {
 				cookie: { name: "e2e-cookie" },
-				duration: 30 * 60,
+				duration: 10 * 60,
 				secret: "e2e-secret",
 			},
+			host: {
+				cors: { origin: /\/\/localhost(:\d{1,5})+/ },
+				globalPrefix: "/e2e/api",
+				name: "127.0.0.1",
+				port: 33000,
+			},
 			logger,
+			orm: {
+				dbName: z
+					.string()
+					.min(1)
+					.default("db-e2e")
+					.parse(process.env.BE_DB_TEST_NAME),
+			},
 			swagger: false,
 		}),
 		{ logger },
@@ -30,6 +49,6 @@ void (async () => {
 
 	await app.listen(host.port, host.name);
 	Logger.debug(
-		`🧪 E2E[${APP_NAME} - v${APP_VERSION}] is running on: ${await app.getUrl()}`,
+		`💉 App-e2e 🧪 [${APP_NAME} - v${APP_VERSION}] is running on: ${await app.getUrl()}`,
 	);
 })();

@@ -77,7 +77,7 @@
 					"watch": false
 				},
 				"coverage": {
-					"coverageTest": 0,
+					"coverageTest": 75,
 					"serve": false,
 					"silent": true
 				}

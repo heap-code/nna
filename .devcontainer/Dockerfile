@@ -5,7 +5,5 @@ FROM mcr.microsoft.com/devcontainers/typescript-node:20
 RUN apt-get update && \
     apt-get install -y vim bash-completion
 
-# sleep infinity
-
-# So the SQL plugins works with both devcontainer and local settings
+# So the SQL plugin works with both devcontainer and local settings
 CMD socat tcp-listen:5432,reuseaddr,fork tcp:db:5432

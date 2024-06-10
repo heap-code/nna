@@ -1,6 +1,9 @@
+import { E2eGlobalThis } from "./e2e.global-this";
+
 export default function () {
-	// Put clean up logic here (e.g. stopping services, docker-compose, etc.).
-	// Hint: `globalThis` is shared between setup and teardown.
-	// @ts-expect-error -- FIXME
-	console.log(globalThis.__TEARDOWN_MESSAGE__); // eslint-disable-line no-console -- FIXME
+	const e2eGlobalThis = globalThis as unknown as E2eGlobalThis;
+
+	if (e2eGlobalThis.server !== "use-existing") {
+		e2eGlobalThis.server.kill();
+	}
 }

@@ -1,28 +1,28 @@
-name: Release & Publish
+# Runs a release-process: prepares badges and then determine new version and them release
+
+name: "[CALLABLE] Release"
 
 on:
-  push:
-    branches:
-      - master
-
-concurrency:
-  group: "${{ github.workflow }} - ${{ github.head_ref || github.ref }}"
-  cancel-in-progress: true
+  workflow_call:
+    inputs:
+      generate-badges:
+        description: Generate the code & comment coverage badges
+        type: boolean
+        default: true
+      pre-release:
+        description: 'Suffix for a pre-release. Empty string for a "normal release"'
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      NX_WRITE_TOKEN:
+        required: false
 
 jobs:
-  checks:
-    uses: ./.github/workflows/ci.yml
-    secrets: inherit
-
-  job:
-    # Ignore the heap-code bot commits and devDependencies
-    # if: ${{ github.actor != vars.HC_BOT && !(github.actor == 'renovate[bot]' && contains(github.event.head_commit.message, 'chore(deps):')) }}
-    if: ${{ 1 == 2 }}
-    needs: [checks]
-
+  release:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.HC_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
 
     steps:
@@ -34,6 +34,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
+
+      - name: Set git config
+        run: |
+          git config user.name "${{ vars.BOT_NAME }}"
+          git config user.email "${{ vars.BOT_NAME }}@users.noreply.github.com"
 
       - name: Cache node modules
         id: cache-node-modules
@@ -55,22 +60,26 @@ jobs:
       - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
         run: npm run postinstall
 
-      - name: Generate code coverage summary
+      - if: ${{ inputs.generate-badges }}
+        name: Generate code coverage summary
         run: npm run test:ci
-
-      - name: Generate code coverage badges
+      - if: ${{ inputs.generate-badges }}
+        name: Generate code coverage badges
         run: for path in ./dist/coverage/*/*; do npx node-jest-badges -c "$path/coverage-summary.json" -o ".badges/${path:16}/code/"; done
-      - name: Set default code coverage badges
+      - if: ${{ inputs.generate-badges }}
+        name: Set default code coverage badges
         run: for path in .badges/*/*/code; do cp $path/coverage-jest\ coverage.svg $path/coverage.svg; done
 
-      - name: Generate comment coverage badges
+      - if: ${{ inputs.generate-badges }}
+        name: Generate comment coverage badges
         run: npm run compodoc:build
-      - name: Move comment coverage badges
+      - if: ${{ inputs.generate-badges }}
+        name: Move comment coverage badges
         run: for path in ./dist/compodoc/*/*; do mkdir -p "./.badges/${path:16}/comment" && cp "$path/images/coverage-badge-documentation.svg" "./.badges/${path:16}/comment/coverage.svg"; done
 
-      - name: Add badges
+      - if: ${{ inputs.generate-badges }}
+        name: Add badges
         run: git add .badges/
 
-      # TODO
-      # - name: Release and publish
-      #   run: npx release-it --ci --no-git.requireCleanWorkingDir
+      - name: Release and publish
+        run: npx release-it --ci --no-git.requireCleanWorkingDir --preRelease=${{ inputs.pre-release }}

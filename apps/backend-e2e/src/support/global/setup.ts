@@ -1,11 +1,40 @@
-let __TEARDOWN_MESSAGE__: string;
+import { spawn } from "child_process";
+import waitPort from "wait-port";
 
-export default function () {
-	// Start services that the app needs to run (e.g. database, docker-compose, etc.).
-	// eslint-disable-next-line no-console -- FIXME
-	console.log("\nSetting up...\n");
+import { E2eGlobalThis } from "./e2e.global-this";
 
-	// Hint: Use `globalThis` to pass variables to global teardown.
-	// @ts-expect-error -- FIXME
-	globalThis.__TEARDOWN_MESSAGE__ = "\nTearing down...\n";
+/** Possible override from env shell for e2e testing */
+export interface EnvironmentShellDefault {
+	/** Set `true` to not start a e2e instance */
+	BE_E2E_USE_EXISTING?: "true";
+}
+
+/** The environment typed */
+const env = process.env as EnvironmentShellDefault;
+
+export default async function () {
+	const e2eGlobalThis = globalThis as unknown as E2eGlobalThis;
+
+	if (env.BE_E2E_USE_EXISTING === "true") {
+		e2eGlobalThis.server = "use-existing";
+	} else {
+		const server = spawn("nx", ["run", "backend:serve:e2e"]);
+		for (const steam of [server.stderr, server.stdout]) {
+			steam.on("data", (data: Buffer) =>
+				// eslint-disable-next-line no-console -- forward logs
+				console.debug("💉 backend-e2e 🧪 |", data.toString()),
+			);
+		}
+
+		e2eGlobalThis.server = server;
+	}
+
+	const { open } = await waitPort({
+		host: "127.0.0.1",
+		port: 33000,
+		timeout: 30 * 1000 /* 30 sec */,
+	});
+	if (!open) {
+		throw new Error("E2E instance has not been detected");
+	}
 }
