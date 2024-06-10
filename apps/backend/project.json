@@ -16,7 +16,6 @@
 					]
 				},
 				"e2e": {
-					"debug": false,
 					"fileReplacements": [
 						{
 							"replace": "apps/backend/src/main.ts",
