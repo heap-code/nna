@@ -16,7 +16,7 @@ export type AuthJwtSignResult = Pick<
 	"expireOn" | "issuedAt" | "token"
 >;
 
-/** Service for authentication operations */
+/** Service for authentication features */
 @Injectable()
 export class AuthService {
 	/**

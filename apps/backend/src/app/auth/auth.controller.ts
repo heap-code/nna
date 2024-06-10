@@ -16,6 +16,7 @@ import {
 } from "./payloads";
 import { AuthSession, AuthSessionParam } from "./session";
 
+/** Controller for authentication operations */
 @ApiTags("Auth")
 @Controller()
 export class AuthController implements ControllerFor<AuthHttp> {

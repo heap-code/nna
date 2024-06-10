@@ -7,6 +7,12 @@
 	"tags": ["scope:frontend"],
 	"targets": {
 		"compodoc": {
+			"configurations": {
+				"coverage": {
+					// FIXME: increase
+					"coverageTest": 0
+				}
+			},
 			"options": {
 				"port": 11001
 			}

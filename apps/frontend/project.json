@@ -53,6 +53,12 @@
 			"outputs": ["{options.outputPath}"]
 		},
 		"compodoc": {
+			"configurations": {
+				"coverage": {
+					// FIXME: increase
+					"coverageTest": 25
+				}
+			},
 			"options": {
 				"port": 4080,
 				"tsConfig": "{projectRoot}/tsconfig.app.json"

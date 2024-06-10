@@ -4,6 +4,7 @@ import { entityServiceBuilder } from "@nna/nest";
 import { UserEntity } from "./user.entity";
 import { UserRepository } from "./user.repository";
 
+/** Service for the `user` features */
 @Injectable()
 export class UserService extends entityServiceBuilder<UserEntity>().getClass() {
 	public constructor(repository: UserRepository) {
