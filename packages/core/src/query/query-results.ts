@@ -1,4 +1,4 @@
-/** Range of [paginated results]{@link QueryResultsPagination} */
+/** Range of {@link QueryResultsPagination paginated results} */
 export interface QueryResultsPaginationRange {
 	/**
 	 * Position of the last result returned from the whole filtered data (not included)

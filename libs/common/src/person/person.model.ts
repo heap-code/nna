@@ -7,7 +7,11 @@ const peopleType = z.discriminatedUnion(
 	[
 		z.object({
 			[discriminator]: z.literal("musician"),
-			instrument: z.string().min(2),
+			groupId: z.number().min(1).nullable(),
+			instrument: z
+				.string()
+				.min(2)
+				.describe("The current group this musician is playing"),
 		}),
 		z.object({ [discriminator]: z.literal("listener") }),
 	],

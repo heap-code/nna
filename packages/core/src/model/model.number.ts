@@ -10,5 +10,5 @@ export const schema = schemaCommon.extend({
 		.readonly(),
 } satisfies Record<typeof PRIMARY_KEY, unknown>);
 
-/** Extracted type from the `Model` [schema]{@link schema} */
+/** Extracted type from the `Model` {@link schema schema} */
 export type Type = z.infer<typeof schema>;

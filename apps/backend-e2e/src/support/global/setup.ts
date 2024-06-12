@@ -18,7 +18,7 @@ export default async function () {
 	if (env.BE_E2E_USE_EXISTING === "true") {
 		e2eGlobalThis.server = "use-existing";
 	} else {
-		const server = spawn("nx", ["run", "backend:serve:e2e"]);
+		const server = spawn("npm", ["run", "backend:start:e2e"]);
 		for (const steam of [server.stderr, server.stdout]) {
 			steam.on("data", (data: Buffer) =>
 				// eslint-disable-next-line no-console -- forward logs

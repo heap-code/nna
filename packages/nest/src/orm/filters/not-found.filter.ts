@@ -3,8 +3,8 @@ import { ArgumentsHost, Catch, NotFoundException } from "@nestjs/common";
 import { BaseExceptionFilter } from "@nestjs/core";
 
 /**
- * Filter Translating `Mikro-orm`'s [NotFoundError]{@link NotFoundError}
- * to HTTP [NotFoundException]{@link NotFoundException}.
+ * Filter Translating `Mikro-orm`'s {@link NotFoundError NotFoundError}
+ * to HTTP {@link NotFoundException NotFoundException}.
  */
 @Catch(NotFoundError)
 export class NotFoundFilter extends BaseExceptionFilter {

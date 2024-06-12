@@ -3,8 +3,8 @@ import { ArgumentsHost, Catch, NotFoundException } from "@nestjs/common";
 import { BaseExceptionFilter } from "@nestjs/core";
 
 /**
- * Filter Translating `Mikro-orm`'s [ForeignKeyConstraintViolationException]{@link ForeignKeyConstraintViolationException}
- * to HTTP [NotFoundException]{@link NotFoundException}.
+ * Filter Translating `Mikro-orm`'s {@link ForeignKeyConstraintViolationException ForeignKeyConstraintViolationException}
+ * to HTTP {@link NotFoundException NotFoundException}.
  */
 @Catch(ForeignKeyConstraintViolationException)
 export class ForeignKeyConstraintFilter extends BaseExceptionFilter {

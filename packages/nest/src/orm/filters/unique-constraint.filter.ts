@@ -3,8 +3,8 @@ import { ArgumentsHost, Catch, ConflictException } from "@nestjs/common";
 import { BaseExceptionFilter } from "@nestjs/core";
 
 /**
- * Filter Translating `Mikro-orm`'s [UniqueConstraintViolationException]{@link UniqueConstraintViolationException}
- * to HTTP [ConflictException]{@link ConflictException}.
+ * Filter Translating `Mikro-orm`'s {@link UniqueConstraintViolationException UniqueConstraintViolationException}
+ * to HTTP {@link ConflictException ConflictException}.
  */
 @Catch(UniqueConstraintViolationException)
 export class UniqueConstraintFilter extends BaseExceptionFilter {

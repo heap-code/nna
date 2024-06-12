@@ -10,7 +10,7 @@ import { AbstractConstructor } from "type-fest";
 import * as Common from "./entity.common";
 
 /**
- * The model that this [entity constructor]{@link Entity} implements.
+ * The model that this {@link Entity entity constructor} implements.
  */
 export type Model = ModelNumber.Type;
 

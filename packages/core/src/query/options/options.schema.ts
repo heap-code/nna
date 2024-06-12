@@ -7,11 +7,11 @@ import * as QueryOrder from "../order";
 export type QueryOptionsOptions = QueryOrderOptions;
 
 /**
- * Creates a [query options]{@link Options} validation schema for an object schema.
+ * Creates a {@link Options query options} validation schema for an object schema.
  *
- * @param schema the object schema to create this [query options]{@link Options} schema
+ * @param schema the object schema to create this {@link Options query options} schema
  * @param options for the creation of the schema
- * @returns the [query options]{@link Options} validation schema for the given schema
+ * @returns the {@link Options query options} validation schema for the given schema
  */
 function _schema<T extends QueryObjectSchema>(
 	schema: T,
