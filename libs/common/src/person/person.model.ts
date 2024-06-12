@@ -18,9 +18,9 @@ const peopleType = z.discriminatedUnion(
 	{ description: "Type of people" },
 );
 
-export const personSchema = Model.schema.extend({
+export const personModelSchema = Model.schema.extend({
 	name: z.string().describe("Name of the person").min(3),
 	peopleType,
 });
 
-export type PersonModel = z.infer<typeof personSchema>;
+export type PersonModel = z.infer<typeof personModelSchema>;

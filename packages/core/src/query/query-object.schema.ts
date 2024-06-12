@@ -26,7 +26,7 @@ function _schema<T extends QueryObjectSchema>(
 	type QryObjShape = Record<keyof Pick<QryObject, "filter">, z.ZodType>;
 
 	return QueryOption.options(schema, options).extend({
-		filter: z.lazy(() => QueryFilter.filter(schema, options)).optional(),
+		filter: QueryFilter.filter(schema, options).optional(),
 	} satisfies QryObjShape) satisfies z.ZodType<QryObject>;
 }
 

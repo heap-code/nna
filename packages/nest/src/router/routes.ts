@@ -19,7 +19,7 @@ function extractModules(route: RouteTree | RouteTree["module"]): RouteModule[] {
 	const { children = [], module } = route;
 
 	const head = module ? [module] : [];
-	return [...head, ...children.flatMap(extractModules)];
+	return [...children.flatMap(extractModules), ...head];
 }
 
 /**

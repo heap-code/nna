@@ -1,3 +1,4 @@
+import { patchNestjsSwagger } from "@anatine/zod-nestjs";
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { PayloadValidationPipe } from "@nna/nest";
@@ -33,7 +34,7 @@ export function bootstrap(app: INestApplication) {
 		.enableCors({ ...host.cors });
 
 	if (swagger) {
-		const options = new DocumentBuilder()
+		const config = new DocumentBuilder()
 			.addBearerAuth()
 			.addCookieAuth(auth.cookie.name, {
 				description:
@@ -44,7 +45,16 @@ export function bootstrap(app: INestApplication) {
 			.setTitle(`${APP_NAME} API`)
 			.setVersion(APP_VERSION)
 			.build();
-		const document = SwaggerModule.createDocument(app, options);
+
+		// Needed from the zod-nestjs and openAPI compatibility
+		// https://github.com/anatine/zod-plugins/blob/main/packages/zod-nestjs/README.md#set-up-your-app
+		patchNestjsSwagger();
+
+		const document = SwaggerModule.createDocument(app, {
+			...config,
+			// Needed from the zod-nestjs and openAPI compatibility
+			openapi: "3.1.0",
+		});
 		SwaggerModule.setup(`/${host.globalPrefix}`, app, document);
 	}
 

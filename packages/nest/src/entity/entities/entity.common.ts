@@ -1,4 +1,10 @@
-import { DateTimeType, Opt, Property, PropertyOptions } from "@mikro-orm/core";
+import {
+	BaseEntity,
+	DateTimeType,
+	Opt,
+	Property,
+	PropertyOptions,
+} from "@mikro-orm/core";
 import { ModelAny, ModelPrimaryKey } from "@nna/core";
 import { deepmerge } from "deepmerge-ts";
 import { AbstractConstructor } from "type-fest";
@@ -23,7 +29,7 @@ export type EntityOption<T> = Partial<
 export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
 	const { createdAt = {}, updatedAt = {} } = options;
 
-	abstract class EntityCommon implements ModelWithoutPK {
+	abstract class EntityCommon extends BaseEntity implements ModelWithoutPK {
 		/** The date when this entity has been created */
 		@Property(
 			deepmerge(

@@ -1,11 +1,11 @@
 import { Model } from "@nna/core";
 import * as z from "zod";
 
-export const groupSchema = Model.schema.extend({
-	genreId: z
-		.number({ description: "Foreign key for this group genre" })
-		.min(0),
+import { groupGenreSchema } from "./genre";
+
+export const groupModelSchema = Model.schema.extend({
+	genreId: groupGenreSchema.pick({ _id: true }).shape._id,
 	name: z.string({ description: "Unique name of the group" }).min(3),
 });
 
-export type GroupModel = z.infer<typeof groupSchema>;
+export type GroupModel = z.infer<typeof groupModelSchema>;

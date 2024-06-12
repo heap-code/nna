@@ -7,8 +7,8 @@ import {
 	QueryFilterObject,
 } from "@nna/core";
 
-import { EntityQueryFilter } from "./entity.query-filter";
-import { EntityQueryOrders } from "./entity.query-order";
+import { EntityQueryFilter } from "../entity.query-filter";
+import { EntityQueryOrders } from "../entity.query-order";
 
 /** A service for entities. It only contains read operations */
 export abstract class EntityReadonlyService<

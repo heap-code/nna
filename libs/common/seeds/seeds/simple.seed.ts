@@ -36,7 +36,7 @@ export const simple = {
 			createdAt: date1,
 			updatedAt: date1,
 
-			genreId: 1,
+			genreId: "gg1",
 			name: "group1",
 		},
 		{
@@ -44,7 +44,7 @@ export const simple = {
 			createdAt: date1,
 			updatedAt: date2,
 
-			genreId: 1,
+			genreId: "gg2",
 			name: "group2",
 		},
 		{
@@ -52,7 +52,7 @@ export const simple = {
 			createdAt: date2,
 			updatedAt: date2,
 
-			genreId: 2,
+			genreId: "gg2",
 			name: "group5",
 		},
 	],
