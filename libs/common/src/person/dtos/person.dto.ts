@@ -1,6 +1,7 @@
 import * as z from "zod";
 
-/** Validation schema for {@link PersonDto} */
-export const personDtoSchema = z.object({});
+import { personModelSchema } from "../person.model";
 
+/** Validation schema for {@link PersonDto} */
+export const personDtoSchema = personModelSchema;
 export type PersonDto = z.infer<typeof personDtoSchema>;

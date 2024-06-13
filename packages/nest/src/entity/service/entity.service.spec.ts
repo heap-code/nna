@@ -2,18 +2,18 @@ import {
 	Collection,
 	Entity,
 	EntityData,
+	EntityRef,
 	ManyToOne,
 	OneToMany,
 	Property,
-	Ref,
 	RequiredEntityData,
 } from "@mikro-orm/core";
 import { MikroORM, defineConfig } from "@mikro-orm/sqlite";
 import { QueryResultsPagination } from "@nna/core";
 
-import { EntityNumber, EntityString } from "./entities";
 import { entityServiceBuilder } from "./entity.service.builder";
-import { ORM_DEFAULT_CONFIGURATION } from "../orm/orm.default-config";
+import { ORM_DEFAULT_CONFIGURATION } from "../../orm/orm.default-config";
+import { EntityNumber, EntityString } from "../entities";
 
 @Entity()
 class GroupEntity extends EntityString.Entity({
@@ -24,7 +24,7 @@ class GroupEntity extends EntityString.Entity({
 
 	// A group can be contain by another
 	@ManyToOne(() => GroupEntity, { default: null, nullable: true, ref: true })
-	public parent!: Ref<GroupEntity> | null;
+	public parent!: EntityRef<GroupEntity> | null;
 
 	@OneToMany(() => GroupEntity, ({ parent }) => parent)
 	public readonly children = new Collection<GroupEntity>(this);
@@ -40,7 +40,7 @@ class UserEntity extends EntityNumber.Entity() {
 
 	// A user is always part of a group
 	@ManyToOne(() => GroupEntity, { ref: true })
-	public group!: Ref<GroupEntity>;
+	public group!: EntityRef<GroupEntity>;
 }
 
 class GroupService extends entityServiceBuilder<GroupEntity>()

@@ -43,7 +43,6 @@
 			"{workspaceRoot}/*"
 		]
 	},
-	"nxCloudAccessToken": "NDUxODJmOGItOTVhNi00OWEyLTkxZDEtZmI1ZTZjOTkxMDQzfHJlYWQ=",
 	"parallel": 4,
 	"targetDefaults": {
 		"@nx/jest:jest": {

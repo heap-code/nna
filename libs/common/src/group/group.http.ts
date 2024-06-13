@@ -1,9 +1,16 @@
-import { HttpRoute } from "@nna/core";
+import { HttpRoute, QueryResults } from "@nna/core";
+
+import { GroupDto, GroupQueryDto } from "./dtos";
 
 /** HTTP configuration for the `group` feature */
 export const GROUP_HTTP_CONFIG = {
 	entrypoint: "groups",
-	routes: {} satisfies HttpRoute.Definitions,
+	routes: {
+		findAll:
+			HttpRoute.builder("/").get<
+				(query: GroupQueryDto) => Promise<QueryResults<GroupDto>>
+			>(),
+	} satisfies HttpRoute.Definitions,
 } as const;
 
 /** HTTP specification for the `group` feature */

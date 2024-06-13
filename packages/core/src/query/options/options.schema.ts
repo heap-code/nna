@@ -1,17 +1,18 @@
 import * as z from "zod";
 
-import type { QueryObjectSchema, QueryOptions, QueryOrderOptions } from "..";
+import type { QueryObjectSchema, QueryOptions } from "..";
+import { FilterOptions } from "../filter";
 import * as QueryOrder from "../order";
 
 /** Options to create a query options validation schema */
-export type QueryOptionsOptions = QueryOrderOptions;
+export type QueryOptionsOptions = Pick<FilterOptions, "coerce" | "strict">;
 
 /**
- * Creates a [query options]{@link Options} validation schema for an object schema.
+ * Creates a {@link Options query options} validation schema for an object schema.
  *
- * @param schema the object schema to create this [query options]{@link Options} schema
+ * @param schema the object schema to create this {@link Options query options} schema
  * @param options for the creation of the schema
- * @returns the [query options]{@link Options} validation schema for the given schema
+ * @returns the {@link Options query options} validation schema for the given schema
  */
 function _schema<T extends QueryObjectSchema>(
 	schema: T,
@@ -24,7 +25,8 @@ function _schema<T extends QueryObjectSchema>(
 	type QryOptions = QueryOptions<z.infer<T>>;
 	type QryOptShape = Record<keyof QryOptions, z.ZodType>;
 
-	const numberSchema = z.number().gte(0);
+	const { coerce = false } = options;
+	const numberSchema = z.number({ coerce }).gte(0);
 
 	return z
 		.object({

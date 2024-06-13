@@ -4,7 +4,7 @@ import {
 	AuthProfile,
 	AuthRefresh,
 	AuthSuccess,
-} from "~/common/auth/dtos";
+} from "~/common/auth";
 
 // Can create one file for each class
 

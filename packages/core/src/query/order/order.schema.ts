@@ -69,7 +69,7 @@ function fromType(zodType: z.ZodTypeAny, options: OrderOptions): z.ZodType {
 export type OrderOptions = Pick<FilterOptions, "strict">;
 
 /**
- * Creates a [query order]{@link QueryOrder} validation schema for an object schema.
+ * Creates a {@link QueryOrder query order} validation schema for an object schema.
  *
  * @param schema the object schema to create this order schema
  * @param options for the creation of the schema

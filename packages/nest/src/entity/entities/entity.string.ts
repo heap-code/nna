@@ -5,7 +5,7 @@ import { AbstractConstructor } from "type-fest";
 import * as Common from "./entity.common";
 
 /**
- * The model that this [entity constructor]{@link Entity} implements.
+ * The model that this {@link Entity entity constructor} implements.
  */
 export type Model = ModelString.Type;
 
@@ -19,6 +19,10 @@ export type EntityOptions<T> = Common.EntityOption<T> &
 /**
  * Creates the base class entity.
  *
+ * For string id, a `onCreate` method must be set.
+ *
+ * @example
+ * class MyEntity extends EntityString.Entity({_id:{ onCreate: () => Date.now().toString()}})
  * @param options for the properties
  * @returns constructed abstract class
  */

@@ -67,5 +67,6 @@
 	"sqltools.results.reuseTabs": "connection",
 	"stylelint.enable": true,
 	"stylelint.snippet": ["css", "scss"],
-	"stylelint.validate": ["css", "scss"]
+	"stylelint.validate": ["css", "scss"],
+	"typescript.preferences.importModuleSpecifier": "project-relative"
 }

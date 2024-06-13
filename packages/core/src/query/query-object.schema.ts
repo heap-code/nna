@@ -8,11 +8,11 @@ import * as QueryOption from "./options";
 export type QueryObjectOptions = QueryFilterOptions;
 
 /**
- * Creates a [query object]{@link QueryObject} validation schema for an object schema.
+ * Creates a {@link QueryObject query object} validation schema for an object schema.
  *
- * @param schema the object schema to create this [query object]{@link QueryObject} schema
+ * @param schema the object schema to create this {@link QueryObject query object} schema
  * @param options for the creation of the schema
- * @returns the [query object]{@link QueryObject} validation schema for the given schema
+ * @returns the {@link QueryObject query object} validation schema for the given schema
  */
 function _schema<T extends QueryObjectSchema>(
 	schema: T,
@@ -26,7 +26,7 @@ function _schema<T extends QueryObjectSchema>(
 	type QryObjShape = Record<keyof Pick<QryObject, "filter">, z.ZodType>;
 
 	return QueryOption.options(schema, options).extend({
-		filter: z.lazy(() => QueryFilter.filter(schema, options)).optional(),
+		filter: QueryFilter.filter(schema, options).optional(),
 	} satisfies QryObjShape) satisfies z.ZodType<QryObject>;
 }
 
