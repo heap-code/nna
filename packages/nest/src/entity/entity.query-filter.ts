@@ -1,10 +1,10 @@
-import { EntityDTO, ExpandProperty } from "@mikro-orm/core";
+import { EntityDTO, EntityRef } from "@mikro-orm/core";
 import { QueryFilter } from "@nna/core";
 
 /** "Transform" a `mikro-orm` entity to a "query-able" model */
 export type EntityQueryModel<T> = {
-	[K in keyof T]: ExpandProperty<T[K]> extends object
-		? EntityQueryModel<ExpandProperty<T[K]>>
+	[K in keyof T]: T[K] extends EntityRef<infer U>
+		? EntityQueryModel<U>
 		: T[K];
 };
 

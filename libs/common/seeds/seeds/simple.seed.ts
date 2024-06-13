@@ -64,7 +64,7 @@ export const simple = {
 
 			_groupIds: [1, 2, 3],
 			name: "person1/listener",
-			peopleType: { type: "listener" },
+			// peopleType: { type: "listener" },
 		},
 		{
 			_id: 2,
@@ -73,7 +73,7 @@ export const simple = {
 
 			_groupIds: [3],
 			name: "person2/listener",
-			peopleType: { type: "listener" },
+			// peopleType: { type: "listener" },
 		},
 		{
 			_id: 5,
@@ -82,7 +82,7 @@ export const simple = {
 
 			_groupIds: [1],
 			name: "person5/musician",
-			peopleType: { groupId: 1, instrument: "Guitar", type: "musician" },
+			// peopleType: { groupId: 1, instrument: "Guitar", type: "musician" },
 		},
 		{
 			_id: 6,
@@ -91,7 +91,7 @@ export const simple = {
 
 			_groupIds: [1, 2],
 			name: "person6/musician",
-			peopleType: { groupId: 2, instrument: "Piano", type: "musician" },
+			// peopleType: { groupId: 2, instrument: "Piano", type: "musician" },
 		},
 		{
 			_id: 7,
@@ -100,7 +100,7 @@ export const simple = {
 
 			_groupIds: [1, 3],
 			name: "person7/musician",
-			peopleType: { groupId: 1, instrument: "Drums", type: "musician" },
+			// peopleType: { groupId: 1, instrument: "Drums", type: "musician" },
 		},
 		{
 			_id: 8,
@@ -109,7 +109,7 @@ export const simple = {
 
 			_groupIds: [],
 			name: "person8/musician",
-			peopleType: { groupId: null, instrument: "Harp", type: "musician" },
+			// peopleType: { groupId: null, instrument: "Harp", type: "musician" },
 		},
 	],
 	users: [

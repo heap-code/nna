@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, Opt, Property } from "@mikro-orm/core";
 import { EntityNumber, checkEntitySatisfiesDto } from "@nna/nest";
 import { GroupDto, GroupModel } from "~/common/group";
 
@@ -17,7 +17,7 @@ export class GroupEntity extends EntityNumber.Entity() implements GroupModel {
 	public name!: string;
 
 	@Property({ getter: true, persist: false })
-	public get genreId() {
+	public get genreId(): Opt<string> {
 		return this.genre._id;
 	}
 }
