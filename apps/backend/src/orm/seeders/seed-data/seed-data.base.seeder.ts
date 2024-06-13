@@ -42,7 +42,10 @@ export abstract class SeedDataBaseSeeder<
 			});
 		}
 		for (const { _groupIds, ...person } of seed.persons) {
-			em.create(PersonEntity, { ...person });
+			em.create(PersonEntity, {
+				...person,
+				groups: _groupIds.map(id => em.getReference(GroupEntity, id)),
+			});
 		}
 	}
 }

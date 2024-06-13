@@ -7,5 +7,4 @@ import { groupModelSchema } from "../group.model";
 export const groupDtoSchema = groupModelSchema.extend({
 	genre: groupGenreDtoSchema,
 });
-
 export type GroupDto = z.infer<typeof groupDtoSchema>;

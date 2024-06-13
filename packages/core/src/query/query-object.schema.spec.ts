@@ -59,6 +59,21 @@ describe("QueryObject Schema", () => {
 		}
 	});
 
+	it("should be valid with coercion", () => {
+		const querySchema = createQueryObjectSchema(schemaData, {
+			coerce: true,
+			strict: true,
+		});
+		type Schema = z.infer<typeof querySchema>;
+
+		for (const [test, expected] of [
+			[{ limit: "2" as never as number }, { limit: 2 }],
+			[{ skip: "55" as never as number }, { skip: 55 }],
+		] satisfies Array<[Schema, Schema]>) {
+			expect(querySchema.parse(test)).toStrictEqual(expected);
+		}
+	});
+
 	it("should remove extraneous values (non-strict)", () => {
 		const querySchema = createQueryObjectSchema(schemaData);
 

@@ -1,4 +1,4 @@
-import { Body, Controller } from "@nestjs/common";
+import { Controller, Query } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ControllerFor, HttpHandleRoute, createPayload } from "@nna/nest";
 import {
@@ -18,7 +18,7 @@ export class GroupController implements ControllerFor<GroupHttp> {
 	public constructor(private readonly service: GroupService) {}
 
 	@HttpHandleRoute(GROUP_HTTP_CONFIG.routes.findAll)
-	public async findAll(@Body() query: GroupQueryPayload) {
+	public async findAll(@Query() query: GroupQueryPayload) {
 		const { filter, ...options } = query;
 		return this.service.findAndCount(filter, options);
 	}

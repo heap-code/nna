@@ -4,7 +4,7 @@ import * as z from "zod";
 import { groupGenreSchema } from "./genre";
 
 export const groupModelSchema = Model.schema.extend({
-	genreId: groupGenreSchema.pick({ _id: true }).shape._id,
+	genreId: groupGenreSchema.shape._id,
 	name: z.string({ description: "Unique name of the group" }).min(3),
 });
 

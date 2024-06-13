@@ -62,7 +62,7 @@ export const simple = {
 			createdAt: date1,
 			updatedAt: date1,
 
-			_groupIds: [1, 2, 3],
+			_groupIds: [1, 2, 5],
 			name: "person1/listener",
 			// peopleType: { type: "listener" },
 		},
@@ -71,7 +71,7 @@ export const simple = {
 			createdAt: date1,
 			updatedAt: date1,
 
-			_groupIds: [3],
+			_groupIds: [5],
 			name: "person2/listener",
 			// peopleType: { type: "listener" },
 		},
@@ -98,7 +98,7 @@ export const simple = {
 			createdAt: date2,
 			updatedAt: date2,
 
-			_groupIds: [1, 3],
+			_groupIds: [1, 5],
 			name: "person7/musician",
 			// peopleType: { groupId: 1, instrument: "Drums", type: "musician" },
 		},

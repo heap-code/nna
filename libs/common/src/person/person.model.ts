@@ -9,9 +9,11 @@ const peopleType = z.discriminatedUnion(
 	[
 		z.object({
 			[discriminator]: z.literal("musician"),
-			groupId: groupModelSchema.shape._id
-				.nullable()
-				.describe("The current group this musician is playing"),
+			groupId: z.lazy(() =>
+				groupModelSchema.shape._id
+					.nullable()
+					.describe("The current group this musician is playing"),
+			),
 			instrument: z.string().min(2),
 		}),
 		z.object({ [discriminator]: z.literal("listener") }),
