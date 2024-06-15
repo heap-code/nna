@@ -7,6 +7,10 @@ export default defineConfig({
 			cypressDir: "src",
 		}) as Cypress.EndToEndConfigOptions),
 		baseUrl: "http://localhost:34200",
+		video: true,
+		videoCompression: true,
 	},
 	experimentalStudio: true,
+	video: true,
+	videoCompression: true,
 });
