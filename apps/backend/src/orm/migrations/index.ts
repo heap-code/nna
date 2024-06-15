@@ -1,6 +1,6 @@
-import { MigrationObject } from "@mikro-orm/core";
+import { OrmUtils } from "@nna/nest";
 
 /** List of known migrations.*/
-export const MIGRATIONS: readonly MigrationObject[] = [
-	// !!! NEVER change the names !!! Or the migrations will be ran again
-];
+export const MIGRATIONS = OrmUtils.areMigrationsUnique([
+	// !!! NEVER change the names of existing migration !!! Or they will be ran again
+]);

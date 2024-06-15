@@ -7,6 +7,7 @@ import { Environment } from "./environment.interface";
 /** The prod environment */
 const ENVIRONMENT_PROD: PartialDeep<Environment> = {
 	auth: { cookie: { secure: true } },
+	db: { applyMigrations: true },
 	host: {
 		cors: {
 			origin: [

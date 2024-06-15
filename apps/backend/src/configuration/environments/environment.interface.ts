@@ -11,6 +11,20 @@ export interface EnvironmentAuthCookie {
 	secure: boolean;
 }
 
+/** Environment data for the database */
+export interface EnvironmentDb
+	extends Pick<
+		OrmModuleSyncOptions,
+		"dbName" | "debug" | "host" | "password" | "port" | "user"
+	> {
+	/**
+	 * Apply migrations on bootstrap if needed
+	 *
+	 * @default true
+	 */
+	applyMigrations: boolean;
+}
+
 /** The environment contains the information to run the application. */
 export interface Environment {
 	/** All information related to authentication */
@@ -23,10 +37,7 @@ export interface Environment {
 		secret: string;
 	};
 	/** All information related to the database */
-	db: Pick<
-		OrmModuleSyncOptions,
-		"dbName" | "debug" | "host" | "password" | "port" | "user"
-	>;
+	db: EnvironmentDb;
 	/** All information to run the application */
 	host: {
 		/** The cors options for the host  */

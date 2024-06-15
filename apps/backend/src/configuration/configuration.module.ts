@@ -59,7 +59,8 @@ export class ConfigurationService {
 	 * @returns The options for the ORM
 	 */
 	public getOrmOptions(): OrmModuleSyncOptions {
-		return this.configuration.orm;
+		const { applyMigrations: _, ...orm } = this.configuration.orm;
+		return orm;
 	}
 }
 
