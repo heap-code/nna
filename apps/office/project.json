@@ -13,6 +13,9 @@
 					"optimization": false,
 					"sourceMap": true
 				},
+				"e2e": {
+					"sourceMap": true
+				},
 				"production": {
 					"budgets": [
 						{
@@ -73,6 +76,10 @@
 					"buildTarget": "office:build:development",
 					"proxyConfig": "apps/office/proxy.conf.json"
 				},
+				"e2e": {
+					"buildTarget": "office:build:e2e",
+					"port": 35200
+				},
 				"production": {
 					"buildTarget": "office:build:production"
 				}
@@ -84,9 +91,16 @@
 			}
 		},
 		"serve-static": {
+			"configurations": {
+				"e2e": {
+					"buildTarget": "office:build:e2e",
+					"port": 35200
+				}
+			},
 			"executor": "@nx/web:file-server",
 			"options": {
 				"buildTarget": "office:build",
+				"port": 5200,
 				"staticFilePath": "dist/apps/office/browser"
 			}
 		},

@@ -6,6 +6,7 @@ export default defineConfig({
 		...(nxE2EPreset(__filename, {
 			cypressDir: "src",
 		}) as Cypress.EndToEndConfigOptions),
-		baseUrl: "http://localhost:4200",
+		baseUrl: "http://localhost:34200",
 	},
+	experimentalStudio: true,
 });

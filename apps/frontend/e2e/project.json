@@ -1,0 +1,26 @@
+{
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"implicitDependencies": ["backend", "frontend"],
+	"name": "frontend-e2e",
+	"projectType": "application",
+	"sourceRoot": "apps/frontend/e2e/src",
+	"tags": [],
+	"targets": {
+		"e2e": {
+			"configurations": {
+				"ci": {
+					"devServerTarget": "frontend:serve-static:e2e"
+				}
+			},
+			"executor": "@nx/cypress:cypress",
+			"options": {
+				"cypressConfig": "apps/frontend/e2e/cypress.config.ts",
+				"devServerTarget": "frontend:serve:e2e",
+				"testingType": "e2e"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		}
+	}
+}
