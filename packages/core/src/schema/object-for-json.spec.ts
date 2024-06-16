@@ -83,6 +83,41 @@ describe("ObjectForJson", () => {
 		});
 	});
 
+	describe("With arrays", () => {
+		const schema = objectForJson(
+			schemaBase.extend({
+				array: z.array(schemaBase).max(2).optional(),
+				ns: z.array(z.number()).optional(),
+			}),
+		);
+		type Schema = z.infer<typeof schema>;
+		type SchemaJson = Jsonify<Schema>;
+
+		it("should validate", () => {
+			for (const [toParse, expected] of [
+				[{ array: [] }, true],
+				[{ ns: [] }, true],
+				[{ c: "2010-01-01T00:00:00.000Z", ns: [1] }, true],
+				[{ array: [{ c: "2010-01-01T00:00:00.000Z" }] }, true],
+				[{ array: [{}, {}, {}] }, false],
+			] satisfies Array<[SchemaJson, boolean]>) {
+				expect(schema.safeParse(toParse).success).toBe(expected);
+			}
+		});
+
+		it("should transform", () => {
+			expect(
+				schema.parse({
+					array: [{ c: "2010-01-01T00:00:00.000Z" }],
+					b: "10",
+				} satisfies SchemaJson),
+			).toStrictEqual({
+				array: [{ c: new Date(2010, 0) }],
+				b: "10",
+			} satisfies Schema);
+		});
+	});
+
 	describe("On discriminated objects", () => {
 		const schema = objectForJson(
 			z.discriminatedUnion("_type", [

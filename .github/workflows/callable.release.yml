@@ -13,7 +13,7 @@ on:
         description: 'Suffix for a pre-release. Empty string for a "normal release"'
         type: string
     secrets:
-      GITHUB_TOKEN:
+      GIT_TOKEN:
         required: true
       NX_WRITE_TOKEN:
         required: false
@@ -22,7 +22,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
 
     steps:
