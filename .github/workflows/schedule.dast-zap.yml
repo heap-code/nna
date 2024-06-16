@@ -1,0 +1,57 @@
+# scheduled workflow to run a DAST scan against the API
+
+name: DAST - API ZAP
+
+on:
+  schedule:
+    # https://crontab.guru/#30_1_*_*_6
+    - cron: "30 1 * * 6"
+
+jobs:
+  scan_api:
+    runs-on: ubuntu-latest
+    name: ZAP Scan API
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./package.json', './package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
+        name: Install packages
+        run: npm ci
+      # If the cache is used
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        run: npm run postinstall
+
+      - name: "[docker-compose] Up for DAST"
+        uses: hoverkraft-tech/compose-action@v2.0.0
+        with:
+          compose-file: "./docker-compose.yml"
+      - name: Run Backend instance
+        run: |
+          npm run backend:start &
+          npx mikro-orm schema:fresh --seed SimpleSeeder -r
+          npx wait-port 3000 -t 30000
+
+      - name: ZAP Scan
+        uses: zaproxy/action-api-scan@v0.7.0
+        with:
+          format: openapi
+          target: "http://localhost:3000/api-json"
+          token: ${{ secrets.BOT_GIT_TOKEN }}

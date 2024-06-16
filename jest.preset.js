@@ -8,6 +8,9 @@ module.exports = {
 		"!<rootDir>/src/**/index.ts",
 	],
 	coverageReporters: ["html", "json-summary", "text"],
+	coverageThreshold: {
+		global: {},
+	},
 	watchPlugins: [
 		"jest-watch-typeahead/filename",
 		"jest-watch-typeahead/testname",

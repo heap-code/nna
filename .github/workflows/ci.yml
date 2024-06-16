@@ -84,7 +84,7 @@ jobs:
       - name: Prepare E2E Backend instance
         run: |
           npm run backend:start:e2e &
-          npx wait-port 33000 -t 30
+          npx wait-port 33000 -t 30000
 
       - name: Tests e2e
         run: npm run test:e2e:ci
