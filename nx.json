@@ -43,26 +43,8 @@
 			"{workspaceRoot}/*"
 		]
 	},
-	"parallel": 4,
+	"parallel": 2,
 	"targetDefaults": {
-		"@nx/jest:jest": {
-			"cache": true,
-			"configurations": {
-				"ci": {
-					"ci": true,
-					"codeCoverage": true,
-					"coverageDirectory": "{workspaceRoot}/dist/coverage/{projectRoot}"
-				}
-			},
-			"inputs": [
-				"^production",
-				"default",
-				"{workspaceRoot}/jest.preset.js"
-			],
-			"options": {
-				"passWithNoTests": false
-			}
-		},
 		"build": {
 			"cache": true,
 			"dependsOn": ["^build"],
@@ -132,6 +114,25 @@
 			"inputs": ["default", "{workspaceRoot}/.stylelintrc.json"],
 			"options": {
 				"maxWarnings": 15
+			}
+		},
+		"test": {
+			"cache": true,
+			"configurations": {
+				"ci": {
+					"ci": true,
+					"codeCoverage": true,
+					"coverageDirectory": "{workspaceRoot}/dist/coverage/{projectRoot}"
+				}
+			},
+			"executor": "@nx/jest:jest",
+			"inputs": [
+				"^production",
+				"default",
+				"{workspaceRoot}/jest.preset.js"
+			],
+			"options": {
+				"passWithNoTests": false
 			}
 		},
 		"typecheck": {

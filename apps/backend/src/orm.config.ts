@@ -18,7 +18,7 @@ export default async () => {
 				name: process.env["npm_package_name"],
 				version: process.env["npm_package_version"],
 			},
-			orm: { connect: false },
+			orm: { applyMigrations: false, connect: false },
 		}),
 		{ logger: ["error", "fatal"] },
 	);

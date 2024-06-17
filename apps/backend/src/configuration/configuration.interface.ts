@@ -15,5 +15,5 @@ export interface Configuration extends Omit<Environment, "db"> {
 		version: string;
 	};
 	/** The orm configuration to merge into the deducted one */
-	orm: OrmModuleSyncOptions;
+	orm: OrmModuleSyncOptions & Pick<Environment["db"], "applyMigrations">;
 }

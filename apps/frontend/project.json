@@ -13,6 +13,9 @@
 					"optimization": false,
 					"sourceMap": true
 				},
+				"e2e": {
+					"sourceMap": true
+				},
 				"production": {
 					"budgets": [
 						{
@@ -73,17 +76,31 @@
 					"buildTarget": "frontend:build:development",
 					"proxyConfig": "apps/frontend/proxy.conf.json"
 				},
+				"e2e": {
+					"buildTarget": "frontend:build:e2e",
+					"port": 34200
+				},
 				"production": {
 					"buildTarget": "frontend:build:production"
 				}
 			},
 			"defaultConfiguration": "development",
-			"executor": "@angular-devkit/build-angular:dev-server"
+			"executor": "@angular-devkit/build-angular:dev-server",
+			"options": {
+				"port": 4200
+			}
 		},
 		"serve-static": {
+			"configurations": {
+				"e2e": {
+					"buildTarget": "frontend:build:e2e",
+					"port": 34200
+				}
+			},
 			"executor": "@nx/web:file-server",
 			"options": {
 				"buildTarget": "frontend:build",
+				"port": 4200,
 				"staticFilePath": "dist/apps/frontend/browser"
 			}
 		},

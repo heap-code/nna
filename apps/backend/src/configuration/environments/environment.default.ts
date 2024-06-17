@@ -10,13 +10,13 @@ import { Environment } from "./environment.interface";
  * Even if it re-uses this content.
  */
 export interface EnvironmentShellDefault {
-	/** Override auth cookie, set `false` to disable (enabled by default) */
-	readonly BE_AUTH_COOKIE?: "false" | "true";
-	/** Override auth cookie name, useless without {@link BE_AUTH_COOKIE} */
+	/** Override auth cookie name */
 	readonly BE_AUTH_COOKIE_NAME?: string;
 	/** Override auth secret */
 	readonly BE_AUTH_SECRET?: string;
 
+	/** Disable auto migrations */
+	readonly BE_DB_APPLY_MIGRATION?: "false";
 	/** Override DB host */
 	readonly BE_DB_HOST?: string;
 	/** Override DB name */
@@ -62,6 +62,7 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 			.parse(envDefault.BE_AUTH_SECRET),
 	},
 	db: {
+		applyMigrations: envDefault.BE_DB_APPLY_MIGRATION !== "false",
 		dbName: z.string().min(1).default("db").parse(envDefault.BE_DB_NAME),
 		debug: false,
 		host: z

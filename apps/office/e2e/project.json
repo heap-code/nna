@@ -1,0 +1,26 @@
+{
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"implicitDependencies": ["backend", "office"],
+	"name": "office-e2e",
+	"projectType": "application",
+	"sourceRoot": "apps/office/e2e/src",
+	"tags": [],
+	"targets": {
+		"e2e": {
+			"configurations": {
+				"ci": {
+					"devServerTarget": "office:serve-static:e2e"
+				}
+			},
+			"executor": "@nx/cypress:cypress",
+			"options": {
+				"cypressConfig": "apps/office/e2e/cypress.config.ts",
+				"devServerTarget": "office:serve:e2e",
+				"testingType": "e2e"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		}
+	}
+}

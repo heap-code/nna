@@ -81,8 +81,15 @@ jobs:
         uses: hoverkraft-tech/compose-action@v2.0.0
         with:
           compose-file: "./docker-compose.yml"
+      - name: Prepare E2E Backend instance
+        run: |
+          npm run backend:start:e2e &
+          npx wait-port 33000 -t 30000
+
       - name: Tests e2e
-        run: NX_PARALLEL=1 npm run test:e2e:ci
+        run: npm run test:e2e:ci
+        env:
+          BE_E2E_USE_EXISTING: true
 
       - name: Upload Cypress artifacts in case of error in `frontend`
         uses: actions/upload-artifact@v4
@@ -90,7 +97,7 @@ jobs:
         with:
           if-no-files-found: warn
           name: cypress-logs
-          path: dist/cypress/apps/frontend-e2e/
+          path: dist/cypress/apps/frontend/e2e/
           retention-days: 7
 
       - name: Upload Cypress artifacts in case of error in `office`
@@ -99,5 +106,5 @@ jobs:
         with:
           if-no-files-found: warn
           name: cypress-logs
-          path: dist/cypress/apps/office-e2e/
+          path: dist/cypress/apps/office/e2e/
           retention-days: 7

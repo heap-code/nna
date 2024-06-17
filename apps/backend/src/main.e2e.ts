@@ -65,6 +65,7 @@ void (async () => {
 				},
 				logger,
 				orm: {
+					applyMigrations: false,
 					dbName: z
 						.string()
 						.min(1)

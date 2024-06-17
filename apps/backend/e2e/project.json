@@ -1,5 +1,5 @@
 {
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
 	"implicitDependencies": ["backend"],
 	"name": "backend-e2e",
 	"projectType": "application",
@@ -7,7 +7,7 @@
 		"e2e": {
 			"executor": "@nx/jest:jest",
 			"options": {
-				"jestConfig": "apps/backend-e2e/jest.config.ts"
+				"jestConfig": "apps/backend/e2e/jest.config.ts"
 			},
 			"outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"]
 		},

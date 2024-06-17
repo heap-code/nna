@@ -9,6 +9,7 @@ import {
 /** @internal */
 const ZOD_OFJ_TYPE = [
 	// OFJ => Object-For-JSON
+	z.ZodFirstPartyTypeKind.ZodArray,
 	z.ZodFirstPartyTypeKind.ZodDate,
 	z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion,
 	z.ZodFirstPartyTypeKind.ZodObject,
@@ -33,6 +34,15 @@ function fromProperty<T extends z.ZodTypeAny>(propertySchema: T): T | false {
 	const { schema } = result;
 	const definition = schema._def;
 	switch (definition.typeName) {
+		case z.ZodFirstPartyTypeKind.ZodArray: {
+			const previousType = definition.type as z.ZodTypeAny;
+			const updateType = fromProperty(previousType);
+
+			return updateType === false || updateType === previousType
+				? false
+				: (result.replace(z.array(updateType).pipe(schema)) as T);
+		}
+
 		case z.ZodFirstPartyTypeKind.ZodDate:
 			return result.replace(dateString).pipe(propertySchema) as T;
 

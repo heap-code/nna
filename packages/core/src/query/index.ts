@@ -4,6 +4,7 @@ export * as QueryOrders from "./order";
 export * from "./query-object";
 export * from "./query-object.schema";
 export * from "./query-results";
+export * from "./query-results.schema";
 export * from "./query.types";
 
 export type {

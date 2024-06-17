@@ -216,7 +216,7 @@
 		"storybook:build": "nx affected -t storybook-build",
 		"test": "nx affected -t test",
 		"test:ci": "nx affected -t test --configuration ci",
-		"test:e2e": "nx affected -t e2e",
+		"test:e2e": "nx affected -t e2e --parallel=false",
 		"test:e2e:ci": "npm run test:e2e -- --configuration ci",
 		"typecheck": "nx affected -t typecheck"
 	},
