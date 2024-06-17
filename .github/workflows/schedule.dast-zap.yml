@@ -44,6 +44,8 @@ jobs:
         with:
           compose-file: "./docker-compose.yml"
       - name: Run Backend instance
+        env:
+          BE_DB_APPLY_MIGRATION: false
         run: |
           npm run backend:start &
           npx mikro-orm schema:fresh --seed SimpleSeeder -r
