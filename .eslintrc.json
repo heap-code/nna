@@ -474,6 +474,13 @@
 			}
 		},
 		{
+			"files": ["Dockerfile"],
+			"parser": "eslint-plugin-markdownlint/parser",
+			"rules": {
+				"prettier/prettier": "error"
+			}
+		},
+		{
 			"files": ["*.js", "*.ts"],
 			"rules": {
 				/* FIXME: There's a plugin that disables that rule (probably prettier) */
