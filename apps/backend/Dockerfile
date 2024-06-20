@@ -1,12 +1,8 @@
-FROM node:20-alpine
+FROM node:20.14.0-alpine
 
 WORKDIR /app
 
 RUN apk add --no-cache jq
-
-# Use of a non-root user
-RUN addgroup --system user \
-	&& adduser --system -G user user
 
 COPY package.json .
 COPY package-lock.json .
@@ -18,7 +14,10 @@ RUN cat package.json \
 
 COPY ./dist/apps/backend .
 
-RUN chown -R user:user .
+# Use of a non-root user
+RUN addgroup --system user \
+	&& adduser --system -G user user \
+	&& chown -R user:user .
 USER user
 
 # The backend is not bundled
