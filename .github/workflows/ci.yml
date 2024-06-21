@@ -133,7 +133,6 @@ jobs:
         name: Wait for E2E Backend instance
         run: npx wait-port 33000 -t 30000
 
-      # FIXME: do not compile fronts
       - if: ${{ steps.get-affected.outputs.N != 0 }}
         name: Tests e2e
         run: npm run test:e2e:ci
