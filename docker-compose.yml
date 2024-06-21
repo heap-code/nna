@@ -1,4 +1,5 @@
-version: "3.8"
+# Basic docker compose
+#   Used for e2e testing and development (integrated in DevContainer)
 
 services:
   db:

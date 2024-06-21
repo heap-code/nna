@@ -127,7 +127,7 @@ jobs:
         with:
           compose-file: |
             ./docker-compose.yml
-            ./docker-compose.ci.yml
+            ./docker-compose.e2e-ci.yml
 
       - if: ${{ steps.get-affected.outputs.N != 0 }}
         name: Wait for E2E Backend instance

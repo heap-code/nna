@@ -1,6 +1,12 @@
-version: "3.8"
+# This docker-compose is used in the CI for E2E testing
+# The docker images should be build before using this compose `npm run docker:e2e`
+#   Also, this indirectly tests the docker images
 
 services:
+  db:
+    environment:
+      POSTGRES_DB: "e2e"
+
   backend:
     image: backend
     depends_on:
@@ -9,6 +15,7 @@ services:
         required: true
     environment:
       BE_DB_HOST: db
+      BE_DB_TEST_NAME: e2e
       BE_HTTP_PORT: 33000
     ports:
       - "33000:33000"
@@ -18,15 +25,15 @@ services:
     depends_on:
       - backend
     environment:
-      PORT: 4200
+      PORT: 34200
     ports:
-      - "34200:4200"
+      - "34200:34200"
 
   office:
     image: office
     depends_on:
       - backend
     environment:
-      PORT: 5200
+      PORT: 35200
     ports:
-      - "35200:5200"
+      - "35200:35200"
