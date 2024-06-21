@@ -9,7 +9,8 @@
 		"e2e": {
 			"configurations": {
 				"ci": {
-					"devServerTarget": "office:serve-static:e2e"
+					"devServerTarget": "",
+					"skipServe": true
 				}
 			},
 			"executor": "@nx/cypress:cypress",

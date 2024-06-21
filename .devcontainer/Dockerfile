@@ -2,8 +2,8 @@ FROM mcr.microsoft.com/devcontainers/typescript-node:20
 
 # Add some utilities
 # `bash-completion` some tools (e.g. git) can use this
-RUN apt-get update && \
-    apt-get install -y vim bash-completion
+RUN apt-get update \
+	&& apt-get install -y vim bash-completion
 
 # So the SQL plugin works with both devcontainer and local settings
 CMD socat tcp-listen:5432,reuseaddr,fork tcp:db:5432

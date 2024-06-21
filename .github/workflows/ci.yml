@@ -1,3 +1,5 @@
+# Run the CI: lint, build, tests, ...
+
 name: CI
 
 on:
@@ -12,15 +14,17 @@ concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
   cancel-in-progress: true
 
+env:
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
+  NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') }}
+
 jobs:
   checks:
     # To not run on draft PRs
-    if: github.event.pull_request.draft == false
+    if: ${{ github.event.pull_request.draft == false }}
 
     runs-on: ubuntu-latest
-    env:
-      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_WRITE_TOKEN }}
-      NX_NO_CLOUD: ${{ contains(github.event.pull_request.labels.*.name, 'renovate') }}
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -71,22 +75,72 @@ jobs:
       - name: Run typecheck
         run: npm run typecheck
 
-      - name: Build
-        run: npm run build
-
       - name: Tests
         run: npm run test:ci
 
-      - name: "[docker-compose] Prepare for E2E testing"
+  e2e:
+    # To not run on draft PRs
+    if: ${{ github.event.pull_request.draft == false }}
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: master
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./package.json', './package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
+        name: Install packages
+        run: npm ci
+
+      # If the cache is used
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        run: npm run postinstall
+
+      # Get the number of affected apps
+      - id: get-affected
+        run: |
+          N=$(npx nx show projects --affected -t build | wc -l)
+          echo "N=$N" >> $GITHUB_OUTPUT
+
+        # Only run when there are affected applications
+
+      - if: ${{ steps.get-affected.outputs.N != 0 }}
+        run: npm run docker:e2e
+      - if: ${{ steps.get-affected.outputs.N != 0 }}
+        name: "[docker-compose] Prepare for E2E testing"
         uses: hoverkraft-tech/compose-action@v2.0.0
         with:
-          compose-file: "./docker-compose.yml"
-      - name: Prepare E2E Backend instance
-        run: |
-          npm run backend:start:e2e &
-          npx wait-port 33000 -t 30000
+          compose-file: |
+            ./docker-compose.yml
+            ./docker-compose.e2e-ci.yml
 
-      - name: Tests e2e
+      - if: ${{ steps.get-affected.outputs.N != 0 }}
+        name: Wait for E2E Backend instance
+        run: npx wait-port 33000 -t 30000
+
+      - if: ${{ steps.get-affected.outputs.N != 0 }}
+        name: Tests e2e
         run: npm run test:e2e:ci
         env:
           BE_E2E_USE_EXISTING: true

@@ -58,7 +58,6 @@
 		"compodoc": {
 			"configurations": {
 				"coverage": {
-					// FIXME: increase
 					"coverageTest": 25
 				}
 			},
@@ -66,6 +65,10 @@
 				"port": 5080,
 				"tsConfig": "{projectRoot}/tsconfig.app.json"
 			}
+		},
+		"docker-build": {
+			"command": "docker build -f apps/office/Dockerfile . -t office",
+			"dependsOn": ["build"]
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint"
