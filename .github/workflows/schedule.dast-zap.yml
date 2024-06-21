@@ -1,4 +1,4 @@
-# scheduled workflow to run a DAST scan against the API
+# Scheduled workflow to run a DAST scan against the API
 
 name: DAST - API ZAP
 
