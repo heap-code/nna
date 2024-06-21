@@ -12,6 +12,7 @@
 	},
 	"eslint.onIgnoredFiles": "warn",
 	"eslint.validate": [
+		"dockerfile",
 		"html",
 		"javascript",
 		"javascriptreact",

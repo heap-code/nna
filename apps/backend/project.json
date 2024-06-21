@@ -65,6 +65,10 @@
 				"tsConfig": "{projectRoot}/tsconfig.app.json"
 			}
 		},
+		"docker-build": {
+			"command": "docker build -f apps/backend/Dockerfile . -t backend",
+			"dependsOn": ["build"]
+		},
 		"lint": {
 			"executor": "@nx/eslint:lint"
 		},
