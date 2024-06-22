@@ -7,7 +7,7 @@ import { HealthService } from "./health.service";
 @Module({
 	controllers: [HealthController],
 	exports: [HealthService],
-	imports: [TerminusModule.forRoot()],
+	imports: [TerminusModule.forRoot({ logger: false })],
 	providers: [HealthService],
 })
 export class HealthModule {}
