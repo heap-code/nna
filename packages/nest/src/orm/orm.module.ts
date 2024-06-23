@@ -62,7 +62,7 @@ export class OrmModule extends ConfigurableModuleClass {
 					imports: [dynamicModule],
 					inject: [MODULE_OPTIONS_TOKEN],
 					useFactory: ({ orm }: OrmModuleSyncOptions) =>
-						deepmerge(ORM_DEFAULT_CONFIGURATION, orm),
+						deepmerge(ORM_DEFAULT_CONFIGURATION, orm as never),
 				}),
 			],
 		};
