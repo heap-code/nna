@@ -39,7 +39,7 @@ export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
 					onUpdate: ({ createdAt }) => createdAt,
 					type: DateTimeType,
 				} satisfies PropertyOptions<T>,
-				createdAt,
+				createdAt as never,
 			),
 		)
 		public readonly createdAt!: Opt<Date>;
@@ -51,7 +51,7 @@ export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
 					onUpdate: () => new Date(),
 					type: DateTimeType,
 				} satisfies PropertyOptions<T>,
-				updatedAt,
+				updatedAt as never,
 			),
 		)
 		public readonly updatedAt!: Opt<Date>;
