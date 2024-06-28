@@ -2,16 +2,15 @@ import { MikroORM } from "@mikro-orm/core";
 import { SeedManager } from "@mikro-orm/seeder";
 import {
 	Controller,
-	HttpCode,
-	HttpStatus,
 	LogLevel,
 	Logger,
 	Module,
 	OnModuleInit,
-	Post,
 } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { ControllerFor, HttpHandleRoute } from "@nna/nest";
 import * as z from "zod";
+import { E2E_HTTP_CONFIG, E2eHttp } from "~/testing/e2e";
 
 import { AppModule } from "./app/app.module";
 import { bootstrap } from "./bootstrap";
@@ -30,12 +29,11 @@ const APP_VERSION = __APP_VERSION__;
 void (async () => {
 	const logger: LogLevel[] = ["debug", "error", "fatal"];
 
-	@Controller("_e2e_")
-	class AppE2eController {
+	@Controller(E2E_HTTP_CONFIG.entrypoint)
+	class AppE2eController implements ControllerFor<E2eHttp> {
 		public constructor(private readonly orm: MikroORM) {}
 
-		@HttpCode(HttpStatus.NO_CONTENT)
-		@Post("db/refresh")
+		@HttpHandleRoute(E2E_HTTP_CONFIG.routes.refreshDb)
 		public async refreshDb() {
 			// TODO
 			await this.orm.seeder.seed("TODO" as never);
@@ -78,13 +76,14 @@ void (async () => {
 	class AppE2eModule implements OnModuleInit {
 		public constructor(private readonly orm: MikroORM) {}
 		public onModuleInit() {
-			// Make the seeder object available
+			// Make the seeder object available (without setting it in the configuration)
 			SeedManager.register(this.orm);
 		}
 	}
 
-	const baseApp = await NestFactory.create(AppE2eModule, { logger });
-	const [app, { host }] = bootstrap(baseApp);
+	const [app, { host }] = bootstrap(
+		await NestFactory.create(AppE2eModule, { logger }),
+	);
 
 	await app.listen(host.port, host.name);
 	Logger.debug(

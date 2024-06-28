@@ -1,1 +1,1 @@
-const myVar = 2;
+export * from "./e2e.http";
