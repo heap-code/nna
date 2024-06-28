@@ -1,0 +1,12 @@
+{
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"name": "testing-e2e",
+	"projectType": "testing",
+	"sourceRoot": "libs/testing/e2e/src",
+	"tags": [],
+	"targets": {
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		}
+	}
+}
