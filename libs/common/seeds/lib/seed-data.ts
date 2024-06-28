@@ -19,13 +19,13 @@ export interface UserSeedModel extends UserModel {
  * Content of a seed ~= instance of the application
  * It should have enough data for a DB seed.
  *
- * Prefer `as const satisfies Seed` when defining the seed.
+ * Prefer `as const satisfies SeedData` when defining the seed.
  *
  * Use `faker` (https://fakerjs.dev/) for random data, BUT
  * 	also set values manually, especially for edge cases (avoid "blind-tests")
  * 	and it gives more deterministic results when testing.
  */
-export interface Seed {
+export interface SeedData {
 	groupGenres: GroupGenreModel[];
 	groups: GroupModel[];
 	persons: PersonSeedModel[];

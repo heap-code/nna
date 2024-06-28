@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { Seed } from "../lib";
+import { SeedData } from "../lib";
 
 const date = faker.date.recent();
 
@@ -19,4 +19,4 @@ export const empty = {
 			username: "admin",
 		},
 	],
-} as const satisfies Seed;
+} as const satisfies SeedData;
