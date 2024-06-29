@@ -1,2 +1,2 @@
-export * from "./seed-data";
-export * from "./seed.types";
+export * from "./data";
+export * from "./generator";
