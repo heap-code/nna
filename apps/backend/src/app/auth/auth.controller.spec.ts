@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { AuthController } from "./auth.controller";
 import { AuthModule } from "./auth.module";
-import { OrmTestingModule } from "../../../test";
+import { OrmTesting } from "../../../test";
 import { ConfigurationModule } from "../../configuration";
 
 describe("AuthController", () => {
@@ -14,7 +14,7 @@ describe("AuthController", () => {
 			imports: [
 				AuthModule,
 				ConfigurationModule.forRoot({}),
-				OrmTestingModule,
+				OrmTesting.Module,
 			],
 		}).compile();
 

@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { AuthGuard } from "./auth.guard";
 import { AuthModule } from "./auth.module";
-import { OrmTestingModule } from "../../../test";
+import { OrmTesting } from "../../../test";
 import { ConfigurationModule } from "../../configuration";
 
 describe("AuthGuard", () => {
@@ -14,7 +14,7 @@ describe("AuthGuard", () => {
 			imports: [
 				AuthModule,
 				ConfigurationModule.forRoot({}),
-				OrmTestingModule,
+				OrmTesting.Module,
 			],
 			providers: [AuthGuard],
 		}).compile();

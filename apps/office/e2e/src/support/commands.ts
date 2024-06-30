@@ -1,16 +1,17 @@
 import { AnyFunction } from "@nna/core";
 import * as z from "zod";
 import { AUTH_HTTP_CONFIG, AuthLogin } from "~/common/auth";
-import { UserSeedModel } from "~/testing/seeds";
+import { E2eHttp } from "~/testing/e2e";
+import { SeedGenerator, Seeding } from "~/testing/seeds";
 
 /** Minimal data for E2E login */
-export type CyUserLogin = Pick<UserSeedModel, "_password" | "username">;
+export type CyUserLogin = Pick<Seeding.UserSeed, "_password" | "username">;
 
 const E2E_API = z
 	.string()
 	// TODO: a way to get this from configuration (or the build being tested)?
 	.default("http://127.0.0.1:33000/e2e/api")
-	.parse(process.env.FE_E2E_);
+	.parse(process.env.OF_E2E_API_URL);
 
 /**
  * Logs the session with the given user object
@@ -32,8 +33,9 @@ function loginWith(username: CyUserLogin | string, password = "") {
 		return loginWith(username.username, username._password);
 	}
 
-	const { method, path } = AUTH_HTTP_CONFIG.routes.getProfile;
-	return cy.request(method, E2E_API + path({}), {
+	const { entrypoint, routes } = AUTH_HTTP_CONFIG;
+	const { method, path } = routes.getProfile;
+	return cy.request(method, `${E2E_API}/${entrypoint}${path({})}`, {
 		cookie: true,
 		password,
 		username,
@@ -45,20 +47,33 @@ function loginWith(username: CyUserLogin | string, password = "") {
  * @returns Cypress chain
  */
 function logout() {
-	const { method, path } = AUTH_HTTP_CONFIG.routes.logout;
-	return cy.request(method, E2E_API + path({})).then(() => cy.clearCookies());
+	const { entrypoint, routes } = AUTH_HTTP_CONFIG;
+	const { method, path } = routes.login;
+	return cy
+		.request(method, `${E2E_API}/${entrypoint}${path({})}`)
+		.then(() => cy.clearCookies());
 }
 
 /**
  * Refresh the DB to a given state
  *
+ * @param param to set refresh data
  * @returns Cypress chain
  */
-function resetDB() {
-	return cy.request("GET");
-}
+const refreshDb: SeedGenerator.Generate = param => {
+	const { entrypoint, routes } = E2eHttp.CONFIG;
+	const { method, path } = routes.refreshDb;
 
-const CY_ADD_ONS = { loginWith, logout, resetDB } as const satisfies Record<
+	// Need to transform into regular promise to not lose typing
+	return new Promise(
+		(res, rej) =>
+			void cy
+				.request(method, `${E2E_API}/${entrypoint}${path({})}`, param)
+				.then(r => (r.isOkStatusCode ? res(r.body as never) : rej())),
+	);
+};
+
+const CY_ADD_ONS = { loginWith, logout, refreshDb } as const satisfies Record<
 	string,
 	AnyFunction
 >;

@@ -9,14 +9,14 @@ import {
 	OnModuleInit,
 } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { ControllerFor, HttpHandleRoute } from "@nna/nest";
+import { ControllerFor, HttpHandleRoute, createPayload } from "@nna/nest";
 import * as z from "zod";
 import { E2eHttp } from "~/testing/e2e";
 import { SeedGenerator } from "~/testing/seeds";
 
 import { AppModule } from "./app/app.module";
 import { bootstrap } from "./bootstrap";
-import { SeedDataBaseSeeder } from "./orm/seeders/seed-data";
+import { OrmTesting } from "../test";
 
 // Injected from webpack. These are no variables, but "MACROs".
 /** @internal */
@@ -32,21 +32,17 @@ const APP_VERSION = __APP_VERSION__;
 void (async () => {
 	const logger: LogLevel[] = ["debug", "error", "fatal"];
 
+	class RefreshDbPayload extends createPayload(
+		SeedGenerator.generateParameterSchema,
+	) {}
+
 	@Controller(E2eHttp.CONFIG.entrypoint)
 	class AppE2eController implements ControllerFor<E2eHttp.Http> {
-		public constructor(private readonly orm: MikroORM) {}
+		public constructor(private readonly orm: OrmTesting.DataSeeder) {}
 
 		@HttpHandleRoute(E2eHttp.CONFIG.routes.refreshDb)
-		public async refreshDb(@Body() body: SeedGenerator.GenerateParameter) {
-			const y = SeedGenerator.generateParameterSchema.parse(body);
-			const seed = await SeedGenerator.generate(y);
-			await this.orm.seeder.seed(
-				class extends SeedDataBaseSeeder {
-					public getSeed = () => seed;
-				},
-			);
-
-			return seed;
+		public refreshDb(@Body() body: RefreshDbPayload) {
+			return this.orm.generate(body);
 		}
 	}
 
@@ -82,6 +78,8 @@ void (async () => {
 				},
 			}),
 		],
+		// Only for e2e
+		providers: [OrmTesting.DataSeeder],
 	})
 	class AppE2eModule implements OnModuleInit {
 		public constructor(private readonly orm: MikroORM) {}

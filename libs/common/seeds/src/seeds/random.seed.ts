@@ -10,13 +10,15 @@ export const RANDOM_DEFAULT_PASSWORD = "password";
 const nItemSchema = z.number().min(0).optional();
 
 /** Validation schema for {@link RandomOptions} */
-export const randomOptionsSchema = z.object({
-	nGroupGenres: nItemSchema,
-	nGroups: nItemSchema,
-	nPersons: nItemSchema,
-	nUsers: nItemSchema,
-	password: z.string().default(RANDOM_DEFAULT_PASSWORD).optional(),
-});
+export const randomOptionsSchema = z
+	.object({
+		nGroupGenres: nItemSchema,
+		nGroups: nItemSchema,
+		nPersons: nItemSchema,
+		nUsers: nItemSchema,
+		password: z.string().default(RANDOM_DEFAULT_PASSWORD).optional(),
+	})
+	.default({});
 
 /** Options for {@link random} seed generator */
 export type RandomOptions = z.infer<typeof randomOptionsSchema>;

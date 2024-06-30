@@ -10,6 +10,6 @@
 		"src/**/*.d.ts",
 		"src/**/*.spec.ts",
 		"src/**/*.test.ts",
-		"test/**/*.ts"
+		"test/index.ts"
 	]
 }
