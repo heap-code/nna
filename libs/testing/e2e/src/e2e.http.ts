@@ -1,12 +1,16 @@
 import { HttpRoute } from "@nna/core";
+import { SeedGenerator } from "~/testing/seeds";
+
+export const refreshDbSchema = SeedGenerator.generateParameterSchema;
+export type RefreshDb = SeedGenerator.Generate;
 
 /** HTTP configuration for e2e controls */
-export const E2E_HTTP_CONFIG = {
+export const CONFIG = {
 	entrypoint: "_e2e_",
 	routes: {
-		refreshDb: HttpRoute.builder("db/refresh").post<() => Promise<void>>(),
+		refreshDb: HttpRoute.builder("db/refresh").post<RefreshDb>(),
 	} satisfies HttpRoute.Definitions,
 } as const;
 
 /** HTTP specification for e2e controls */
-export type E2eHttp = HttpRoute.Handlers<typeof E2E_HTTP_CONFIG.routes>;
+export type Http = HttpRoute.Handlers<typeof CONFIG.routes>;

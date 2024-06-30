@@ -1,6 +1,7 @@
 import { MikroORM } from "@mikro-orm/core";
 import { SeedManager } from "@mikro-orm/seeder";
 import {
+	Body,
 	Controller,
 	LogLevel,
 	Logger,
@@ -10,10 +11,12 @@ import {
 import { NestFactory } from "@nestjs/core";
 import { ControllerFor, HttpHandleRoute } from "@nna/nest";
 import * as z from "zod";
-import { E2E_HTTP_CONFIG, E2eHttp } from "~/testing/e2e";
+import { E2eHttp } from "~/testing/e2e";
+import { SeedGenerator } from "~/testing/seeds";
 
 import { AppModule } from "./app/app.module";
 import { bootstrap } from "./bootstrap";
+import { SeedDataBaseSeeder } from "./orm/seeders/seed-data";
 
 // Injected from webpack. These are no variables, but "MACROs".
 /** @internal */
@@ -29,14 +32,21 @@ const APP_VERSION = __APP_VERSION__;
 void (async () => {
 	const logger: LogLevel[] = ["debug", "error", "fatal"];
 
-	@Controller(E2E_HTTP_CONFIG.entrypoint)
-	class AppE2eController implements ControllerFor<E2eHttp> {
+	@Controller(E2eHttp.CONFIG.entrypoint)
+	class AppE2eController implements ControllerFor<E2eHttp.Http> {
 		public constructor(private readonly orm: MikroORM) {}
 
-		@HttpHandleRoute(E2E_HTTP_CONFIG.routes.refreshDb)
-		public async refreshDb() {
-			// TODO
-			await this.orm.seeder.seed("TODO" as never);
+		@HttpHandleRoute(E2eHttp.CONFIG.routes.refreshDb)
+		public async refreshDb(@Body() body: SeedGenerator.GenerateParameter) {
+			const y = SeedGenerator.generateParameterSchema.parse(body);
+			const seed = await SeedGenerator.generate(y);
+			await this.orm.seeder.seed(
+				class extends SeedDataBaseSeeder {
+					public getSeed = () => seed;
+				},
+			);
+
+			return seed;
 		}
 	}
 

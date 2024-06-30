@@ -10,8 +10,6 @@ const GENERATORS = [
 	{ fn: () => simple, name: "simple" },
 ] as const satisfies Generator.Meta[];
 
-/** Type of the generate function */
-export type Generate = Generator.ToFunction<typeof GENERATORS>;
 /** Argument for the {@link Generate} function */
 export type GenerateParameter = Generator.ToParameter<typeof GENERATORS>;
 
@@ -23,7 +21,22 @@ export const generateParameterSchema: z.ZodType<GenerateParameter> =
 		z.object({ options: randomOptionsSchema, seed: z.literal("random") }),
 	]);
 
+type X<P extends GenerateParameter> = ReturnType<
+	NonNullable<Generator.KeepMetaOfName<typeof GENERATORS, P["seed"]>[0]>["fn"]
+>;
+
 /** Generates a seed from the given Meta */
-export const generate: Generate = ({ options, seed }) =>
-	(GENERATORS.find(({ name }) => name === seed)?.fn(options) as never) ??
-	Promise.reject(new Error("No generator found"));
+export function generate<P extends GenerateParameter>(param: P): Promise<X<P>> {
+	const { options, seed } = param;
+	return (
+		(GENERATORS.find(({ name }) => name === seed)?.fn(options) as never) ??
+		Promise.reject(new Error("No generator found"))
+	);
+}
+
+const y0 = generate({ seed: "empty" });
+const y1 = generate({ options: {}, seed: "simple" });
+const y2 = generate({ options: {}, seed: "random" });
+
+/** Type of the generate function */
+export type Generate = typeof generate;
