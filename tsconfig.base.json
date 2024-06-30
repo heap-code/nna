@@ -21,7 +21,7 @@
 			"~/common/*": ["libs/common/src/*"],
 			"~/front/*": ["libs/front/src/*"],
 			"~/testing/e2e": ["libs/testing/e2e/src/index.ts"],
-			"~/testing/seeds": ["libs/common/seeds/index.ts"]
+			"~/testing/seeds": ["libs/common/seeds/src/index.ts"]
 		},
 		"resolveJsonModule": true,
 		"rootDir": ".",

@@ -3,7 +3,10 @@
 	"overrides": [
 		{
 			"files": ["*.ts"],
-			"rules": {}
+			"rules": {
+				"jsdoc/require-param": "off",
+				"jsdoc/require-returns": "off"
+			}
 		}
 	]
 }

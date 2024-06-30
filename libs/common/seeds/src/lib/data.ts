@@ -1,7 +1,7 @@
-import { GroupModel } from "../../src/group";
-import { GroupGenreModel } from "../../src/group/genre";
-import { PersonModel } from "../../src/person";
-import { UserModel } from "../../src/user";
+import { GroupModel } from "../../../src/group";
+import { GroupGenreModel } from "../../../src/group/genre";
+import { PersonModel } from "../../../src/person";
+import { UserModel } from "../../../src/user";
 
 /** Seed data for {@link PersonModel} */
 export interface PersonSeed extends PersonModel {
