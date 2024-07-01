@@ -35,16 +35,32 @@
 	},
 	"dockerComposeFile": ["../docker-compose.yml", "./docker-compose.yml"],
 	"features": {
+		// FIXME: check https://github.com/microsoft/vscode-remote-release/issues/3279
+		// 	To "extends" this configuration
+		"ghcr.io/devcontainers/features/desktop-lite:1": {
+			"password": "vscode",
+			"vncPort": 5903
+		},
 		// TODO: enable when some E2E tests will be set
 		// "ghcr.io/devcontainers/features/desktop-lite:1": {}
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
 		"ghcr.io/dhoeric/features/hadolint:1": {}
 	},
+	"forwardPorts": [5903, 6080],
 	"name": "DevContainer",
 	"onCreateCommand": "npm install",
+	"portsAttributes": {
+		"5903": {
+			"label": "desktop VNC"
+		},
+		"6080": {
+			"label": "desktop Web"
+		}
+	},
 	"postCreateCommand": {
 		"set npx path": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.bashrc",
-		"set nx parallel": "echo 'export NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")' >> ~/.bashrc"
+		"set nx parallel": "echo 'export NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")' >> ~/.bashrc",
+		"vnc-xrandr": "xrandr --output VNC-0 --mode 1920x1080"
 	},
 	"remoteEnv": {
 		"BE_DB_HOST": "db"

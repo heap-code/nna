@@ -1,20 +1,22 @@
 import { MikroORM } from "@mikro-orm/core";
 import { SeedManager } from "@mikro-orm/seeder";
 import {
+	Body,
 	Controller,
-	HttpCode,
-	HttpStatus,
 	LogLevel,
 	Logger,
 	Module,
 	OnModuleInit,
-	Post,
 } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { ControllerFor, HttpHandleRoute, createPayload } from "@nna/nest";
 import * as z from "zod";
+import { E2eHttp } from "~/testing/e2e";
+import { SeedGenerator } from "~/testing/seeds";
 
 import { AppModule } from "./app/app.module";
 import { bootstrap } from "./bootstrap";
+import { OrmTesting } from "../test";
 
 // Injected from webpack. These are no variables, but "MACROs".
 /** @internal */
@@ -30,15 +32,17 @@ const APP_VERSION = __APP_VERSION__;
 void (async () => {
 	const logger: LogLevel[] = ["debug", "error", "fatal"];
 
-	@Controller("_e2e_")
-	class AppE2eController {
-		public constructor(private readonly orm: MikroORM) {}
+	class RefreshDbPayload extends createPayload(
+		SeedGenerator.generateParameterSchema,
+	) {}
 
-		@HttpCode(HttpStatus.NO_CONTENT)
-		@Post("db/refresh")
-		public async refreshDb() {
-			// TODO
-			await this.orm.seeder.seed("TODO" as never);
+	@Controller(E2eHttp.CONFIG.entrypoint)
+	class AppE2eController implements ControllerFor<E2eHttp.Http> {
+		public constructor(private readonly orm: OrmTesting.DataSeeder) {}
+
+		@HttpHandleRoute(E2eHttp.CONFIG.routes.refreshDb)
+		public refreshDb(@Body() body: RefreshDbPayload) {
+			return this.orm.generate(body);
 		}
 	}
 
@@ -60,7 +64,7 @@ void (async () => {
 						],
 					},
 					globalPrefix: "e2e/api",
-					name: "127.0.0.1",
+					name: "0.0.0.0",
 					port: 33000,
 				},
 				logger,
@@ -74,17 +78,20 @@ void (async () => {
 				},
 			}),
 		],
+		// Only for e2e
+		providers: [OrmTesting.DataSeeder],
 	})
 	class AppE2eModule implements OnModuleInit {
 		public constructor(private readonly orm: MikroORM) {}
 		public onModuleInit() {
-			// Make the seeder object available
+			// Make the seeder object available (without setting it in the configuration)
 			SeedManager.register(this.orm);
 		}
 	}
 
-	const baseApp = await NestFactory.create(AppE2eModule, { logger });
-	const [app, { host }] = bootstrap(baseApp);
+	const [app, { host }] = bootstrap(
+		await NestFactory.create(AppE2eModule, { logger }),
+	);
 
 	await app.listen(host.port, host.name);
 	Logger.debug(

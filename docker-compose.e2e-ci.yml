@@ -18,7 +18,7 @@ services:
       BE_DB_TEST_NAME: e2e
       BE_HTTP_PORT: 33000
     ports:
-      - "33000:33000"
+      - "127.0.0.1:33000:33000"
 
   frontend:
     image: frontend
@@ -27,7 +27,7 @@ services:
     environment:
       PORT: 34200
     ports:
-      - "34200:34200"
+      - "127.0.0.1:34200:34200"
 
   office:
     image: office
@@ -36,4 +36,4 @@ services:
     environment:
       PORT: 35200
     ports:
-      - "35200:35200"
+      - "127.0.0.1:35200:35200"

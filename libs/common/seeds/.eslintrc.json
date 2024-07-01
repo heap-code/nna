@@ -1,0 +1,12 @@
+{
+	"extends": ["../.eslintrc.json"],
+	"overrides": [
+		{
+			"files": ["*.ts"],
+			"rules": {
+				"jsdoc/require-param": "off",
+				"jsdoc/require-returns": "off"
+			}
+		}
+	]
+}

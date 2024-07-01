@@ -21,7 +21,9 @@ RUN addgroup --system user \
 USER user
 
 # The backend is not bundled
-RUN npm -f --omit=dev ci
+RUN npm ci
+
+# RUN npm -f --omit=dev ci
 
 # Default environments
 ENV BE_HTTP_HOST=0.0.0.0

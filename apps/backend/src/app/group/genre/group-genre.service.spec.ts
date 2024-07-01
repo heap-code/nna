@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { GroupGenreModule } from "./group-genre.module";
 import { GroupGenreService } from "./group-genre.service";
-import { OrmTestingModule } from "../../../../test";
+import { OrmTesting } from "../../../../test";
 
 describe("GroupGenreService", () => {
 	let service: GroupGenreService;
@@ -10,7 +10,7 @@ describe("GroupGenreService", () => {
 
 	beforeEach(async () => {
 		module = await Test.createTestingModule({
-			imports: [GroupGenreModule, OrmTestingModule],
+			imports: [GroupGenreModule, OrmTesting.Module],
 		}).compile();
 
 		service = module.get<GroupGenreService>(GroupGenreService);
