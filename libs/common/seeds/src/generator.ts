@@ -20,7 +20,7 @@ export const generateParameterSchema = z.discriminatedUnion("seed", [
 	z.object({ options: randomOptionsSchema, seed: z.literal("random") }),
 ]) satisfies z.ZodType<GenerateParameter>;
 
-type GetSeedFromGenerator<P extends GenerateParameter> = ReturnType<
+export type GetSeedFromGenerator<P extends GenerateParameter> = ReturnType<
 	NonNullable<Generator.KeepMetaOfName<typeof GENERATORS, P["seed"]>[0]>["fn"]
 >;
 

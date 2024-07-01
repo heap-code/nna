@@ -6,7 +6,7 @@ export type RefreshDb = SeedGenerator.Generate;
 
 /** HTTP configuration for e2e controls */
 export const CONFIG = {
-	entrypoint: "_e2e_",
+	entrypoint: "-e2e-",
 	routes: {
 		refreshDb: HttpRoute.builder("db/refresh").post<RefreshDb>(),
 	} satisfies HttpRoute.Definitions,

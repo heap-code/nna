@@ -34,7 +34,7 @@ function loginWith(username: CyUserLogin | string, password = "") {
 	}
 
 	const { entrypoint, routes } = AUTH_HTTP_CONFIG;
-	const { method, path } = routes.getProfile;
+	const { method, path } = routes.login;
 	return cy.request(method, `${E2E_API}/${entrypoint}${path({})}`, {
 		cookie: true,
 		password,
@@ -60,18 +60,16 @@ function logout() {
  * @param param to set refresh data
  * @returns Cypress chain
  */
-const refreshDb: SeedGenerator.Generate = param => {
+function refreshDb<P extends SeedGenerator.GenerateParameter>(
+	param: P,
+): Cypress.Chainable<SeedGenerator.GetSeedFromGenerator<P>> {
 	const { entrypoint, routes } = E2eHttp.CONFIG;
 	const { method, path } = routes.refreshDb;
 
-	// Need to transform into regular promise to not lose typing
-	return new Promise(
-		(res, rej) =>
-			void cy
-				.request(method, `${E2E_API}/${entrypoint}${path({})}`, param)
-				.then(r => (r.isOkStatusCode ? res(r.body as never) : rej())),
-	);
-};
+	return cy
+		.request(method, `${E2E_API}/${entrypoint}${path({})}`, param)
+		.then(({ body }) => body as never);
+}
 
 const CY_ADD_ONS = { loginWith, logout, refreshDb } as const satisfies Record<
 	string,
@@ -88,10 +86,10 @@ declare global {
 	namespace Cypress {
 		// eslint-disable-next-line @typescript-eslint/no-empty-interface -- Needed for type-merging
 		interface Chainable extends CyChain {}
+
+		type ExtractFromChainable<T extends Chainable> =
+			T extends Chainable<infer U> ? U : never;
 	}
 }
 
-for (const [key, fn] of Object.entries(CY_ADD_ONS)) {
-	// Add implementations
-	Cypress.Commands.add(key as never, fn);
-}
+Cypress.Commands.addAll(CY_ADD_ONS);
