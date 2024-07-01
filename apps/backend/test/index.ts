@@ -1,1 +1,1 @@
-export * from "./orm-testing.module";
+export * as OrmTesting from "./orm-testing";

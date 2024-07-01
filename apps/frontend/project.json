@@ -72,7 +72,10 @@
 			"dependsOn": ["build"]
 		},
 		"lint": {
-			"executor": "@nx/eslint:lint"
+			"executor": "@nx/eslint:lint",
+			"options": {
+				"lintFilePatterns": ["{projectRoot}/!(e2e)"]
+			}
 		},
 		"serve": {
 			"configurations": {

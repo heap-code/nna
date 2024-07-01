@@ -31,7 +31,7 @@ export function bootstrap(app: INestApplication) {
 		.use(helmet({ contentSecurityPolicy: false }))
 		.useGlobalPipes(new PayloadValidationPipe())
 		.enableShutdownHooks()
-		.enableCors({ ...host.cors });
+		.enableCors({ ...host.cors, credentials: true });
 
 	if (swagger) {
 		const config = new DocumentBuilder()

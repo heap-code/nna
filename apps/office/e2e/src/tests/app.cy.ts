@@ -1,8 +1,17 @@
 describe("office-e2e", () => {
-	beforeEach(() => cy.visit("/"));
+	let seed: Cypress.ExtractFromChainable<ReturnType<typeof refreshDb>>;
+	const refreshDb = () => cy.refreshDb({ seed: "empty" });
 
-	it("should display welcome message", () => {
-		// Custom command example, see `../support/commands.ts` file
-		cy.login("my-email@something.com", "myPassword");
+	beforeEach(() => {
+		cy.visit("/");
+		refreshDb().then(data => (seed = data));
+	});
+
+	it("should seed", () => {
+		expect(seed.users).to.have.length(1);
+	});
+
+	it("should login", () => {
+		cy.loginWith(seed.users[0]);
 	});
 });

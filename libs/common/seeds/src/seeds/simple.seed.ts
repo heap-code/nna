@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { Seed } from "../lib";
+import type { Seeding } from "..";
 
 const date2 = faker.date.recent();
 const date1 = faker.date.recent({ days: 5, refDate: date2 });
@@ -130,4 +130,4 @@ export const simple = {
 			username: "user-forgot-password",
 		},
 	],
-} as const satisfies Seed;
+} as const satisfies Seeding.Data;

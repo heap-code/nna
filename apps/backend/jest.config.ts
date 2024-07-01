@@ -4,6 +4,7 @@ export default {
 	coveragePathIgnorePatterns: [
 		"src/configuration/environments.*.ts",
 		"src/environment.ts",
+		"src/orm/seeders",
 	],
 	displayName: "backend",
 	moduleFileExtensions: ["ts", "js", "html"],
