@@ -64,7 +64,7 @@ void (async () => {
 						],
 					},
 					globalPrefix: "e2e/api",
-					name: "127.0.0.1",
+					name: "0.0.0.0",
 					port: 33000,
 				},
 				logger,
