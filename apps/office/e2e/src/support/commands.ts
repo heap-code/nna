@@ -10,7 +10,7 @@ export type CyUserLogin = Pick<Seeding.UserSeed, "_password" | "username">;
 const E2E_API = z
 	.string()
 	// TODO: a way to get this from configuration (or the build being tested)?
-	.default("http://127.0.0.1:33000/e2e/api")
+	.default("http://localhost:33000/e2e/api")
 	.parse(process.env.OF_E2E_API_URL);
 
 /**
