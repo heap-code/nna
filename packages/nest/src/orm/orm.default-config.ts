@@ -24,8 +24,9 @@ const seederSuffix = "seeder";
 export const ORM_DEFAULT_CONFIGURATION = {
 	// App usage
 	autoLoadEntities: true,
-	discovery: { disableDynamicFileAccess: true },
+	discovery: { disableDynamicFileAccess: true, requireEntitiesArray: true },
 	forceUndefined: false,
+	ignoreUndefinedInQuery: true,
 	namingStrategy: NamingStrategy,
 	strict: true,
 	validate: true,

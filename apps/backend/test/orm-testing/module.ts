@@ -6,24 +6,39 @@ import * as path from "path";
 
 import { DataSeeder } from "./data-seeder";
 
-/** Path to the test DB. Can help debug some tests */
-const dbPath = path.join(
-	__dirname,
-	"..",
-	"..",
-	"tmp",
-	"db.backend-test.sqlite",
-);
+/** Path to the temp folder (at root). Can help debug some tests */
+const TMP_PATH = path.join(__dirname, "..", "..", "..", "..", "tmp", "backend");
+const CACHE_DIR = path.join(TMP_PATH, "orm-cache");
+const ENTITIES_PATH = path.join(__dirname, "..", "..", "src", "**/*.entity.ts");
 
 @NModule({
 	imports: [
-		NestOrmModule.forRoot({
-			orm: {
-				allowGlobalContext: true,
-				dbName: dbPath,
-				driver: SqliteDriver,
-				extensions: [SeedManager],
-			},
+		NestOrmModule.forRootAsync({
+			useFactory: () => ({
+				orm: {
+					allowGlobalContext: true,
+					autoLoadEntities: false,
+					// Avoid error with concurrent access
+					dbName: path.join(
+						TMP_PATH,
+						`db.${process.env["JEST_WORKER_ID"]}.sqlite`,
+					),
+					discovery: {
+						disableDynamicFileAccess: false,
+						requireEntitiesArray: false,
+					},
+					driver: SqliteDriver,
+					// TODO: something better (without "glob loading") ?
+					entities: [ENTITIES_PATH],
+					entitiesTs: [ENTITIES_PATH],
+					extensions: [SeedManager],
+					metadataCache: {
+						// To fasten the tests with auto-load entities
+						enabled: true,
+						options: { cacheDir: CACHE_DIR },
+					},
+				},
+			}),
 		}),
 	],
 	providers: [DataSeeder],

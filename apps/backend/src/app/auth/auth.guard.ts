@@ -27,10 +27,9 @@ export class AuthGuard extends PassportGuard(AUTH_DEFAULT_STRATEGY_NAME) {
 		const canActivate = await this.isJwtValid(context);
 
 		// Get AuthParam with the internal decorator
-		const { optional = false } = this.reflector.get(
-			AuthParam,
+		const { optional = false } = this.reflector.getAllAndMerge(AuthParam, [
 			context.getHandler(),
-		);
+		]);
 
 		if (!(canActivate || optional)) {
 			// Returning false actually sends a forbidden error
