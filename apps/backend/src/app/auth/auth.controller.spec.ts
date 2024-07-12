@@ -23,7 +23,7 @@ describe("AuthController", () => {
 
 	const AUTH_CONFIG = {
 		cookie: { name: "abc", secure: false },
-		duration: 2,
+		duration: 3,
 		secret: "s",
 	} as const satisfies Partial<Environment["auth"]>;
 
@@ -93,6 +93,7 @@ describe("AuthController", () => {
 		it("should log and return the profile (via header auth)", async () => {
 			const {
 				body: { expireOn, issuedAt, token },
+				user,
 			} = await testLogin();
 
 			const res = await request
@@ -103,6 +104,7 @@ describe("AuthController", () => {
 			const body = Schemas.objectForJson(AuthProfile.schema).parse(
 				res.body,
 			);
+			expect(body.user._id).toStrictEqual(user._id);
 			expect(body.issuedAt).toStrictEqual(issuedAt);
 			expect(body.expireOn).toStrictEqual(expireOn);
 		});
@@ -118,6 +120,24 @@ describe("AuthController", () => {
 			expect(res.statusCode).toBe(200);
 		});
 
+		it("should refresh the token", async () => {
+			const { body } = await testLogin();
+
+			await new Promise(res => setTimeout(res, 2500));
+			const res = await request
+				.post(AUTH_HTTP_CONFIG.routes.refresh.path({}))
+				.set({ authorization: `Bearer ${body.token}` });
+			expect(res.statusCode).toBe(201);
+
+			const { expireOn, issuedAt, token } = Schemas.objectForJson(
+				AuthSuccess.schema,
+			).parse(res.body);
+
+			expect(issuedAt.getTime()).toBeGreaterThan(body.issuedAt.getTime());
+			expect(expireOn.getTime()).toBeGreaterThan(body.expireOn.getTime());
+			expect(token).not.toBe(body.token);
+		});
+
 		it("should return 401 when token expire", async () => {
 			const {
 				body: { expireOn, token },
@@ -129,6 +149,7 @@ describe("AuthController", () => {
 			expect(code0).toBe(200);
 			jest.useRealTimers();
 
+			// Sleep until expired
 			await new Promise(res =>
 				setTimeout(res, AUTH_CONFIG.duration * 1000),
 			);

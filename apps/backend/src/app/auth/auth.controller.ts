@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ControllerFor, HttpHandleRoute } from "@nna/nest";
 import { Response } from "express";
-import { AUTH_HTTP_CONFIG, AuthHttp } from "~/common/auth";
+import { AUTH_HTTP_CONFIG, AuthHttp, AuthProfile } from "~/common/auth";
 
 import { AuthConfig } from "./auth.config";
 import { UseAuthGuard } from "./auth.guard";
@@ -28,11 +28,16 @@ export class AuthController implements ControllerFor<AuthHttp> {
 	/** Gets the information of the connected session */
 	@HttpHandleRoute(AUTH_HTTP_CONFIG.routes.getProfile)
 	@UseAuthGuard()
-	public getProfile(
+	public async getProfile(
 		@AuthSessionParam() session: AuthSession,
 	): Promise<AuthProfilePayload> {
-		const { expireOn, issuedAt } = session;
-		return Promise.resolve({ expireOn, issuedAt });
+		const { expireOn, getUser, issuedAt } = session;
+		return AuthProfile.schema.strip().parse({
+			// The parse will only keep what is needed
+			expireOn,
+			issuedAt,
+			user: await getUser(),
+		});
 	}
 
 	/** Logs in a user */

@@ -158,7 +158,10 @@ export class AuthService {
 	public async signJwtPayload(
 		payload: JWT.Payload,
 	): Promise<AuthJwtSignResult> {
-		const token = await this.jwtService.signAsync(payload);
+		const token = await this.jwtService.signAsync(
+			// To remove the extra data used internally from the JWT payload extends
+			JWT.payloadSchema.parse(payload),
+		);
 		const dates = AuthService.extractDateRange(
 			this.jwtService.decode<JWT.PayloadFull>(token),
 		);
