@@ -23,7 +23,7 @@ describe("AuthController", () => {
 
 	const AUTH_CONFIG = {
 		cookie: { name: "abc", secure: false },
-		duration: 3,
+		duration: 2,
 		secret: "s",
 	} as const satisfies Partial<Environment["auth"]>;
 
@@ -60,13 +60,16 @@ describe("AuthController", () => {
 			jest.useRealTimers();
 		});
 
+		const setFakeDate = (now: Date) =>
+			jest.useFakeTimers({ doNotFake: ["nextTick"], now });
+
 		async function testLogin() {
 			const [user] = await seeder
 				.generate({ seed: "simple" })
 				.then(({ users }) => users);
 
 			const now = new Date(2000, 1, 1);
-			jest.useFakeTimers({ doNotFake: ["nextTick", "setTimeout"], now });
+			setFakeDate(now);
 
 			const res = await request
 				.post(AUTH_HTTP_CONFIG.routes.login.path({}))
@@ -87,7 +90,7 @@ describe("AuthController", () => {
 				dateFns.addSeconds(now, AUTH_CONFIG.duration),
 			);
 
-			return { body, headers: res.headers, user };
+			return { body, headers: res.headers, now, user };
 		}
 
 		it("should log and return the profile (via header auth)", async () => {
@@ -121,9 +124,9 @@ describe("AuthController", () => {
 		});
 
 		it("should refresh the token", async () => {
-			const { body } = await testLogin();
+			const { body, now } = await testLogin();
+			setFakeDate(dateFns.addSeconds(now, 1));
 
-			await new Promise(res => setTimeout(res, 2500));
 			const res = await request
 				.post(AUTH_HTTP_CONFIG.routes.refresh.path({}))
 				.set({ authorization: `Bearer ${body.token}` });
@@ -138,21 +141,18 @@ describe("AuthController", () => {
 			expect(token).not.toBe(body.token);
 		});
 
-		it("should return 401 when token expire", async () => {
+		it("should return a 401 when the token expire", async () => {
 			const {
 				body: { expireOn, token },
+				now,
 			} = await testLogin();
 
 			const { statusCode: code0 } = await request
 				.get(AUTH_HTTP_CONFIG.routes.getProfile.path({}))
 				.set({ authorization: `Bearer ${token}` });
 			expect(code0).toBe(200);
-			jest.useRealTimers();
 
-			// Sleep until expired
-			await new Promise(res =>
-				setTimeout(res, AUTH_CONFIG.duration * 1000),
-			);
+			setFakeDate(dateFns.addSeconds(now, AUTH_CONFIG.duration + 1));
 			expect(expireOn.getTime()).toBeLessThan(Date.now());
 
 			const { statusCode: code1 } = await request
