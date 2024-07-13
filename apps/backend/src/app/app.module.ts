@@ -11,6 +11,7 @@ import {
 	ConfigurationModule,
 	ConfigurationService,
 } from "../configuration";
+import { AppMailerModule } from "../mail/mail.module";
 import { OrmModule } from "../orm/orm.module";
 
 /** Options to run the application */
@@ -46,7 +47,11 @@ export class AppModule implements OnModuleInit {
 	 */
 	public static forRoot(options?: AppModuleOptions): DynamicModule {
 		return {
-			imports: [ConfigurationModule.forRoot(options ?? {})],
+			imports: [
+				ConfigurationModule.forRoot(options ?? {}),
+				// This override configuration from the `MailModule`
+				AppMailerModule,
+			],
 			module: AppModule,
 		};
 	}
