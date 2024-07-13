@@ -2,13 +2,18 @@ import { HttpRoute } from "@nna/core";
 
 import { AuthLogin, AuthProfile, AuthRefresh, AuthSuccess } from "./dtos";
 
+
+
+/** Entrypoint route */
+const entrypoint = HttpRoute.builder("auth");
+
+
 /** HTTP configuration for the Auth feature */
 export const AUTH_HTTP_CONFIG = {
-	entrypoint: "auth",
 	routes: {
 		/** Returns the information of the connected session */
 		getProfile:
-			HttpRoute.builder("profile").get<() => Promise<AuthProfile.Dto>>(),
+			entrypoint. ("profile").get<() => Promise<AuthProfile.Dto>>(),
 		/** Logs in a user */
 		login: HttpRoute.builder("login").post<
 			(body: AuthLogin.Dto) => Promise<AuthSuccess.Dto>

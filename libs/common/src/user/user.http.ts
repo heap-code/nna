@@ -2,7 +2,6 @@ import { HttpRoute } from "@nna/core";
 
 /** HTTP configuration for the `user` feature */
 export const USER_HTTP_CONFIG = {
-	entrypoint: "users",
 	routes: {} satisfies HttpRoute.Definitions,
 } as const;
 
