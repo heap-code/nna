@@ -23,7 +23,7 @@ describe("Auth DTOs", () => {
 
 		it("should be valid", () => {
 			for (const test of [
-				{ expireOn: now, issuedAt: now },
+				{ expireOn: now, issuedAt: now, user: { _id: 0 } },
 			] satisfies Dto[]) {
 				expect(schema.parse(test)).toStrictEqual(test);
 			}

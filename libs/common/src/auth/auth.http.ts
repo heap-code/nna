@@ -2,24 +2,26 @@ import { HttpRoute } from "@nna/core";
 
 import { AuthLogin, AuthProfile, AuthRefresh, AuthSuccess } from "./dtos";
 
+/** Entrypoint route */
+const entrypoint = HttpRoute.builder("auth");
+
 /** HTTP configuration for the Auth feature */
 export const AUTH_HTTP_CONFIG = {
-	entrypoint: "auth",
 	routes: {
 		/** Returns the information of the connected session */
-		getProfile:
-			HttpRoute.builder("profile").get<() => Promise<AuthProfile.Dto>>(),
+		getProfile: entrypoint
+			.addSegment("profile")
+			.get<() => Promise<AuthProfile.Dto>>(),
 		/** Logs in a user */
-		login: HttpRoute.builder("login").post<
-			(body: AuthLogin.Dto) => Promise<AuthSuccess.Dto>
-		>(),
+		login: entrypoint
+			.addSegment("login")
+			.post<(body: AuthLogin.Dto) => Promise<AuthSuccess.Dto>>(),
 		/** Logout a user (only useful with cookies) */
-		logout: HttpRoute.builder("logout").post<() => Promise<void>>(),
+		logout: entrypoint.addSegment("logout").post<() => Promise<void>>(),
 		/** Refresh an existing token */
-		refresh:
-			HttpRoute.builder("refresh").post<
-				(body: AuthRefresh.Dto) => Promise<AuthSuccess.Dto>
-			>(),
+		refresh: entrypoint
+			.addSegment("refresh")
+			.post<(body: AuthRefresh.Dto) => Promise<AuthSuccess.Dto>>(),
 	} satisfies HttpRoute.Definitions,
 } as const;
 

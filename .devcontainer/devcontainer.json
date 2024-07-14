@@ -63,7 +63,8 @@
 		"vnc-xrandr": "xrandr --output VNC-0 --mode 1920x1080"
 	},
 	"remoteEnv": {
-		"BE_DB_HOST": "db"
+		"BE_DB_HOST": "db",
+		"BE_MAIL_HOST": "mail-server"
 	},
 	"service": "devcontainer",
 	"shutdownAction": "stopCompose",

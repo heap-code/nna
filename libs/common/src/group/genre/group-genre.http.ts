@@ -1,8 +1,10 @@
 import { HttpRoute } from "@nna/core";
 
+/** Entrypoint route */
+const entrypoint = HttpRoute.builder("group-genres");
+
 /** HTTP configuration for the `group` feature */
 export const GROUP_GENRE_HTTP_CONFIG = {
-	entrypoint: "group-genres",
 	routes: {} satisfies HttpRoute.Definitions,
 } as const;
 

@@ -1,17 +1,19 @@
 import { MikroORM } from "@mikro-orm/core";
 import { DynamicModule, Logger, Module, OnModuleInit } from "@nestjs/common";
-import { RouterModule } from "@nestjs/core";
-import { extractModulesFromRoutes } from "@nna/nest";
 import { LoggerModule } from "nestjs-pino";
 import { PartialDeep } from "type-fest";
 
-import { APP_ROUTES } from "./app.routes";
+import { AppRoutingModule } from "./app-routing.module";
 import {
 	Configuration,
 	ConfigurationModule,
 	ConfigurationService,
 } from "../configuration";
+import { AppMailerModule } from "../mail/mail.module";
 import { OrmModule } from "../orm/orm.module";
+
+// Force the use of the platform (and for the bundle)
+import "@nestjs/platform-express";
 
 /** Options to run the application */
 export type AppModuleOptions = PartialDeep<Configuration>;
@@ -19,7 +21,7 @@ export type AppModuleOptions = PartialDeep<Configuration>;
 /** The application module */
 @Module({
 	imports: [
-		...extractModulesFromRoutes(APP_ROUTES),
+		AppRoutingModule,
 		LoggerModule.forRootAsync({
 			inject: [ConfigurationService],
 			useFactory: ({ configuration }: ConfigurationService) => ({
@@ -34,7 +36,6 @@ export type AppModuleOptions = PartialDeep<Configuration>;
 			useFactory: (service: ConfigurationService) =>
 				service.getOrmOptions(),
 		}),
-		RouterModule.register(APP_ROUTES),
 	],
 })
 export class AppModule implements OnModuleInit {
@@ -46,7 +47,11 @@ export class AppModule implements OnModuleInit {
 	 */
 	public static forRoot(options?: AppModuleOptions): DynamicModule {
 		return {
-			imports: [ConfigurationModule.forRoot(options ?? {})],
+			imports: [
+				ConfigurationModule.forRoot(options ?? {}),
+				// This override configuration from the `MailModule`
+				AppMailerModule,
+			],
 			module: AppModule,
 		};
 	}

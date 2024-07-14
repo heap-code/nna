@@ -1,8 +1,10 @@
 import { HttpRoute } from "@nna/core";
 
+/** Entrypoint route */
+const entrypoint = HttpRoute.builder("persons");
+
 /** HTTP configuration for the `person` feature */
 export const PERSON_HTTP_CONFIG = {
-	entrypoint: "persons",
 	routes: {} satisfies HttpRoute.Definitions,
 } as const;
 

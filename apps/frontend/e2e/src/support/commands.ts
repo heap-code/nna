@@ -10,7 +10,7 @@ export type CyUserLogin = Pick<Seeding.UserSeed, "_password" | "username">;
 const E2E_API = z
 	.string()
 	// TODO: a way to get this from configuration (or the build being tested)?
-	.default("http://127.0.0.1:33000/e2e/api")
+	.default("http://localhost:33000/e2e/api")
 	.parse(process.env.OF_E2E_API_URL);
 
 /**
@@ -33,9 +33,9 @@ function loginWith(username: CyUserLogin | string, password = "") {
 		return loginWith(username.username, username._password);
 	}
 
-	const { entrypoint, routes } = AUTH_HTTP_CONFIG;
+	const { routes } = AUTH_HTTP_CONFIG;
 	const { method, path } = routes.login;
-	return cy.request(method, `${E2E_API}/${entrypoint}${path({})}`, {
+	return cy.request(method, `${E2E_API}${path({})}`, {
 		cookie: true,
 		password,
 		username,
@@ -47,10 +47,10 @@ function loginWith(username: CyUserLogin | string, password = "") {
  * @returns Cypress chain
  */
 function logout() {
-	const { entrypoint, routes } = AUTH_HTTP_CONFIG;
+	const { routes } = AUTH_HTTP_CONFIG;
 	const { method, path } = routes.login;
 	return cy
-		.request(method, `${E2E_API}/${entrypoint}${path({})}`)
+		.request(method, `${E2E_API}${path({})}`)
 		.then(() => cy.clearCookies());
 }
 
@@ -63,11 +63,11 @@ function logout() {
 function refreshDb<P extends SeedGenerator.GenerateParameter>(
 	param: P,
 ): Cypress.Chainable<SeedGenerator.GetSeedFromGenerator<P>> {
-	const { entrypoint, routes } = E2eHttp.CONFIG;
+	const { routes } = E2eHttp.CONFIG;
 	const { method, path } = routes.refreshDb;
 
 	return cy
-		.request(method, `${E2E_API}/${entrypoint}${path({})}`, param)
+		.request(method, `${E2E_API}${path({})}`, param)
 		.then(({ body }) => body as never);
 }
 

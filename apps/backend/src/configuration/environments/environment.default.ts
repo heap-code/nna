@@ -1,4 +1,5 @@
 import { Schemas } from "@nna/core";
+import type SMTPConnection from "nodemailer/lib/smtp-connection";
 import * as z from "zod";
 
 import { Environment } from "./environment.interface";
@@ -34,10 +35,37 @@ export interface EnvironmentShellDefault {
 	readonly BE_HTTP_PORT?: string;
 	/** Override HTTP prefix */
 	readonly BE_HTTP_PREFIX?: string;
+
+	/** Override MAIL password */
+	readonly BE_MAIL_AUTH_PASS?: string;
+	/** Override MAIL user */
+	readonly BE_MAIL_AUTH_USER?: string;
+	/** Override MAIL host */
+	readonly BE_MAIL_HOST?: string;
+	/** Override MAIL port */
+	readonly BE_MAIL_PORT?: string;
+	/** Override MAIL secure */
+	readonly BE_MAIL_SECURE?: "true";
 }
 
 /** The environment typed with defaults */
 export const envDefault = process.env as EnvironmentShellDefault;
+
+/**
+ * Cleans the configuration for email auth.
+ *
+ * Even when undefined, nodemailer will try to use any auth properties
+ *
+ * @param options to clean
+ * @returns A clean configurations
+ */
+export function cleanEmailAuth(
+	options: SMTPConnection.AuthenticationType,
+): SMTPConnection.AuthenticationType {
+	return Object.fromEntries(
+		Object.entries(options).filter(([_, value]) => !!value),
+	);
+}
 
 /**
  * Default environment.
@@ -75,6 +103,28 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 			.default(5432)
 			.parse(envDefault.BE_DB_PORT),
 		user: z.string().default("user").parse(envDefault.BE_DB_USER),
+	},
+	email: {
+		actors: {
+			sender: { address: "sender@host.local", name: "local sender" },
+		},
+		transport: {
+			auth: cleanEmailAuth({
+				pass: z.string().optional().parse(envDefault.BE_MAIL_AUTH_PASS),
+				user: z.string().optional().parse(envDefault.BE_MAIL_AUTH_USER),
+
+				// TODO: more?
+			}),
+			host: z
+				.string()
+				.min(1)
+				.default("localhost")
+				.parse(envDefault.BE_MAIL_HOST),
+			port: Schemas.port(z.coerce.number())
+				.default(1025)
+				.parse(envDefault.BE_MAIL_PORT),
+			secure: envDefault.BE_MAIL_SECURE === "true",
+		},
 	},
 	host: {
 		cors: {

@@ -1,6 +1,8 @@
 import { LogLevel } from "@nestjs/common";
 import { CorsOptions } from "@nestjs/common/interfaces/external/cors-options.interface";
+import type * as SMTPConnection from "nodemailer/lib/smtp-connection";
 
+import type { MailAddress } from "../../mail/mail.types";
 import { OrmModuleSyncOptions } from "../../orm/orm.module";
 
 /** Environment data for authCookie */
@@ -25,6 +27,24 @@ export interface EnvironmentDb
 	applyMigrations: boolean;
 }
 
+/** Default actors value for mail  */
+export interface EnvironmentEmailActors {
+	/** Sender of the mail */
+	sender: MailAddress;
+
+	// TODO: reply-to, default bcc, ... ?
+}
+/** Environment data for the mail server */
+export interface EnvironmentEmail {
+	/** Default actors when sending mail (when not override */
+	actors: EnvironmentEmailActors;
+	/** Transport data */
+	transport: Pick<
+		SMTPConnection.Options,
+		"auth" | "host" | "port" | "secure"
+	>;
+}
+
 /** The environment contains the information to run the application. */
 export interface Environment {
 	/** All information related to authentication */
@@ -38,6 +58,8 @@ export interface Environment {
 	};
 	/** All information related to the database */
 	db: EnvironmentDb;
+	/** All information related to the mail server */
+	email: EnvironmentEmail;
 	/** All information to run the application */
 	host: {
 		/** The cors options for the host  */
