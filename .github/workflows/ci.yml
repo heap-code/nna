@@ -191,7 +191,7 @@ jobs:
         if: failure()
         with:
           if-no-files-found: warn
-          name: cypress-logs
+          name: cypress-frontend-logs
           path: dist/cypress/apps/frontend/e2e/
           retention-days: 7
 
@@ -200,6 +200,6 @@ jobs:
         if: failure()
         with:
           if-no-files-found: warn
-          name: cypress-logs
+          name: cypress-office-logs
           path: dist/cypress/apps/office/e2e/
           retention-days: 7

@@ -1,11 +1,9 @@
 import { MikroORM } from "@mikro-orm/core";
 import { DynamicModule, Logger, Module, OnModuleInit } from "@nestjs/common";
-import { RouterModule } from "@nestjs/core";
-import { extractModulesFromRoutes } from "@nna/nest";
 import { LoggerModule } from "nestjs-pino";
 import { PartialDeep } from "type-fest";
 
-import { APP_ROUTES } from "./app.routes";
+import { AppRoutingModule } from "./app-routing.module";
 import {
 	Configuration,
 	ConfigurationModule,
@@ -20,7 +18,7 @@ export type AppModuleOptions = PartialDeep<Configuration>;
 /** The application module */
 @Module({
 	imports: [
-		...extractModulesFromRoutes(APP_ROUTES),
+		AppRoutingModule,
 		LoggerModule.forRootAsync({
 			inject: [ConfigurationService],
 			useFactory: ({ configuration }: ConfigurationService) => ({
@@ -35,7 +33,6 @@ export type AppModuleOptions = PartialDeep<Configuration>;
 			useFactory: (service: ConfigurationService) =>
 				service.getOrmOptions(),
 		}),
-		RouterModule.register(APP_ROUTES),
 	],
 })
 export class AppModule implements OnModuleInit {

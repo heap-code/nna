@@ -21,12 +21,28 @@ class Builder<const T extends readonly Segment[]> {
 	public constructor(public readonly segments: T) {}
 
 	/**
-	 * Adds a path segment to the builder
+	 * Adds a segment to the builder
 	 *
 	 * @param segment to add
 	 * @returns a builder with the added segment
 	 */
-	public addSegment<const S extends Segment>(segment: S) {
+	public addSegment<const S extends Segment>(
+		segment: S,
+	): Builder<readonly [...this["segments"], S]>;
+	/**
+	 * Adds a pathSegment to the builder
+	 *
+	 * @param path to add
+	 * @returns a builder with the added segment
+	 */
+	public addSegment(
+		path: string,
+	): Builder<readonly [...this["segments"], SegmentPath]>;
+	public addSegment<const S extends Segment>(segment: S | string) {
+		if (typeof segment === "string") {
+			return this.addSegment({ path: segment, type: "path" });
+		}
+
 		return new Builder([...this.segments, segment]);
 	}
 
@@ -101,6 +117,11 @@ class Builder<const T extends readonly Segment[]> {
 		};
 	}
 }
+
+// Only exports the type
+export { type Builder };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Must be any for type inference
+export type BuilderAny = Builder<any>;
 
 /**
  * Creates a builder with the given initial segments

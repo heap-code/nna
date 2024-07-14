@@ -67,6 +67,7 @@
 			"inputs": ["^production", "default"],
 			"options": {
 				"disableCoverage": false,
+				"disableRoutesGraph": true,
 				"outputPath": "{workspaceRoot}/dist/compodoc/{projectRoot}",
 				"serve": true,
 				"tsConfig": "{projectRoot}/tsconfig.lib.json",

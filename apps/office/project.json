@@ -62,6 +62,7 @@
 				}
 			},
 			"options": {
+				"disableRoutesGraph": false,
 				"port": 5080,
 				"tsConfig": "{projectRoot}/tsconfig.app.json"
 			}
