@@ -36,7 +36,7 @@ void (async () => {
 		SeedGenerator.generateParameterSchema,
 	) {}
 
-	@Controller(E2eHttp.CONFIG.entrypoint)
+	@Controller()
 	class AppE2eController implements ControllerFor<E2eHttp.Http> {
 		public constructor(private readonly orm: OrmTesting.DataSeeder) {}
 

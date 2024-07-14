@@ -12,6 +12,9 @@ import {
 import { AppMailerModule } from "../mail/mail.module";
 import { OrmModule } from "../orm/orm.module";
 
+// Force the use of the platform (and for the bundle)
+import "@nestjs/platform-express";
+
 /** Options to run the application */
 export type AppModuleOptions = PartialDeep<Configuration>;
 
