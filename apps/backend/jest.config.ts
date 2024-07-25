@@ -4,6 +4,8 @@ export default {
 	coveragePathIgnorePatterns: [
 		"src/configuration/environments.*.ts",
 		"src/environment.ts",
+		"src/main.ts",
+		"src/main.e2e.ts",
 		"src/orm/migrations",
 		"src/orm/seeders",
 	],
