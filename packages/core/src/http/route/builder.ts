@@ -57,7 +57,7 @@ class Builder<const T extends readonly Segment[]> {
 	/**
 	 * Build a route {@link Definition} for a HTTP POST request
 	 *
-	 *  @returns a {@link Definition} for a HTTP POST request
+	 * @returns a {@link Definition} for a HTTP POST request
 	 */
 	public post<const Handler extends AnyFunction>() {
 		return this.request<Handler>("POST");
@@ -65,7 +65,7 @@ class Builder<const T extends readonly Segment[]> {
 	/**
 	 * Build a route {@link Definition} for a HTTP PATCH request
 	 *
-	 *  @returns a {@link Definition} for a HTTP PATCH request
+	 * @returns a {@link Definition} for a HTTP PATCH request
 	 */
 	public patch<const Handler extends AnyFunction>() {
 		return this.request<Handler>("PATCH");
@@ -73,7 +73,7 @@ class Builder<const T extends readonly Segment[]> {
 	/**
 	 * Build a route {@link Definition} for a HTTP PUT request
 	 *
-	 *  @returns a {@link Definition} for a HTTP PUT request
+	 * @returns a {@link Definition} for a HTTP PUT request
 	 */
 	public put<const Handler extends AnyFunction>() {
 		return this.request<Handler>("PUT");
@@ -81,7 +81,7 @@ class Builder<const T extends readonly Segment[]> {
 	/**
 	 * Build a route {@link Definition} for a HTTP DELETE request
 	 *
-	 *  @returns a {@link Definition} for a HTTP DELETE request
+	 * @returns a {@link Definition} for a HTTP DELETE request
 	 */
 	public delete<const Handler extends AnyFunction>() {
 		return this.request<Handler>("DELETE");
@@ -95,9 +95,9 @@ class Builder<const T extends readonly Segment[]> {
 	 */
 	public request<const Handler extends AnyFunction>(
 		method: HttpMethod,
-	): Definition<Handler, T> {
+	): Definition<Handler, this["segments"]> {
 		const segments = this.segments;
-		const params = extractSegmentParams(segments);
+		const params = extractSegmentParams<this["segments"]>(this.segments);
 		const schema = new Singleton(() => paramsSchema(params));
 
 		return {
