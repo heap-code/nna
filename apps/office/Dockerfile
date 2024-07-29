@@ -10,8 +10,6 @@ RUN addgroup --system user \
 	&& chown -R user:user .
 USER user
 
-# RUN npm --omit=dev -f install
-
 # Default environments
 ENV PORT=5200
 
