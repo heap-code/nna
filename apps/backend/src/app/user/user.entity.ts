@@ -2,7 +2,7 @@ import {
 	Entity,
 	EntityRepositoryType,
 	Property,
-	Ref,
+	ScalarReference,
 	StringType,
 } from "@mikro-orm/core";
 import { EntityNumber } from "@nna/nest";
@@ -27,5 +27,5 @@ export class UserEntity extends EntityNumber.Entity() implements UserModel {
 		ref: true,
 		type: StringType,
 	})
-	public password!: Ref<string>;
+	public password!: ScalarReference<string>;
 }
