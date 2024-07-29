@@ -1,5 +1,3 @@
-import demo from "./templates/demo.hbs";
-
 /** Context for template rendering */
 export interface Context {
 	user: { age: number; name: string };
@@ -12,5 +10,5 @@ export interface Context {
  * @returns string content
  */
 export function render(context: Context) {
-	return demo(context);
+	return import("./templates/demo.hbs").then(_ => _.default(context));
 }

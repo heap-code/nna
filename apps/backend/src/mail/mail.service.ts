@@ -11,7 +11,7 @@ export class MailService extends MailerService {
 	private readonly configurationService!: ConfigurationService;
 
 	/** @returns the email configuration */
-	private get config() {
+	public get config() {
 		return this.configurationService.configuration.email;
 	}
 

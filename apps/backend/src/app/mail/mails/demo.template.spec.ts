@@ -7,12 +7,12 @@ import { faker } from "@faker-js/faker";
 import { render } from "./demo.template";
 
 describe("Template demo", () => {
-	it("should render", () => {
+	it("should render", async () => {
 		for (let i = 0; i < 10; ++i) {
 			const name = faker.person.firstName();
 			const age = faker.helpers.rangeToNumber({ max: 100, min: 2 });
 
-			const template = render({ user: { age, name } });
+			const template = await render({ user: { age, name } });
 			expect(template).toContain(`<style>`);
 			expect(template).toContain(`Hello ${name}`);
 			expect(template).toContain(
