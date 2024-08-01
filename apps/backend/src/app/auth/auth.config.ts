@@ -13,7 +13,7 @@ export class AuthConfig {
 
 	/** @returns The cookie configuration from the {@link ConfigurationService} */
 	public get cookie() {
-		return { ...this.config.cookie, signed: true };
+		return this.config.cookie;
 	}
 
 	/** @returns The secret value for authentication from the {@link ConfigurationService} */

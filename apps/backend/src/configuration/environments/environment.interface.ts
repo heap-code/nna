@@ -11,6 +11,8 @@ export interface EnvironmentAuthCookie {
 	name: string;
 	/** Use secure cookie (HTTPS) */
 	secure: boolean;
+	/** Should the cookie be signed */
+	signed: boolean;
 }
 
 /** Environment data for the database */
