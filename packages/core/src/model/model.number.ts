@@ -6,7 +6,8 @@ import { PRIMARY_KEY, schemaCommon } from "./model.common";
 export const schema = schemaCommon.extend({
 	_id: z
 		.number({ description: "Unique ID defining an entity" })
-		.min(0)
+		.int()
+		.positive()
 		.readonly(),
 } satisfies Record<typeof PRIMARY_KEY, unknown>);
 

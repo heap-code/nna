@@ -31,7 +31,7 @@ on:
         required: true
 
 jobs:
-  merge-back:
+  merge:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -70,11 +70,11 @@ jobs:
         # - Push the branch
         # - Create (auto-merge) PR
         run: |
-          PR_BRANCH=merge-back/${{ inputs.ref_from }}
-          PR_TITLE="${{ inputs.pr_title || format('chore(merge-back): update from {0} to {1}', inputs.ref_from, inputs.ref_to) }}"
+          PR_BRANCH=auto-merge/${{ inputs.ref_from }}/${{ inputs.ref_to }}
+          PR_TITLE="${{ inputs.pr_title || format('chore(auto-merge): update from {0} to {1}', inputs.ref_from, inputs.ref_to) }}"
           gh pr close $PR_BRANCH -d -c "Another PR will be opened" || echo "OK"
           git checkout -b $PR_BRANCH
           git merge origin/${{ inputs.ref_to }} || git merge --abort
           git push -u origin $PR_BRANCH
-          gh pr create --head ${{ inputs.ref_from }} --base ${{ inputs.ref_to }} --title "$PR_TITLE" --body "This PR will be auto-merged if everything succeed" -r ${{ vars.AUTO_PR_REVIEWERS }}
+          gh pr create --head $PR_BRANCH --base ${{ inputs.ref_to }} --title "$PR_TITLE" --body "This PR will be auto-merged if everything succeed" -r ${{ vars.AUTO_PR_REVIEWERS }}
           gh pr merge --auto -m -d

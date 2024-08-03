@@ -28,7 +28,9 @@ export class AuthGuard extends PassportGuard(AUTH_DEFAULT_STRATEGY_NAME) {
 
 		// Get AuthParam with the internal decorator
 		const { optional = false } = this.reflector.getAllAndMerge(AuthParam, [
+			// Method data will override/merge with class data
 			context.getHandler(),
+			context.getClass(),
 		]);
 
 		if (!(canActivate || optional)) {
@@ -59,6 +61,21 @@ export class AuthGuard extends PassportGuard(AUTH_DEFAULT_STRATEGY_NAME) {
 
 /** Authentication parameters passed to the {@link AuthGuard} */
 export interface UseAuthGuardParams {
+	// Note: avoid arrays, the parameters are merge in the guard
+	//	=> prefer objects
+	// Ex:
+	// 	No: {roles: Array<"admin" | "user">}
+	//  Ok: {role: {admin: boolean, user: boolean}}
+	// Allow to define basic rights in the controller and override them in the methods
+	// @UseAuth({role: {user: true}})
+	// class A {
+	//	@Get()
+	//	public onlyUser() {}
+	//	@Get()
+	//	@UseAuth({role: {user: false, admin: true}})
+	//	public onlyAdmin() {}
+	// }
+
 	/**
 	 * Is the authentication optional?
 	 * When true, the {@link AuthSession} will still be hydrated when the user is connected,

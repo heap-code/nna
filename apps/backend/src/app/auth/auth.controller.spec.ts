@@ -22,7 +22,7 @@ describe("AuthController", () => {
 	let seeder: OrmTesting.DataSeeder;
 
 	const AUTH_CONFIG = {
-		cookie: { name: "abc", secure: false },
+		cookie: { name: "abc", secure: false, signed: true },
 		duration: 2,
 		secret: "s",
 	} as const satisfies Partial<Environment["auth"]>;

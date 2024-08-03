@@ -7,7 +7,16 @@ import * as path from "path";
 import { DataSeeder } from "./data-seeder";
 
 /** Path to the temp folder (at root). Can help debug some tests */
-const TMP_PATH = path.join(__dirname, "..", "..", "..", "..", "tmp", "backend");
+const TMP_PATH = path.join(
+	__dirname,
+	"..",
+	"..",
+	"..",
+	"..",
+	"tmp",
+	"apps",
+	"backend",
+);
 const CACHE_DIR = path.join(TMP_PATH, "orm-cache");
 const ENTITIES_PATH = path.join(__dirname, "..", "..", "src", "**/*.entity.ts");
 
