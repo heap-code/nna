@@ -13,7 +13,7 @@ describe("UserService", () => {
 			imports: [OrmTesting.Module, UserModule],
 		}).compile();
 
-		service = module.get<UserService>(UserService);
+		service = module.get(UserService);
 	});
 
 	afterEach(() => module.close());

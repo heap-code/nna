@@ -52,4 +52,5 @@ export const ORM_DEFAULT_CONFIGURATION = {
 			return `${kebabCase(name)}.${seederSuffix}`;
 		},
 	},
+	serialization: { forceObject: true },
 } as const satisfies MikroOrmModuleOptions;
