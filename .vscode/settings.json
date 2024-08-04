@@ -56,7 +56,7 @@
 		},
 		{
 			// For test debuging (the first one for watch mode)
-			"database": "./tmp/apps/backend/db.1.sqlite",
+			"database": "./tmp/apps/backend/db.debug.sqlite",
 			"driver": "SQLite",
 			"group": "testing",
 			"name": "💉 Backend unit-testing",

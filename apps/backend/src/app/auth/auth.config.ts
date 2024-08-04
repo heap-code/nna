@@ -33,8 +33,7 @@ export class AuthConfig {
 
 		return {
 			httpOnly: true,
-			// TODO: may need to change with HTTPS
-			sameSite: "none",
+			sameSite: "strict",
 			secure,
 			signed,
 		} satisfies CookieOptions;

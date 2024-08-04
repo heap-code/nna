@@ -22,12 +22,12 @@ describe("AuthController", () => {
 	let seeder: OrmTesting.DataSeeder;
 
 	const AUTH_CONFIG = {
-		cookie: { name: "abc", secure: false, signed: true },
+		cookie: { name: "abc", secure: false, signed: false },
 		duration: 2,
 		secret: "s",
 	} as const satisfies Partial<Environment["auth"]>;
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		const module = await Test.createTestingModule({
 			imports: [
 				AuthModule,
@@ -46,7 +46,7 @@ describe("AuthController", () => {
 		request = supertest(app.getHttpServer() as never);
 	});
 
-	afterEach(() => app.close());
+	afterAll(() => app.close());
 
 	it("should fail to get profile when un-logged", async () => {
 		const { statusCode } = await request.get(
@@ -56,9 +56,7 @@ describe("AuthController", () => {
 	});
 
 	describe("Login and auth token", () => {
-		afterEach(() => {
-			jest.useRealTimers();
-		});
+		afterEach(() => jest.useRealTimers());
 
 		const setFakeDate = (now: Date) =>
 			jest.useFakeTimers({ doNotFake: ["nextTick"], now });
@@ -112,7 +110,7 @@ describe("AuthController", () => {
 			expect(body.expireOn).toStrictEqual(expireOn);
 		});
 
-		it("should log and return the profile (with cookie)", async () => {
+		it("should log and return the profile (with cookie) + logout", async () => {
 			const {
 				headers: { "set-cookie": cookie },
 			} = await testLogin();
@@ -121,6 +119,17 @@ describe("AuthController", () => {
 				.get(AUTH_HTTP_CONFIG.routes.getProfile.path({}))
 				.set("Cookie", [cookie]);
 			expect(res.statusCode).toBe(200);
+
+			const {
+				headers: {
+					"set-cookie": [delCookie],
+				},
+			} = await request
+				.post(AUTH_HTTP_CONFIG.routes.logout.path({}))
+				.set("Cookie", [cookie]);
+
+			// Empty cookie ~= delete
+			expect(delCookie).toContain(`${AUTH_CONFIG.cookie.name}=;`);
 		});
 
 		it("should refresh the token", async () => {
