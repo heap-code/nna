@@ -3,7 +3,9 @@ import { MikroORM } from "@mikro-orm/core";
 
 describe("ORM config", () => {
 	let orm: MikroORM;
-	beforeAll(async () => (orm = await CLIHelper.getORM()));
+
+	// Timeout increase as reading the file "from outside" is slower
+	beforeAll(async () => (orm = await CLIHelper.getORM()), 10000);
 	afterAll(() => orm.close());
 
 	it("should load from configuration (CLI)", () => {

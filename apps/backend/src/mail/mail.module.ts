@@ -33,6 +33,7 @@ export class MailModule {}
 
 /** The module to apply in the AppModule (to overwrite the configuration) */
 export const AppMailerModule = MailerModule.forRootAsync({
+	// FIXME: a forChild/forRoot strategy
 	inject: [ConfigurationService],
 	useFactory: ({ configuration }: ConfigurationService) => ({
 		transport: configuration.email.transport,

@@ -11,6 +11,7 @@ module.exports = {
 	coverageThreshold: {
 		global: {},
 	},
+	testPathIgnorePatterns: ["<rootDir>/e2e"],
 	watchPlugins: [
 		"jest-watch-typeahead/filename",
 		"jest-watch-typeahead/testname",
