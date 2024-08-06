@@ -52,7 +52,7 @@ class GroupService extends entityServiceBuilder<GroupEntity>()
 		return toCreate;
 	}
 	protected override transformToUpdate(
-		_: string,
+		_: GroupEntity,
 		toUpdate: EntityData<GroupEntity>,
 	) {
 		return toUpdate;
@@ -67,7 +67,7 @@ class UserService extends entityServiceBuilder<UserEntity>()
 		return toCreate;
 	}
 	protected override transformToUpdate(
-		_: number,
+		_: UserEntity,
 		toUpdate: EntityData<UserEntity>,
 	) {
 		return toUpdate;

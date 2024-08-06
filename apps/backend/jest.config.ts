@@ -12,7 +12,7 @@ export default {
 	displayName: "backend",
 	globals: {
 		"handlebars-jest": {
-			partialDirs: ["<rootDir>/src/app/mail/mails/templates"],
+			partialDirs: ["<rootDir>/src/mail/mails/templates"],
 		},
 	},
 	moduleFileExtensions: ["ts", "js", "html"],
