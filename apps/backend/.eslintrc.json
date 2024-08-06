@@ -1,6 +1,6 @@
 {
 	"extends": ["../../packages/nest/.eslintrc.json"],
-	"ignorePatterns": ["src/environment.ts"],
+	"ignorePatterns": ["src/environment.ts", "e2e/"],
 	"overrides": [
 		{
 			"files": ["*.ts"],
@@ -8,5 +8,6 @@
 				"project": ["./apps/backend/tsconfig.lint.json"]
 			}
 		}
-	]
+	],
+	"root": true
 }

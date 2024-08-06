@@ -6,6 +6,7 @@
 				"EditorConfig.EditorConfig",
 				"GitHub.vscode-pull-request-github",
 				"Gruntfuggly.todo-tree",
+				"bierner.markdown-mermaid",
 				"dbaeumer.vscode-eslint",
 				"exiasr.hadolint",
 				"firsttris.vscode-jest-runner",
