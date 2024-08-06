@@ -118,6 +118,46 @@ describe("ObjectForJson", () => {
 		});
 	});
 
+	describe("With lazy", () => {
+		const schema = objectForJson(
+			schemaBase
+				.extend({
+					n: z.lazy(() => schemaBase.optional()),
+					x: z.lazy(() => z.object({ a: z.number() }).partial()),
+					z: z.object({ a: z.lazy(() => z.number()) }).optional(),
+				})
+				.partial(),
+		);
+		type Schema = z.infer<typeof schema>;
+		type SchemaJson = Jsonify<Schema>;
+
+		it("should validate", () => {
+			for (const [toParse, expected] of [
+				[{}, true],
+				[{ a: 0, b: "ab", d: null, x: {} }, true],
+				[{ c: "2000-01-01T12:00:00.000Z" }, true],
+				[{ n: { a: 1, b: "abc" } }, true],
+				[{ n: { d: null } }, true],
+				[{ n: { d: "2000-01-01T12:00:00.000Z" } }, true],
+				[{ n: { c: null as unknown as string } }, false],
+			] satisfies Array<[SchemaJson, boolean]>) {
+				expect(schema.safeParse(toParse).success).toBe(expected);
+			}
+		});
+
+		it("should transform", () => {
+			expect(
+				schema.parse({
+					b: "10",
+					n: { c: "2010-01-01T00:00:00.000Z" },
+				} satisfies SchemaJson),
+			).toStrictEqual({
+				b: "10",
+				n: { c: new Date(2010, 0) },
+			} satisfies Schema);
+		});
+	});
+
 	describe("On discriminated objects", () => {
 		const schema = objectForJson(
 			z.discriminatedUnion("_type", [
