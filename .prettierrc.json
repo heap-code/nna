@@ -9,6 +9,12 @@
 			}
 		},
 		{
+			"files": ["*.handlebars", "*.hbs"],
+			"options": {
+				"parser": "angular"
+			}
+		},
+		{
 			"files": "*.html",
 			"options": {
 				"parser": "html"

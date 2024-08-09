@@ -9,6 +9,7 @@ on:
       - environments/*
     types: [opened, synchronize, ready_for_review]
   workflow_call: {}
+  workflow_dispatch: {}
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
