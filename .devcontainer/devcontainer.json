@@ -42,8 +42,6 @@
 			"password": "vscode",
 			"vncPort": 5903
 		},
-		// TODO: enable when some E2E tests will be set
-		// "ghcr.io/devcontainers/features/desktop-lite:1": {}
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
 		"ghcr.io/dhoeric/features/hadolint:1": {}
 	},
