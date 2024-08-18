@@ -1,7 +1,6 @@
 import { Collection } from "@mikro-orm/core";
-import { Ref } from "@mikro-orm/core/entity";
 
-import { checkEntitySatisfiesDto } from "./entity.satisfies-dto";
+import { checkEntitySatisfiesQueryDto } from "./entity.satisfies-query-dto";
 
 interface TestDto {
 	a: number;
@@ -17,17 +16,17 @@ class TestEntity1 {
 class TestEntity2 {
 	public a!: number;
 	public b!: string;
-	public c!: Ref<TestEntity1>;
+	public c!: Date;
 }
 
-describe("checkEntitySatisfiesDto", () => {
+describe("checkEntitySatisfiesQueryDto", () => {
 	it("should satisfy", () => {
-		checkEntitySatisfiesDto<TestEntity1, TestDto>();
+		checkEntitySatisfiesQueryDto<TestEntity1, TestDto>();
 		expect(true).toBe(true);
 	});
 
 	it("should not satisfy", () => {
-		checkEntitySatisfiesDto<TestEntity2, TestDto>(
+		checkEntitySatisfiesQueryDto<TestEntity2, TestDto>(
 			"Entity does not satisfy Dto",
 		);
 		expect(true).toBe(true);

@@ -1,12 +1,13 @@
 import { Collection, Entity, OneToMany, Property } from "@mikro-orm/core";
-import { EntityString, checkEntitySatisfiesDto } from "@nna/nest";
+import { EntityString, checkEntitySatisfiesQueryDto } from "@nna/nest";
 import * as bcryptjs from "bcryptjs";
-import { GroupGenreDto, GroupGenreModel } from "~/common/group/genre";
+import { GroupGenreModel } from "~/common/group/genre";
+import { GroupGenreDto } from "~/common/group/genre/dtos";
 
 import { GroupGenreRepository } from "./group-genre.repository";
 import { GroupEntity } from "../group.entity";
 
-checkEntitySatisfiesDto<GroupGenreEntity, GroupGenreDto>();
+checkEntitySatisfiesQueryDto<GroupGenreEntity, GroupGenreDto>();
 
 /** Entity for the `group genre` features */
 @Entity({ repository: () => GroupGenreRepository })

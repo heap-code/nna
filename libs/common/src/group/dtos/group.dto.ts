@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import { groupGenreDtoSchema } from "../genre";
+import { groupGenreDtoSchema } from "../genre/dtos";
 import { groupModelSchema } from "../group.model";
 
 /** Validation schema for {@link GroupDto} */

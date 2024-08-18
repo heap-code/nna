@@ -1,11 +1,12 @@
 import { Collection, Entity, ManyToMany, Property } from "@mikro-orm/core";
-import { EntityNumber, checkEntitySatisfiesDto } from "@nna/nest";
-import { PersonDtoExtended, PersonModel } from "~/common/person";
+import { EntityNumber, checkEntitySatisfiesQueryDto } from "@nna/nest";
+import { PersonModel } from "~/common/person";
+import { PersonExtendedDto } from "~/common/person/dtos";
 
 import { PersonRepository } from "./person.repository";
 import { GroupEntity } from "../group/group.entity";
 
-checkEntitySatisfiesDto<PersonEntity, PersonDtoExtended>();
+checkEntitySatisfiesQueryDto<PersonEntity, PersonExtendedDto>();
 
 /** Entity for the `person` features */
 @Entity({ repository: () => PersonRepository })
