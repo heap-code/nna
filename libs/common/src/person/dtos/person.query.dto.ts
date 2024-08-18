@@ -1,18 +1,11 @@
 import { Schemas, createQueryObjectSchema } from "@nna/core";
 import * as z from "zod";
 
-import { personDtoSchema } from "./person.dto";
-import { groupDtoSchema } from "../../group";
-
-/** Extends {@link personDtoSchema} with related dtos */
-export const personDtoExtendedSchema = personDtoSchema.extend({
-	groups: z.array(z.lazy(() => groupDtoSchema)),
-});
-export type PersonDtoExtended = z.infer<typeof personDtoExtendedSchema>;
+import { personExtendedDtoSchema } from "./person.extended.dto";
 
 /** Validation schema for {@link PersonQueryDto} */
 export const personQueryDtoSchema = createQueryObjectSchema(
-	Schemas.objectForJson(personDtoExtendedSchema),
+	Schemas.objectForJson(personExtendedDtoSchema),
 	{ coerce: true, strict: true },
 );
 
