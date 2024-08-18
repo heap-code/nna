@@ -2,7 +2,7 @@ import { Schemas, createQueryObjectSchema } from "@nna/core";
 import * as z from "zod";
 
 import { groupDtoSchema } from "./group.dto";
-import { personDtoSchema } from "../../person";
+import { personDtoSchema } from "../../person/dtos";
 
 /** Extends {@link groupDtoSchema} with related dtos */
 export const groupDtoExtendedSchema = groupDtoSchema.extend({
