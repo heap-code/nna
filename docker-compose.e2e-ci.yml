@@ -13,12 +13,16 @@ services:
       db:
         condition: service_healthy
         required: true
+      mail-server:
+        condition: service_started
+        required: true
     environment:
       BE_DB_HOST: db
       BE_DB_TEST_NAME: e2e
       BE_HTTP_PORT: 33000
+      BE_MAIL_HOST: "mail-server"
     ports:
-      - "127.0.0.1:33000:33000"
+      - "33000:33000"
 
   frontend:
     image: frontend
@@ -27,7 +31,7 @@ services:
     environment:
       PORT: 34200
     ports:
-      - "127.0.0.1:34200:34200"
+      - "34200:34200"
 
   office:
     image: office
@@ -36,4 +40,4 @@ services:
     environment:
       PORT: 35200
     ports:
-      - "127.0.0.1:35200:35200"
+      - "35200:35200"
