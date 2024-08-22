@@ -46,17 +46,17 @@ export function visit<T>(
  * Uses the default provided handler when the "visitor do not visit"
  *
  * @param issue to visit
- * @param handler default handler when none of visitor's handlers have "seen" the {@link issue}
+ * @param fallback default fallback when none of visitor's handlers have "seen" the {@link issue}
  * @param visitor for the given {@link issue}
  * @returns the data from the handlers
  */
-export function visitWithDefault<T>(
+export function visitWithFallback<T>(
 	issue: Issue,
-	handler: (issue: Issue) => T,
+	fallback: (issue: Issue) => T,
 	visitor: Partial<Visitor<T>>,
 ) {
 	const result = visit(issue, visitor);
-	return result.visited ? result.data : handler(issue as never);
+	return result.visited ? result.data : fallback(issue as never);
 }
 
 // TODO: the nested issue (e.g. string : [email, uuid, ...])
