@@ -1,9 +1,9 @@
-import { Issue, visit, VisitResultVisited, visitWithDefault } from "./visit";
+import { Issue, visit, VisitResultVisited, visitWithFallback } from "./visit";
 
 describe("Issue Visit", () => {
 	it("should visit", () => {
 		const value = Math.random();
-		const result = visitWithDefault(
+		const result = visitWithFallback(
 			{ code: "invalid_date", path: [] },
 			() => -10,
 			{ invalid_date: () => value },
@@ -12,9 +12,9 @@ describe("Issue Visit", () => {
 		expect(result).toBe(value);
 	});
 
-	it("should use the default handler", () => {
+	it("should use the fallback", () => {
 		const value = Math.random();
-		const result = visitWithDefault(
+		const result = visitWithFallback(
 			{ code: "custom", path: [] },
 			() => value,
 			{},
