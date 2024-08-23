@@ -58,7 +58,7 @@
 	},
 	"postCreateCommand": {
 		"set npx path": "echo \"\nPATH=\"${PATH}:${PWD}/node_modules/.bin\"\n\" >> ~/.bashrc",
-		"set nx parallel": "echo '\nexport NX_PARALLEL=$(node -e \"console.log(Math.max(2, Math.floor($(nproc) * 3/4)))\")\n' >> ~/.bashrc",
+		"set nx parallel": "echo '\nexport NX_PARALLEL=$(node -e \"console.log(Math.min(8, Math.max(2, Math.floor($(nproc) * 3/4))))\")\n' >> ~/.bashrc",
 		"vnc-xrandr": "xrandr --output VNC-0 --mode 1920x1080"
 	},
 	"remoteEnv": {

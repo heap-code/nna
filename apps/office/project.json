@@ -36,22 +36,22 @@
 			"executor": "@angular-devkit/build-angular:application",
 			"options": {
 				"assets": [
-					"apps/office/src/favicon.ico",
-					"apps/office/src/assets"
+					"{projectRoot}/src/favicon.ico",
+					"{projectRoot}/src/assets"
 				],
-				"browser": "apps/office/src/main.ts",
-				"index": "apps/office/src/index.html",
+				"browser": "{projectRoot}/src/main.ts",
+				"index": "{projectRoot}/src/index.html",
 				"inlineStyleLanguage": "scss",
-				"outputPath": "dist/apps/office",
+				"outputPath": "dist/{projectRoot}",
 				"polyfills": ["zone.js"],
 				"prerender": true,
 				"scripts": [],
-				"server": "apps/office/src/main.server.ts",
+				"server": "{projectRoot}/src/main.server.ts",
 				"ssr": {
-					"entry": "apps/office/server.ts"
+					"entry": "{projectRoot}/server.ts"
 				},
-				"styles": ["apps/office/src/styles.scss"],
-				"tsConfig": "apps/office/tsconfig.app.json"
+				"styles": ["{projectRoot}/src/styles.scss"],
+				"tsConfig": "{projectRoot}/tsconfig.app.json"
 			},
 			"outputs": ["{options.outputPath}"]
 		},
@@ -68,7 +68,7 @@
 			}
 		},
 		"docker-build": {
-			"command": "docker build -f apps/office/Dockerfile . -t office",
+			"command": "docker build -f {projectRoot}/Dockerfile . -t office",
 			"dependsOn": ["build"]
 		},
 		"lint": {
@@ -78,7 +78,7 @@
 			"configurations": {
 				"development": {
 					"buildTarget": "office:build:development",
-					"proxyConfig": "apps/office/proxy.conf.json"
+					"proxyConfig": "{projectRoot}/proxy.conf.json"
 				},
 				"e2e": {
 					"buildTarget": "office:build:e2e",
@@ -105,7 +105,7 @@
 			"options": {
 				"buildTarget": "office:build",
 				"port": 5200,
-				"staticFilePath": "dist/apps/office/browser"
+				"staticFilePath": "dist/{projectRoot}/browser"
 			}
 		},
 		"storybook": {
@@ -118,7 +118,7 @@
 			"options": {
 				"browserTarget": "office:storybook-build",
 				"compodoc": false,
-				"configDir": "apps/office/.storybook",
+				"configDir": "{projectRoot}/.storybook",
 				"port": 5400
 			}
 		},
@@ -132,28 +132,28 @@
 			"options": {
 				"browserTarget": "office:storybook-build",
 				"compodoc": false,
-				"configDir": "apps/office/.storybook",
-				"outputDir": "dist/storybook/office"
+				"configDir": "{projectRoot}/.storybook",
+				"outputDir": "dist/storybook/{projectRoot}"
 			},
 			"outputs": ["{options.outputDir}"]
 		},
 		"storybook-test": {
 			"executor": "nx:run-commands",
 			"options": {
-				"command": "test-storybook -c apps/office/.storybook --url=http://localhost:5400"
+				"command": "test-storybook -c {projectRoot}/.storybook --url=http://localhost:5400"
 			}
 		},
 		"stylelint": {
 			"executor": "nx-stylelint:lint",
 			"options": {
-				"lintFilePatterns": ["apps/office/**/*.{css,scss}"]
+				"lintFilePatterns": ["{projectRoot}/**/*.{css,scss}"]
 			},
 			"outputs": ["{options.outputFile}"]
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"options": {
-				"jestConfig": "apps/office/jest.config.ts"
+				"jestConfig": "{projectRoot}/jest.config.ts"
 			},
 			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
 		}
