@@ -78,6 +78,11 @@
 			"cache": true,
 			"inputs": ["^production", "default"]
 		},
+		"i18n": {
+			"cache": true,
+			"dependsOn": ["^build"],
+			"inputs": ["^production", "production"]
+		},
 		"lint": {
 			"cache": true,
 			"configurations": {

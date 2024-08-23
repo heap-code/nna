@@ -108,6 +108,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Check i18n
+        run: npm run i18n:check
+
       - name: Comments coverage
         run: npm run compodoc:coverage
 
