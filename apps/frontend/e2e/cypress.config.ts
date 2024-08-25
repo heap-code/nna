@@ -13,4 +13,6 @@ export default defineConfig({
 	experimentalStudio: true,
 	video: true,
 	videoCompression: true,
+	viewportHeight: 1080,
+	viewportWidth: 1280,
 });

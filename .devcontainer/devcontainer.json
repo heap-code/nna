@@ -14,6 +14,7 @@
 				"formulahendry.auto-rename-tag",
 				"github.vscode-github-actions",
 				"hediet.vscode-drawio",
+				"king2021.vnc-extension",
 				"mhutchie.git-graph",
 				"ms-azuretools.vscode-docker",
 				"mtxr.sqltools",
@@ -38,7 +39,7 @@
 	"features": {
 		// FIXME: check https://github.com/microsoft/vscode-remote-release/issues/3279
 		// 	To "extends" this configuration
-		"ghcr.io/devcontainers/features/desktop-lite:1": {
+		"./desktop-xfce4": {
 			"password": "vscode",
 			"vncPort": 5903
 		},
