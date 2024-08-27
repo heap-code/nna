@@ -93,6 +93,12 @@
 				"watch": true
 			}
 		},
+		"stylelint": {
+			"executor": "nx-stylelint:lint",
+			"options": {
+				"lintFilePatterns": ["{projectRoot}/**/*.{css,scss}"]
+			}
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"options": {

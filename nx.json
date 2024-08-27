@@ -120,7 +120,8 @@
 			"inputs": ["default", "{workspaceRoot}/.stylelintrc.json"],
 			"options": {
 				"maxWarnings": 15
-			}
+			},
+			"outputs": ["{options.outputFile}"]
 		},
 		"test": {
 			"cache": true,
