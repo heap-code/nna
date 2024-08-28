@@ -1,0 +1,18 @@
+@use "../partials/global" as global;
+
+.color-primary {
+	color: global.$primary;
+}
+
+.color-secondary {
+	color: global.$secondary;
+}
+
+.abstract {
+	font-size: 18px;
+	background-color: lightgrey;
+
+	span {
+		font-weight: 700;
+	}
+}

@@ -1,3 +1,4 @@
+import { inline } from "@css-inline/css-inline";
 import { Injectable } from "@nestjs/common";
 import { ISendMailOptions, MailerService } from "@nestjs-modules/mailer";
 
@@ -24,8 +25,13 @@ export class MailService {
 	 * @returns information of the sent email
 	 */
 	public sendMail(sendMailOptions: ISendMailOptions) {
-		return this.mailerService.sendMail(
-			Utils.completeMailWithDefaults(sendMailOptions, this.config),
+		const { html, ...options } = Utils.completeMailWithDefaults(
+			sendMailOptions,
+			this.config,
 		);
+		return this.mailerService.sendMail({
+			...options,
+			html: html && inline(html.toString()),
+		});
 	}
 }

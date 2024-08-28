@@ -4,7 +4,9 @@ import { deepmerge } from "deepmerge-ts";
 import * as GeneratePackageJsonPlugin from "generate-package-json-webpack-plugin";
 import type * as handlebars from "handlebars";
 import { minify } from "html-minifier";
-import { DefinePlugin } from "webpack";
+import * as path from "path";
+import * as WebpackStringReplaceLoader from "string-replace-loader";
+import { DefinePlugin, RuleSetRule } from "webpack";
 
 // eslint-disable-next-line @nx/enforce-module-boundaries -- The bundler is not "part" of the app
 import * as packageJson from "../../package.json";
@@ -29,45 +31,71 @@ export default composePlugins(
 		],
 		watch: options.watch,
 	}),
-	(config, { configuration }) =>
-		deepmerge(config, {
+	(config, { configuration }) => {
+		const everythingRegExp = /(\s|\S)+$/gm;
+		const hbsRules = [
+			{
+				// Make the content "handlebars-usable"
+				loader: "handlebars-loader",
+				options: {
+					// https://www.npmjs.com/package/handlebars-loader#details
+					debug: false,
+					precompileOptions: {
+						preventIndent: true,
+						// Raise error on non-production build
+						//	prefer incomplete emails over no email sent or 500 errors
+						strict: configuration !== "production",
+					} satisfies Parameters<typeof handlebars.precompile>[1],
+				},
+			},
+			{
+				// Minify HTML content
+				loader: "string-replace-loader",
+				options: {
+					flags: "gm",
+					replace: content =>
+						minify(content, {
+							collapseWhitespace: true,
+							minifyCSS: true,
+							minifyJS: true,
+							minifyURLs: true,
+							removeComments: true,
+							sortAttributes: true,
+						}),
+					search: everythingRegExp,
+				} satisfies WebpackStringReplaceLoader.Options,
+			},
+		] as const satisfies RuleSetRule[];
+
+		/** Wrap the content inside a 'style' tag */
+		const wrapStyleRule = {
+			loader: "string-replace-loader",
+			options: {
+				replace: content => `<style>${content}</style>`,
+				search: everythingRegExp,
+			} satisfies WebpackStringReplaceLoader.Options,
+		} as const satisfies RuleSetRule;
+
+		/** Path of the handlebars templates */
+		const hbsTemplates = path.resolve(__dirname, "src/mail/templates");
+
+		return deepmerge(config, {
 			module: {
 				rules: [
 					{
-						test: [/\.handlebars$/, /\.hbs$/],
-						use: [
-							{
-								loader: "handlebars-loader",
-								options: {
-									// https://www.npmjs.com/package/handlebars-loader#details
-									debug: false,
-									precompileOptions: {
-										preventIndent: true,
-										// Raise error on non-production build
-										//	prefer incomplete emails over no email sent or 500 errors
-										strict: configuration !== "production",
-									} satisfies Parameters<
-										typeof handlebars.precompile
-									>[1],
-								},
-							},
-							{
-								loader: "string-replace-loader",
-								options: {
-									flags: "gm",
-									replace: content =>
-										minify(content, {
-											collapseWhitespace: true,
-											minifyCSS: true,
-											minifyJS: true,
-											minifyURLs: true,
-											removeComments: true,
-											sortAttributes: true,
-										}),
-									search: /((.|\s)*)/gm,
-								},
-							},
-						],
+						include: [hbsTemplates],
+						test: [/\.css$/i],
+						use: [...hbsRules, wrapStyleRule],
+					},
+					{
+						include: [hbsTemplates],
+						test: [/\.scss$/i, /\.sass$/i],
+						use: [...hbsRules, wrapStyleRule, "sass-loader"],
+					},
+					{
+						include: [hbsTemplates],
+						test: [/\.handlebars$/i, /\.hbs$/i],
+						use: hbsRules,
 					},
 				],
 			},
@@ -81,5 +109,6 @@ export default composePlugins(
 					{ useInstalledVersions: true },
 				) as never,
 			],
-		} satisfies typeof config),
+		} satisfies typeof config);
+	},
 );
