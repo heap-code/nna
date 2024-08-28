@@ -32,7 +32,7 @@ export default composePlugins(
 		watch: options.watch,
 	}),
 	(config, { configuration }) => {
-		const everythingRegExp = /((.|\s)+)$/gm;
+		const everythingRegExp = /(\s|\S)+$/gm;
 		const hbsRules = [
 			{
 				// Make the content "handlebars-usable"
