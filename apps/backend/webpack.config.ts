@@ -77,10 +77,7 @@ export default composePlugins(
 		} as const satisfies RuleSetRule;
 
 		/** Path of the handlebars templates */
-		const hbsTemplates = path.resolve(
-			__dirname,
-			"src/mail/mails/templates",
-		);
+		const hbsTemplates = path.resolve(__dirname, "src/mail/templates");
 
 		return deepmerge(config, {
 			module: {
@@ -97,7 +94,7 @@ export default composePlugins(
 					},
 					{
 						include: [hbsTemplates],
-						test: [/\.handlebars$/, /\.hbs$/],
+						test: [/\.handlebars$/i, /\.hbs$/i],
 						use: hbsRules,
 					},
 				],

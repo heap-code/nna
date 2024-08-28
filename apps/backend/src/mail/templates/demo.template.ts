@@ -10,5 +10,5 @@ export interface Context {
  * @returns string content
  */
 export function render(context: Context) {
-	return import("./templates/demo.hbs").then(_ => _.default(context));
+	return import("./demo/demo.hbs").then(_ => _.default(context));
 }

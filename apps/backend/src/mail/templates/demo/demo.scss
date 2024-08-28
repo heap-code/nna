@@ -1,4 +1,4 @@
-@use "./partials/global" as global;
+@use "../partials/global" as global;
 
 .color-primary {
 	color: global.$primary;

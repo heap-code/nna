@@ -10,16 +10,13 @@ export default {
 		"src/orm/seeders",
 	],
 	displayName: "backend",
-	globals: {
-		"handlebars-jest": {
-			partialDirs: ["<rootDir>/src/mail/mails/templates"],
-		},
-	},
 	moduleFileExtensions: ["ts", "js", "html"],
+	moduleNameMapper: {
+		"^.+\\.(handlebars|hbs)$": "<rootDir>/test/handlebars.mock.js",
+	},
 	preset: "../../jest.preset.js",
 	testEnvironment: "node",
 	transform: {
-		"^.+\\.(handlebars|hbs)$": "handlebars-jest",
 		"^.+\\.[tj]s$": [
 			"ts-jest",
 			{ tsconfig: "<rootDir>/tsconfig.spec.json" },
