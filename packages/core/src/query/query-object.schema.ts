@@ -1,11 +1,11 @@
 import * as z from "zod";
 
-import type { QueryFilterOptions, QueryObject, QueryObjectSchema } from ".";
+import type { QueryObject, QueryObjectSchema } from ".";
 import * as QueryFilter from "./filter";
 import * as QueryOption from "./options";
 
 /** Options to create a query order validation schema */
-export type QueryObjectOptions = QueryFilterOptions;
+export type QueryObjectOptions = QueryOption.QueryOptionsOptions;
 
 /**
  * Creates a {@link QueryObject query object} validation schema for an object schema.
