@@ -144,7 +144,7 @@
 		},
 		"typecheck": {
 			"cache": true,
-			"dependsOn": ["^build", "^typecheck"],
+			"dependsOn": ["^typecheck"],
 			"inputs": ["^default", "default"]
 		}
 	}
