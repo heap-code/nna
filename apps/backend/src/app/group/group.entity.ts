@@ -6,6 +6,7 @@ import {
 	Opt,
 	Property,
 } from "@mikro-orm/core";
+import { Unreflected } from "@nna/core";
 import { EntityNumber, checkEntitySatisfiesQueryDto } from "@nna/nest";
 import { GroupModel } from "~/common/group";
 import { GroupExtendedDto } from "~/common/group/dtos";
@@ -27,7 +28,7 @@ export class GroupEntity extends EntityNumber.Entity() implements GroupModel {
 	public readonly persons = new Collection<PersonEntity>(this);
 
 	@ManyToOne(() => GroupGenreEntity, { eager: true })
-	public genre!: GroupGenreEntity;
+	public genre!: Unreflected<GroupGenreEntity>;
 
 	@Property({ unique: true })
 	public name!: string;

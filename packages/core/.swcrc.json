@@ -1,4 +1,5 @@
 {
+	"$schema": "https://json.schemastore.org/swcrc",
 	"exclude": [
 		"jest.config.ts",
 		".*\\.spec.tsx?$",
