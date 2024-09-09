@@ -71,6 +71,8 @@ describe("Order schema", () => {
 			child: schemaFlat,
 			children: z.array(schemaFlat),
 			nest: z.object({ child: schemaFlat }),
+			nullable: schemaFlat.nullable(),
+			optional: schemaFlat.optional(),
 			unknown: z.array(z.custom()),
 		});
 		type SchemaNested = z.infer<typeof schemaNested>;
@@ -81,6 +83,7 @@ describe("Order schema", () => {
 			const orders: Array<QueryOrder<SchemaNested>> = [
 				{ child: { boolean: "asc" }, children: { number: "desc" } },
 				{ nest: { child: { date: "asc_nf" } }, unknown: "asc" },
+				{ nullable: { boolean: "desc" }, optional: { string: "asc" } },
 			];
 
 			for (const order of orders) {
