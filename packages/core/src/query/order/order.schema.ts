@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import * as OrderValue from "./order-value.schema";
 import type { QueryOrder } from "..";
+import * as OrderValue from "./order-value.schema";
 import { FilterOptions } from "../filter";
 import { QueryObjectSchema } from "../query.types";
 

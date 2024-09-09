@@ -3,12 +3,12 @@ import { Routes } from "@nestjs/core";
 import { RouterModule } from "@nestjs/core";
 import { extractModulesFromRoutes } from "@nna/nest";
 
+import { HealthModule } from "../health";
 import { AuthModule } from "./auth/auth.module";
 import { GroupGenreModule } from "./group/genre/group-genre.module";
 import { GroupModule } from "./group/group.module";
 import { PersonModule } from "./person/person.module";
 import { UserModule } from "./user/user.module";
-import { HealthModule } from "../health";
 
 /** @internal */
 const APP_ROUTES: Routes = [

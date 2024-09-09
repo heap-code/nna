@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import { createQueryResultsSchema } from "./query-results.schema";
 import { Schemas } from "..";
+import { createQueryResultsSchema } from "./query-results.schema";
 import { jsonify } from "../utils";
 
 describe("createQueryResultsSchema", () => {
