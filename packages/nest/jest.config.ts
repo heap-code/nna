@@ -1,3 +1,4 @@
+import * as swc from "@swc/core";
 import { JestConfigWithTsJest } from "ts-jest";
 
 export default {
@@ -7,8 +8,26 @@ export default {
 	testEnvironment: "node",
 	transform: {
 		"^.+\\.[tj]s$": [
-			"ts-jest",
-			{ tsconfig: "<rootDir>/tsconfig.spec.json" },
+			"@swc/jest",
+			{
+				jsc: {
+					externalHelpers: true,
+					keepClassNames: true,
+					loose: true,
+					parser: {
+						decorators: true,
+						dynamicImport: true,
+						syntax: "typescript",
+					},
+					target: "es2021",
+					transform: {
+						decoratorMetadata: true,
+						legacyDecorator: true,
+					},
+				},
+				module: { type: "commonjs" },
+				sourceMaps: "inline",
+			} satisfies swc.Options,
 		],
 	},
 } satisfies JestConfigWithTsJest;
