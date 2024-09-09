@@ -1,8 +1,8 @@
 import * as z from "zod";
 
+import type { QueryOrderValue } from "..";
 import { Options } from "./options";
 import { options as createSchema } from "./options.schema";
-import type { QueryOrderValue } from "..";
 
 const schemaData = z.object({
 	number: z.number().nullable(),
