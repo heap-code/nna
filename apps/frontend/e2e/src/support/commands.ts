@@ -1,5 +1,4 @@
 import { AnyFunction } from "@nna/core";
-import * as z from "zod";
 import { AUTH_HTTP_CONFIG, AuthLogin } from "~/common/auth";
 import { E2eHttp } from "~/testing/e2e";
 import { SeedGenerator, Seeding } from "~/testing/seeds";
@@ -7,11 +6,10 @@ import { SeedGenerator, Seeding } from "~/testing/seeds";
 /** Minimal data for E2E login */
 export type CyUserLogin = Pick<Seeding.UserSeed, "_password" | "username">;
 
-const E2E_API = z
-	.string()
-	// TODO: a way to get this from configuration (or the build being tested)?
-	.default("http://localhost:33000/e2e/api")
-	.parse(process.env.OF_E2E_API_URL);
+/** E2E API URL */
+const E2E_API = Cypress.env("E2E_API") as string;
+/** MailHog Client (& API) URL */
+const MAIL_HOG_URL = Cypress.env("MAIL_HOG_URL") as string;
 
 /**
  * Logs the session with the given user object
@@ -35,6 +33,7 @@ function loginWith(username: CyUserLogin | string, password = "") {
 
 	const { routes } = AUTH_HTTP_CONFIG;
 	const { method, path } = routes.login;
+
 	return cy.request(method, `${E2E_API}${path({})}`, {
 		cookie: true,
 		password,
@@ -71,10 +70,32 @@ function refreshDb<P extends SeedGenerator.GenerateParameter>(
 		.then(({ body }) => body as never);
 }
 
-const CY_ADD_ONS = { loginWith, logout, refreshDb } as const satisfies Record<
-	string,
-	AnyFunction
->;
+/**
+ * Visits the mail client
+ * Run {@link emailDeleteAll} before an operation that sends mails to avoid errors
+ *
+ * @returns Cypress chain
+ */
+function emailVisit() {
+	return cy.visit(MAIL_HOG_URL);
+}
+
+/**
+ * Deletes all mails in the client
+ *
+ * @returns Cypress chain
+ */
+function emailDeleteAll() {
+	return cy.request("DELETE", `${MAIL_HOG_URL}/api/v1/messages`);
+}
+
+const CY_ADD_ONS = {
+	emailDeleteAll,
+	emailVisit,
+	loginWith,
+	logout,
+	refreshDb,
+} as const satisfies Record<string, AnyFunction>;
 
 /** @internal */
 type _CyAddOns = typeof CY_ADD_ONS;
