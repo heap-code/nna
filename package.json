@@ -62,7 +62,7 @@
 		"@angular/language-service": "~18.2.0",
 		"@compodoc/compodoc": "^1.1.23",
 		"@darraghor/eslint-plugin-nestjs-typed": "^5.0.0",
-		"@faker-js/faker": "^8.4.1",
+		"@faker-js/faker": "^9.0.0",
 		"@html-eslint/parser": "^0.26.0",
 		"@mikro-orm/cli": "6.3.8",
 		"@mikro-orm/seeder": "6.3.8",
