@@ -1,0 +1,92 @@
+# This workflow builds and push a version to the docker registry
+#   (defined via GitHub variables and secrets)
+
+name: "[Callable] Build and push"
+
+on:
+  workflow_call:
+    inputs:
+      application:
+        description: |
+          Name of the application [backend, frontend, ...]
+          Must be in `package.json` looking like `<application>:docker` (also the default image name)
+        type: string
+        required: true
+      version:
+        description: "Version to build (= tag), also docker tag (v0.1.2, v2.0.13-rc2, ...)"
+        type: string
+        required: true
+      tag_additional:
+        description: "Additional tag to set to the docker image (e.g.: latest, uat, ...)"
+        type: string
+        required: false
+    outputs:
+      IMAGE_NAME:
+        description: Name of the docker image
+        value: ${{ jobs.build_push.outputs.IMAGE_NAME }}
+
+jobs:
+  build_push:
+    name: "Building ${{ inputs.application }}@${{ inputs.version }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#env:
+    # Variables in the env map cannot be defined in terms of other variables in the map.
+    env:
+      IMAGE_NAME: ${{ vars.DOCKER_REGISTRY_NAME }}/${{ vars.DOCKER_APP_NAME }}/${{ inputs.application }}:${{ inputs.version }}
+      IMAGE_NAME_ADDITIONAL: ${{ vars.DOCKER_REGISTRY_NAME }}/${{ vars.DOCKER_APP_NAME }}/${{ inputs.application }}:${{ inputs.tag_additional }}
+    outputs:
+      IMAGE_NAME: ${{ env.IMAGE_NAME }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./package.json', './package-lock.json') }}
+          restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
+        name: Install packages
+        run: npm ci
+      # If the cache is used
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        run: npm run postinstall
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ vars.DOCKER_REGISTRY_NAME }}
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # The label add a link to the GitHub repository the image is created from
+      #   If used with Github docker registry, it links the image and the repository together
+      - name: "Build docker image"
+        run: npm run ${{ inputs.application }}:docker -- --label "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}"
+
+      - name: "Push docker image"
+        run: |
+          docker tag ${{ inputs.application }} ${{ env.IMAGE_NAME }}
+          docker push ${{ env.IMAGE_NAME }}
+
+      - name: "Push addition docker tag"
+        if: ${{ inputs.tag_additional }}
+        run: |
+          docker tag ${{ inputs.application }} ${{ env.IMAGE_NAME_ADDITIONAL }}
+          docker push ${{ env.IMAGE_NAME_ADDITIONAL }}
