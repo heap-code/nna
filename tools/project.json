@@ -4,6 +4,24 @@
 	"sourceRoot": "./",
 	"tags": [],
 	"targets": {
+		"documentation-build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"npm run compodoc:build",
+					"npm run storybook:build",
+					"npx nx graph --file=./dist/nx-graph/index.html"
+				],
+				"parallel": true
+			}
+		},
+		"documentation-docker": {
+			"dependsOn": ["documentation-build"],
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "docker build -f ./tools/documentation/Dockerfile . -t documentation"
+			}
+		},
 		"lint": {
 			"configurations": {
 				"fix": {
