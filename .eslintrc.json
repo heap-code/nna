@@ -350,7 +350,7 @@
 			}
 		},
 		{
-			"files": ["*.handlebars", "*.hbs"],
+			"files": ["*.handlebars", "*.hbs", "*.html"],
 			"parser": "@html-eslint/parser",
 			"plugins": ["sort-attribute-content"],
 			"rules": {
