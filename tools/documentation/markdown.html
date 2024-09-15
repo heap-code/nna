@@ -12,6 +12,13 @@
 		/>
 
 		<style>
+			#meta {
+				padding: 12px;
+				position: absolute;
+				right: 0;
+				top: 0;
+			}
+
 			#content {
 				box-sizing: border-box;
 				min-width: 200px;
@@ -75,13 +82,12 @@
 		></script>
 		<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 
-		<script defer type="module">
+		<script defer>
 			mermaid.initialize({ startOnLoad: false });
-
 			const FILENAME = location.pathname;
+
 			const set = html =>
 				(document.getElementById("content").innerHTML = html);
-
 			fetch(FILENAME, { headers: { Accept: "text/markdown" } })
 				.then(res => {
 					if (!res.ok) {
@@ -108,10 +114,19 @@
 							parentElement.classList.add("image-centered");
 						});
 				});
+
+			fetch(FILENAME, { headers: { Accept: "custom/info.json" } })
+				.then(r => r.json())
+				.then(
+					({ version, name }) =>
+						(document.getElementById("meta").textContent =
+							`${name}@${version}`),
+				);
 		</script>
 	</head>
 
 	<body class="markdown-body">
 		<div id="content"></div>
+		<span id="meta"></span>
 	</body>
 </html>
