@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import { QueryOrderValue } from ".";
+import { QUERY_OPTIONS_DEFAULT_LIMIT } from "./options";
 import { QueryObject } from "./query-object";
 import { createQueryObjectSchema } from "./query-object.schema";
 
@@ -60,8 +61,10 @@ describe("QueryObject Schema", () => {
 	});
 
 	it("should be valid with coercion", () => {
+		const limit = 10;
 		const querySchema = createQueryObjectSchema(schemaData, {
 			coerce: true,
+			defaultLimit: limit,
 			strict: true,
 		});
 		type Schema = z.infer<typeof querySchema>;
@@ -70,7 +73,10 @@ describe("QueryObject Schema", () => {
 			[{ limit: "2" as never as number }, { limit: 2 }],
 			[{ skip: "55" as never as number }, { skip: 55 }],
 		] satisfies Array<[Schema, Schema]>) {
-			expect(querySchema.parse(test)).toStrictEqual(expected);
+			expect(querySchema.parse(test)).toStrictEqual({
+				limit,
+				...(expected as Schema),
+			} satisfies Schema);
 		}
 	});
 
@@ -89,7 +95,10 @@ describe("QueryObject Schema", () => {
 			}) as z.SafeParseSuccess<never>;
 
 			expect(results.success).toBe(true);
-			expect(results.data).toStrictEqual(options);
+			expect(results.data).toStrictEqual({
+				limit: QUERY_OPTIONS_DEFAULT_LIMIT,
+				...options,
+			} satisfies SchemaQuery);
 		}
 	});
 
@@ -141,6 +150,7 @@ describe("QueryObject Schema", () => {
 		}
 
 		const filterSchema = createQueryObjectSchema(groupSchema, {
+			defaultLimit: null,
 			strict: true,
 		});
 		type FilterGroup = z.infer<typeof filterSchema>;

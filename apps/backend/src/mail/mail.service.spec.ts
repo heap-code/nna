@@ -1,8 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { ISendMailOptions } from "@nestjs-modules/mailer";
+import { MailerService } from "@nestjs-modules/mailer";
 
 import { MailModule } from "./mail.module";
 import { MailService } from "./mail.service";
+import { ConfigurationModule } from "../configuration";
 
 describe("MailService", () => {
 	let service: MailService;
@@ -12,9 +13,9 @@ describe("MailService", () => {
 
 	beforeEach(async () => {
 		module = await Test.createTestingModule({
-			imports: [MailModule],
+			imports: [ConfigurationModule.forRoot({}), MailModule],
 		})
-			.overrideProvider(MailService)
+			.overrideProvider(MailerService)
 			.useValue({ sendMail: mockSendMail })
 			.compile();
 
@@ -30,10 +31,9 @@ describe("MailService", () => {
 	});
 
 	it("should send mail (mocked)", async () => {
-		const options: ISendMailOptions = {};
-		expect(mockSendMail).not.toHaveBeenCalledWith(options);
+		expect(mockSendMail).not.toHaveBeenCalled();
 
-		await service.sendMail(options);
-		expect(mockSendMail).toHaveBeenCalledWith(options);
+		await service.sendMail({});
+		expect(mockSendMail).toHaveBeenCalled();
 	});
 });

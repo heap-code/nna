@@ -1,6 +1,8 @@
 import {
 	BaseEntity,
+	Config,
 	DateTimeType,
+	DefineConfig,
 	Opt,
 	Property,
 	PropertyOptions,
@@ -30,6 +32,9 @@ export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
 	const { createdAt = {}, updatedAt = {} } = options;
 
 	abstract class EntityCommon extends BaseEntity implements ModelWithoutPK {
+		/** https://mikro-orm.io/docs/serializing#foreign-keys-are-forceobject */
+		public [Config]?: DefineConfig<{ forceObject: true }>;
+
 		/** The date when this entity has been created */
 		@Property(
 			deepmerge(

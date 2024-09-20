@@ -9,6 +9,7 @@ on:
       - environments/*
     types: [opened, synchronize, ready_for_review]
   workflow_call: {}
+  workflow_dispatch: {}
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
@@ -106,6 +107,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Check i18n
+        run: npm run i18n:check
 
       - name: Comments coverage
         run: npm run compodoc:coverage

@@ -349,6 +349,22 @@
 				]
 			}
 		},
+		{
+			"files": ["*.handlebars", "*.hbs", "*.html"],
+			"parser": "@html-eslint/parser",
+			"plugins": ["sort-attribute-content"],
+			"rules": {
+				"prettier/prettier": "error",
+				"sort-attribute-content/sort-attribute-content": [
+					"error",
+					[
+						{
+							"attributes": ["class"]
+						}
+					]
+				]
+			}
+		},
 		/** Custom rules ("non-code") */
 		{
 			"extends": [
@@ -421,7 +437,7 @@
 						"order": {
 							"type": "asc"
 						},
-						"pathPattern": "compilerOptions.(lib|types)$|include$|files$|^exclude$|extends$|plugins$|eslint.validate|auto-close-tag.\\w+|stylelint.\\w+|vscode.extensions$"
+						"pathPattern": "compilerOptions.(lib|types)$|include$|files$|^exclude$|extends$|plugins$|cSpell.words|eslint.validate|auto-close-tag.\\w+|stylelint.\\w+|vscode.extensions$"
 					}
 				]
 			}

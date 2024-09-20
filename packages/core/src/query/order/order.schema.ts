@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import * as OrderValue from "./order-value.schema";
 import type { QueryOrder } from "..";
+import * as OrderValue from "./order-value.schema";
 import { FilterOptions } from "../filter";
 import { QueryObjectSchema } from "../query.types";
 
@@ -46,6 +46,8 @@ function fromType(zodType: z.ZodTypeAny, options: OrderOptions): z.ZodType {
 		| QueryObjectSchema
 		| z.ZodArray<z.ZodTypeAny>
 		| z.ZodLazy<z.ZodTypeAny>
+		| z.ZodNullable<z.ZodTypeAny>
+		| z.ZodOptional<z.ZodTypeAny>
 		| z.ZodUnknown;
 
 	switch (_def.typeName) {
@@ -57,6 +59,9 @@ function fromType(zodType: z.ZodTypeAny, options: OrderOptions): z.ZodType {
 		case z.ZodFirstPartyTypeKind.ZodObject:
 			// For a nested object, it simply needs to explore its shape
 			return z.lazy(() => fromShape(_def.shape(), options));
+		case z.ZodFirstPartyTypeKind.ZodNullable:
+		case z.ZodFirstPartyTypeKind.ZodOptional:
+			return fromType(_def.innerType, options);
 		case z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
 			return z.lazy(() => fromDiscriminated(_def, options));
 

@@ -1,0 +1,46 @@
+# This workflows build, push and then deploy all services
+
+name: "[Callable] Build, push and deploy stack"
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "Version to build (= tag)"
+        type: string
+        required: true
+      version_tag:
+        description: "Tag of the version (e.g.: uat, prod)"
+        type: string
+        required: true
+      environment:
+        description: "Environment to deploy"
+        type: string
+        required: true
+
+jobs:
+  build_applications:
+    name: "Build '${{ inputs.version_tag }}' apps"
+    uses: ./.github/workflows/callable.build-n-push.yml
+
+    strategy:
+      matrix:
+        application: [backend, frontend, office, documentation]
+
+    secrets: inherit
+    with:
+      application: ${{ matrix.application }}
+      version: ${{ inputs.version }}
+      tag_additional: ${{ inputs.version_tag }}
+
+  deploy:
+    name: "Deploying '${{ inputs.version_tag }}' to ${{ inputs.environment }}"
+    needs:
+      - build_applications
+
+    uses: ./.github/workflows/callable.deploy.yml
+
+    secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
+      version: ${{ inputs.version }}

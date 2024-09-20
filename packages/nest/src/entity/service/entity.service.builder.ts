@@ -46,12 +46,12 @@ declare abstract class AbstractServiceWithUpdate<
 	/**
 	 * Transforms the {@link ToUpdate} data into a valid object for the ORM {@link EntityRepository repository}.
 	 *
-	 * @param id of the entity to update
+	 * @param entity to update (loaded from `findById`)
 	 * @param toUpdate data to update
 	 * @returns data for the {@link EntityRepository repository}
 	 */
 	protected abstract transformToUpdate(
-		id: T[ModelPrimaryKey],
+		entity: T,
 		toUpdate: ToUpdate,
 	): EntityToUpdate<T> | Promise<EntityToUpdate<T>>;
 }
@@ -141,7 +141,7 @@ class EntityServiceBuilder<
 				await this.repository.getEntityManager().persistAndFlush(
 					this.repository.assign(
 						entity as T,
-						await this.transformToUpdate(id, toUpdate),
+						await this.transformToUpdate(entity, toUpdate),
 						{
 							updateByPrimaryKey: true,
 						},

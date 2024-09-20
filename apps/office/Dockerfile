@@ -1,4 +1,4 @@
-FROM node:20.15.1-alpine
+FROM node:20.17.0-alpine
 
 WORKDIR /app
 
@@ -9,8 +9,6 @@ RUN addgroup --system user \
 	&& adduser --system -G user user \
 	&& chown -R user:user .
 USER user
-
-# RUN npm --omit=dev -f install
 
 # Default environments
 ENV PORT=5200

@@ -13,6 +13,7 @@ const ZOD_OFJ_TYPE = [
 	z.ZodFirstPartyTypeKind.ZodDate,
 	z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion,
 	z.ZodFirstPartyTypeKind.ZodObject,
+	z.ZodFirstPartyTypeKind.ZodLazy,
 ] as const;
 /** @internal */
 function isOFJ(
@@ -61,6 +62,16 @@ function fromProperty<T extends z.ZodTypeAny>(propertySchema: T): T | false {
 				? false
 				: (result.replace(updateType) as T);
 		}
+
+		case z.ZodFirstPartyTypeKind.ZodLazy:
+			return result.replace(
+				// Still return a `lazy` (even if it can be extracted here)
+				//	to avoid unnecessary calculation (e.g. if it is optional)
+				z.lazy(() => {
+					const updateType = definition.getter() as z.ZodTypeAny;
+					return fromProperty(updateType) || updateType;
+				}),
+			) as T;
 	}
 }
 

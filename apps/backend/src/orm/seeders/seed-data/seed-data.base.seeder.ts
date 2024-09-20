@@ -1,4 +1,5 @@
-import { EntityManager } from "@mikro-orm/core";
+import { AnyEntity, EntityClass, EntityManager } from "@mikro-orm/core";
+import * as OrmPostgres from "@mikro-orm/postgresql";
 import { Seeder } from "@mikro-orm/seeder";
 import { SeedData } from "~/testing/seeds";
 
@@ -46,6 +47,40 @@ export abstract class SeedDataBaseSeeder<
 				...person,
 				groups: _groupIds.map(id => em.getReference(GroupEntity, id)),
 			});
+		}
+
+		if (em.getDriver() instanceof OrmPostgres.PostgreSqlDriver) {
+			await em.flush();
+			await (em as OrmPostgres.EntityManager).transactional(em =>
+				this.updatePostgresPKSequences(em),
+			);
+		}
+	}
+
+	/**
+	 * Update the primary key sequences for PostgresSQL
+	 *
+	 * @param em to make the updates
+	 */
+	private async updatePostgresPKSequences(em: OrmPostgres.EntityManager) {
+		for (const entity of em.config.getAll().entities) {
+			const { primaryKeys, properties, tableName } = em.getMetadata(
+				entity as EntityClass<AnyEntity>,
+			);
+
+			if (primaryKeys.length !== 1) {
+				continue;
+			}
+
+			const [primaryKey] = primaryKeys;
+			const primaryProperty = properties[primaryKey];
+			if (!primaryProperty.primary || !primaryProperty.autoincrement) {
+				continue;
+			}
+
+			await em.execute(
+				`SELECT SETVAL('${tableName}_${primaryKey}_seq', (SELECT MAX("${primaryKey}") FROM "${tableName}"))`,
+			);
 		}
 	}
 }

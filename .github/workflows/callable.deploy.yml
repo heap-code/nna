@@ -1,0 +1,25 @@
+# This workflow deploys the applications of a given version to an environment
+
+name: "[Callable] Deploy"
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "Environment to deploy (uat, pre-prod, prod, ...)"
+        type: string
+        required: true
+      version:
+        description: "Version (of the docker images) to deploy (v0.1.2, uat, prod, ...)"
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Deploy TODO
+        run: exit 1

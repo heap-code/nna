@@ -36,7 +36,7 @@ export class ConfigurationService {
 	/* @internal */
 	public constructor(
 		@Inject(MODULE_OPTIONS_TOKEN)
-		options: ConfigurationModuleSyncOptions = {},
+		options: ConfigurationModuleSyncOptions,
 	) {
 		const { db, ...env } = ENVIRONMENT;
 

@@ -10,16 +10,16 @@
 				"development": {
 					"fileReplacements": [
 						{
-							"replace": "apps/backend/src/configuration/environments/environment.ts",
-							"with": "apps/backend/src/configuration/environments/environment.local.ts"
+							"replace": "{projectRoot}/src/configuration/environments/environment.ts",
+							"with": "{projectRoot}/src/configuration/environments/environment.local.ts"
 						}
 					]
 				},
 				"e2e": {
 					"fileReplacements": [
 						{
-							"replace": "apps/backend/src/main.ts",
-							"with": "apps/backend/src/main.e2e.ts"
+							"replace": "{projectRoot}/src/main.ts",
+							"with": "{projectRoot}/src/main.e2e.ts"
 						}
 					],
 					"inspect": false,
@@ -28,8 +28,8 @@
 				"production": {
 					"fileReplacements": [
 						{
-							"replace": "apps/backend/src/configuration/environments/environment.ts",
-							"with": "apps/backend/src/configuration/environments/environment.prod.ts"
+							"replace": "{projectRoot}/src/configuration/environments/environment.ts",
+							"with": "{projectRoot}/src/configuration/environments/environment.prod.ts"
 						}
 					],
 					"optimization": true
@@ -38,12 +38,13 @@
 			"defaultConfiguration": "production",
 			"executor": "@nx/webpack:webpack",
 			"options": {
-				"assets": ["apps/backend/src/assets"],
+				"assets": ["{projectRoot}/src/assets"],
 				"compiler": "tsc",
-				"main": "apps/backend/src/main.ts",
-				"outputPath": "dist/apps/backend",
+				"main": "{projectRoot}/src/main.ts",
+				"outputPath": "dist/{projectRoot}",
+				"progress": true,
 				"target": "node",
-				"tsConfig": "apps/backend/tsconfig.app.json",
+				"tsConfig": "{projectRoot}/tsconfig.app.json",
 				"tsPlugins": [
 					{
 						"name": "@nestjs/swagger/plugin",
@@ -55,7 +56,7 @@
 						}
 					}
 				],
-				"webpackConfig": "apps/backend/webpack.config.ts"
+				"webpackConfig": "{projectRoot}/webpack.config.ts"
 			},
 			"outputs": ["{options.outputPath}"]
 		},
@@ -66,14 +67,11 @@
 			}
 		},
 		"docker-build": {
-			"command": "docker build -f ./apps/backend/Dockerfile . -t backend",
+			"command": "docker build -f {projectRoot}/Dockerfile . -t backend",
 			"dependsOn": ["build"]
 		},
 		"lint": {
-			"executor": "@nx/eslint:lint",
-			"options": {
-				"lintFilePatterns": ["{projectRoot}/!(e2e)"]
-			}
+			"executor": "@nx/eslint:lint"
 		},
 		"serve": {
 			"configurations": {
@@ -90,15 +88,29 @@
 			"defaultConfiguration": "development",
 			"executor": "@nx/js:node",
 			"options": {
-				"buildTarget": "backend:build"
+				"buildTarget": "backend:build",
+				"debounce": 500,
+				"watch": true
+			}
+		},
+		"stylelint": {
+			"executor": "nx-stylelint:lint",
+			"options": {
+				"lintFilePatterns": ["{projectRoot}/**/*.{css,scss}"]
 			}
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"options": {
-				"jestConfig": "apps/backend/jest.config.ts"
+				"jestConfig": "{projectRoot}/jest.config.ts"
 			},
 			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tsc --noEmit -p {projectRoot}/tsconfig.spec.json"
+			}
 		}
 	}
 }

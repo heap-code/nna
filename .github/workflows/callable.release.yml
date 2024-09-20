@@ -1,4 +1,5 @@
 # Runs a release-process: prepares badges and then determine new version and them release
+#   The release pushes a tag, that is listen to a deploy workflow
 
 name: "[CALLABLE] Release"
 
@@ -29,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_TOKEN }}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -60,9 +61,11 @@ jobs:
       - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
         run: npm run postinstall
 
+      # FIXME: use a NX cache ? or better: set base of affected at the previous tag (then only copy new badges)
       - if: ${{ inputs.generate-badges }}
         name: Generate code coverage summary
-        run: npm run test:ci
+        #run: npm run test:ci # Affected
+        run: npx nx run-many -t test --configuration ci
       - if: ${{ inputs.generate-badges }}
         name: Generate code coverage badges
         run: for path in ./dist/coverage/*/*; do npx node-jest-badges -c "$path/coverage-summary.json" -o ".badges/${path:16}/code/"; done
@@ -70,9 +73,11 @@ jobs:
         name: Set default code coverage badges
         run: for path in .badges/*/*/code; do cp $path/coverage-jest\ coverage.svg $path/coverage.svg; done
 
+      # FIXME: use a NX cache ? or better: set base of affected at the previous tag (then only copy new badges)
       - if: ${{ inputs.generate-badges }}
         name: Generate comment coverage badges
-        run: npm run compodoc:build
+        run: npx nx run-many -t compodoc --configuration build
+        # run: npm run compodoc:build # Affected
       - if: ${{ inputs.generate-badges }}
         name: Move comment coverage badges
         run: for path in ./dist/compodoc/*/*; do mkdir -p "./.badges/${path:16}/comment" && cp "$path/images/coverage-badge-documentation.svg" "./.badges/${path:16}/comment/coverage.svg"; done

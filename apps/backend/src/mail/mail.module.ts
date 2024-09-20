@@ -1,23 +1,19 @@
 import { Module, Provider } from "@nestjs/common";
-import { MailerModule, MailerService } from "@nestjs-modules/mailer";
+import { MailerModule } from "@nestjs-modules/mailer";
 
 import { MailService } from "./mail.service";
 import { ConfigurationService } from "../configuration";
 
-/** The default mailer is available, but this make {@link MailService} works like a synonym */
-const providers: Provider[] = [
-	{ provide: MailService, useExisting: MailerService },
-];
+/** Imported and exported providers */
+const providers: Provider[] = [MailService];
 
 /**
  * Module for mail interaction.
  * To import in each module that requires it (simplify dependency)
  *
- * Prefer {@link MailService} over {@link MailerService} (even if they both work)
- *
- * On tests, override the {@link MailerService} with (as example): ```
+ * On tests, override the {@link MailService} with (as example): ```
  * module = await Test.createTestingModule({})
- * 	.overrideProvider(MailerService)
+ * 	.overrideProvider(MailService)
  * 	.useValue({ sendMail: jest.fn() })
  * 	.compile();
  * ```
@@ -37,7 +33,7 @@ export class MailModule {}
 
 /** The module to apply in the AppModule (to overwrite the configuration) */
 export const AppMailerModule = MailerModule.forRootAsync({
-	extraProviders: [{ provide: MailerService, useClass: MailService }],
+	// FIXME: a forChild/forRoot strategy
 	inject: [ConfigurationService],
 	useFactory: ({ configuration }: ConfigurationService) => ({
 		transport: configuration.email.transport,

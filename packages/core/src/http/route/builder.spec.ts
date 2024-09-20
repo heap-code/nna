@@ -58,10 +58,17 @@ describe("HttpRouteBuilder", () => {
 		expect(routeById.path({ id: 7 })).toBe("/users/7");
 
 		expect(
-			builder([{ path: "a/path", type: "path" }])
+			builder([{ path: "a", type: "path" }])
+				.addSegment("b/c/")
+				.addSegment({
+					param: "id",
+					type: "param",
+					validation: "number",
+				})
+				.addSegment({ path: "/path", type: "path" })
 				.delete()
 				.path({ id: 2 }),
-		).toBe("/a/path");
+		).toBe("/a/b/c/2/path");
 	});
 
 	it("should get the schemas", () => {

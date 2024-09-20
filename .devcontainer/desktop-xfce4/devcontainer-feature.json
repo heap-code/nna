@@ -1,0 +1,39 @@
+{
+	"containerEnv": {
+		"DISPLAY": ":1"
+	},
+	"description": "This is a change of the 'desktop-lite' feature but it uses 'xfce4' instead of 'fluxbox'.",
+	"documentationURL": "https://github.com/heap-code/nna/blob/master/.devcontainer/desktop-xfce4",
+	"entrypoint": "/usr/local/share/desktop-init.sh",
+	"id": "desktop-xfce4",
+	"init": true,
+	"installsAfter": ["ghcr.io/devcontainers/features/common-utils"],
+	"name": "xfce4 Desktop",
+	"options": {
+		"noVncVersion": {
+			"default": "1.2.0",
+			"description": "The noVNC version to use",
+			"proposals": ["1.2.0"],
+			"type": "string"
+		},
+		"password": {
+			"default": "vscode",
+			"description": "Enter a password for desktop connections. If \"noPassword\", connections from the local host can be established without entering a password",
+			"proposals": ["vscode", "codespaces", "password", "noPassword"],
+			"type": "string"
+		},
+		"vncPort": {
+			"default": "5901",
+			"description": "Enter a port for the desktop VNC server (TigerVNC)",
+			"proposals": ["5901"],
+			"type": "string"
+		},
+		"webPort": {
+			"default": "6080",
+			"description": "Enter a port for the VNC web client (noVNC)",
+			"proposals": ["6080"],
+			"type": "string"
+		}
+	},
+	"version": "1.0.0"
+}

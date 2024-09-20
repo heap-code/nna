@@ -1,0 +1,132 @@
+<!-- Original file: https://gist.github.com/max-lt/76de5a9765fa713cc5a6e267914ebba6#file-md-renderer-html -->
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
+		/>
+
+		<style>
+			#meta {
+				padding: 12px;
+				position: absolute;
+				right: 0;
+				top: 0;
+			}
+
+			#content {
+				box-sizing: border-box;
+				min-width: 200px;
+				max-width: 980px;
+				margin: 0 auto;
+				padding: 45px;
+			}
+
+			.markdown-body #content img {
+				--bgColor-default: var(--bgColor-neutral-muted);
+
+				border-radius: 8px;
+				border: 8px solid var(--borderColor-default);
+				background-image: linear-gradient(
+						to right,
+						var(--borderColor-neutral-muted) 1px,
+						transparent 1px
+					),
+					linear-gradient(
+						to bottom,
+						var(--borderColor-neutral-muted) 1px,
+						transparent 1px
+					);
+				background-size: 25px 25px;
+			}
+
+			#content code.language-mermaid {
+				display: flex;
+			}
+			#content code.language-mermaid svg {
+				margin: auto;
+			}
+
+			code.error {
+				line-height: 2rem;
+				font-size: 2rem;
+				color: #f43;
+				padding: 2rem;
+				display: block;
+			}
+
+			.image-centered {
+				display: flex;
+			}
+			.image-centered img {
+				margin: auto;
+			}
+
+			@media (max-width: 767px) {
+				#content {
+					padding: 15px;
+				}
+			}
+		</style>
+
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/marked/14.1.2/marked.min.js"
+			integrity="sha512-bXyBT2/sYjZg1D7ykDS6eJSE4DFDVPJHvbRAfdfYKr6IusrCz7wAmSm36vz9G8zMob25Rvqu90vft3JI71ygcQ=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		></script>
+		<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
+		<script defer>
+			mermaid.initialize({ startOnLoad: false });
+			const FILENAME = location.pathname;
+
+			const set = html =>
+				(document.getElementById("content").innerHTML = html);
+			fetch(FILENAME, { headers: { Accept: "text/markdown" } })
+				.then(res => {
+					if (!res.ok) {
+						throw new Error(`${res.statusText} (${res.status})`);
+					}
+
+					return res.text();
+				})
+				.then(text => set(marked.parse(text)))
+				.catch(err =>
+					set(
+						`<code class="error">Failed to load ${FILENAME}: ${err.message}</code>`,
+					),
+				)
+				.then(() => {
+					mermaid.run({ querySelector: "code.language-mermaid" });
+					document
+						.querySelectorAll("p > img")
+						.forEach(({ parentElement }) => {
+							if (parentElement.childNodes.length > 1) {
+								return;
+							}
+
+							parentElement.classList.add("image-centered");
+						});
+				});
+
+			fetch(FILENAME, { headers: { Accept: "custom/info.json" } })
+				.then(r => r.json())
+				.then(
+					({ version, name }) =>
+						(document.getElementById("meta").textContent =
+							`${name}@${version}`),
+				);
+		</script>
+	</head>
+
+	<body class="markdown-body">
+		<div id="content"></div>
+		<span id="meta"></span>
+	</body>
+</html>

@@ -28,7 +28,7 @@ export function bootstrap(app: INestApplication) {
 
 	app.setGlobalPrefix(host.globalPrefix)
 		.use(cookieParser.default(auth.secret))
-		.use(helmet({ contentSecurityPolicy: false }))
+		.use(helmet())
 		.useGlobalPipes(new PayloadValidationPipe())
 		.enableShutdownHooks()
 		.enableCors({ ...host.cors, credentials: true });

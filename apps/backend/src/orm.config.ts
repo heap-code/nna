@@ -1,6 +1,6 @@
 import { MikroORM } from "@mikro-orm/core";
 import { SeedManager } from "@mikro-orm/seeder";
-import { NestFactory } from "@nestjs/core";
+import { Test } from "@nestjs/testing";
 import { deepmerge } from "deepmerge-ts";
 
 import { AppModule } from "./app/app.module";
@@ -12,16 +12,18 @@ import { AppModule } from "./app/app.module";
  */
 export default async () => {
 	// The `MikroOrmModule` constructs all the configuration with auto-loaded entities.
-	const app = await NestFactory.createApplicationContext(
-		AppModule.forRoot({
-			app: {
-				name: process.env["npm_package_name"],
-				version: process.env["npm_package_version"],
-			},
-			orm: { applyMigrations: false, connect: false },
-		}),
-		{ logger: ["error", "fatal"] },
-	);
+	const app = await Test.createTestingModule({
+		imports: [
+			AppModule.forRoot({
+				app: {
+					name: process.env["npm_package_name"],
+					version: process.env["npm_package_version"],
+				},
+				logger: ["error", "fatal"],
+				orm: { applyMigrations: false, connect: false },
+			}),
+		],
+	}).compile();
 
 	const orm = app.get(MikroORM);
 

@@ -23,21 +23,21 @@
 		"stylelint": {
 			"executor": "nx-stylelint:lint",
 			"options": {
-				"lintFilePatterns": ["packages/angular/**/*.{css,scss}"]
+				"lintFilePatterns": ["{projectRoot}/**/*.{css,scss}"]
 			},
 			"outputs": ["{options.outputFile}"]
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"options": {
-				"jestConfig": "packages/angular/jest.config.ts"
+				"jestConfig": "{projectRoot}/jest.config.ts"
 			},
 			"outputs": ["{workspaceRoot}/dist/coverage/{projectRoot}"]
 		},
 		"typecheck": {
 			"executor": "nx:run-commands",
 			"options": {
-				"command": "tsc --noEmit -p packages/angular/tsconfig.spec.json"
+				"command": "tsc --noEmit -p {projectRoot}/tsconfig.spec.json"
 			}
 		}
 	}

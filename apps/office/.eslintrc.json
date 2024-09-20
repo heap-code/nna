@@ -1,5 +1,6 @@
 {
 	"extends": ["../../libs/front/.eslintrc.json"],
+	"ignorePatterns": ["e2e/"],
 	"overrides": [
 		{
 			"extends": [
@@ -42,5 +43,6 @@
 				"import/no-default-export": "off"
 			}
 		}
-	]
+	],
+	"root": true
 }

@@ -1,0 +1,36 @@
+# this workflows build, push and then deploy
+#   on vX.Y.Z or vX.Y.Z-uat.A tags
+
+name: Build, push and deploy to environments
+
+# Example with 2 environments
+# - UAT: User acceptance Test (tags ends with `-uat.[0-9]+`)
+# - prod: The real used application (regular version tags)
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-uat.[0-9]+"
+
+jobs:
+  job:
+    uses: ./.github/workflows/callable.build-push-deploy.yml
+    secrets: inherit
+    with:
+      # ref_name = tag that triggers this workflow
+
+      version: ${{ github.ref_name }}
+      # Ternary: https://github.com/actions/runner/issues/409#issuecomment-752775072
+      version_tag: ${{ contains(github.ref_name, 'uat') && 'uat' || 'prod' }}
+      environment: ${{ contains(github.ref_name, 'uat') && 'uat' || 'prod' }}
+
+  # Updates master branch with released content (bump of application version)
+  merge-back:
+    uses: ./.github/workflows/callable.merge.yml
+    secrets:
+      GIT_TOKEN: ${{ secrets.BOT_GIT_TOKEN }}
+    with:
+      ref_from: ${{ github.ref_name }}
+      ref_from_tag: true
+      ref_to: master

@@ -46,6 +46,14 @@ export interface EnvironmentShellDefault {
 	readonly BE_MAIL_PORT?: string;
 	/** Override MAIL secure */
 	readonly BE_MAIL_SECURE?: "true";
+
+	/** Override MAIL default sender address */
+	readonly BE_MAIL_SENDER_ADDRESS?: string;
+	/** Override MAIL default sender name */
+	readonly BE_MAIL_SENDER_NAME?: string;
+
+	/** Override Swagger documentation module */
+	readonly BE_SWAGGER_ENABLED?: "true";
 }
 
 /** The environment typed with defaults */
@@ -81,9 +89,9 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 				.default("authToken")
 				.parse(envDefault.BE_AUTH_COOKIE_NAME),
 			secure: false,
+			signed: true,
 		},
-		// 1 hour
-		duration: 60 * 60,
+		duration: 60 * 60, // 1 hour
 		secret: z
 			.string()
 			.default("Keep it secret!")
@@ -106,7 +114,18 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 	},
 	email: {
 		actors: {
-			sender: { address: "sender@host.local", name: "local sender" },
+			sender: {
+				address: z
+					.string()
+					.email()
+					.default("sender@host.local")
+					.parse(envDefault.BE_MAIL_SENDER_ADDRESS),
+				name: z
+					.string()
+					.min(3)
+					.default("local sender")
+					.parse(envDefault.BE_MAIL_SENDER_NAME),
+			},
 		},
 		transport: {
 			auth: cleanEmailAuth({
@@ -151,5 +170,5 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 			.parse(envDefault.BE_HTTP_PORT),
 	},
 	logger: ["debug", "error", "warn"],
-	swagger: true,
+	swagger: envDefault.BE_SWAGGER_ENABLED === "true",
 };

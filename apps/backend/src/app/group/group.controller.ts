@@ -1,11 +1,8 @@
 import { Controller, Query } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ControllerFor, HttpHandleRoute, createPayload } from "@nna/nest";
-import {
-	GROUP_HTTP_CONFIG,
-	GroupHttp,
-	groupQueryDtoSchema,
-} from "~/common/group";
+import { GROUP_HTTP_CONFIG, GroupHttp } from "~/common/group";
+import { groupQueryDtoSchema } from "~/common/group/dtos";
 
 import { GroupService } from "./group.service";
 
