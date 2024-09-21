@@ -63,7 +63,7 @@
 		"@compodoc/compodoc": "^1.1.23",
 		"@darraghor/eslint-plugin-nestjs-typed": "^5.0.0",
 		"@faker-js/faker": "^9.0.0",
-		"@html-eslint/parser": "^0.26.0",
+		"@html-eslint/parser": "^0.27.0",
 		"@mikro-orm/cli": "6.3.10",
 		"@mikro-orm/seeder": "6.3.10",
 		"@mikro-orm/sqlite": "6.3.10",
