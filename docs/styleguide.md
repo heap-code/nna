@@ -10,6 +10,8 @@ TODO
 - [Eslint](#eslint)
 - [Global](#global)
   - [Ordering](#ordering)
+- [Styleguide extensions](#styleguide-extensions)
+- [Docker-compose](#docker-compose)
 - [TODO](#todo)
 
 <!-- tocstop -->
@@ -42,12 +44,21 @@ It also avoids conflicts with _git_.
 
 > Always prefer the alphabetical order if none other order takes place.
 
+## Styleguide extensions
+
+Some files, or category of files, have their own styleguide:
+
+> They are _extensions_ of this styleguide, so the [global rules](#global) are still applied, unless explicitly mentioned otherwise.
+
+- [Documentation](./styleguide/documentation.md)
+- [Markdown files](./styleguide/markdown.md)
+- [Javascript/Typescript](./styleguide/typescript.md)
+
+## Docker-compose
+
+Do **not** prefix the services in a `docker-compose.yml` file.
+They are already prefixed by the folder it is run from.
+
 ## TODO
-
-TODO
-
-```bash
-npx markdown-toc -i 
-```
 
 TODO

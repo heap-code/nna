@@ -1,6 +1,8 @@
 # Commands
 
-## Lint & format
+## Global
+
+### Lint & format
 
 ```bash
 npm run lint
@@ -10,15 +12,7 @@ npm run lint
 npm run lint:fix
 ```
 
-```bash
-npm run stylelint
-```
-
-```bash
-npm run stylelint:fix
-```
-
-## Tests
+### Tests
 
 To run the tests:
 

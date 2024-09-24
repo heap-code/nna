@@ -22,7 +22,7 @@
 - [Description](#description)
 - [Requirements](#requirements)
   - [DevContainer](#devcontainer)
-- [Commands](#commands)
+- [Quick Start-up](#quick-start-up)
   - [Run the `backend`](#run-the-backend)
   - [Run the `frontend`](#run-the-frontend)
   - [Run the `office`](#run-the-office)
@@ -41,7 +41,7 @@ TODO
 
 TODO
 
-## Commands
+## Quick Start-up
 
 Some commands to quickly run the code:
 

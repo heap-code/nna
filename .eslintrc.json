@@ -457,9 +457,24 @@
 			}
 		},
 		{
-			"extends": ["plugin:yml/prettier", "plugin:yml/recommended"],
+			"extends": [
+				"plugin:yml/prettier",
+				"plugin:yml/recommended",
+				"plugin:yml/standard"
+			],
 			"files": ["*.yaml", "*.yml"],
-			"parser": "yaml-eslint-parser"
+			"parser": "yaml-eslint-parser",
+			"rules": {
+				"yml/sort-sequence-values": [
+					"warn",
+					{
+						"order": {
+							"type": "asc"
+						},
+						"pathPattern": ".*"
+					}
+				]
+			}
 		},
 		{
 			"files": ["*.sql"],

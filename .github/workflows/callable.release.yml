@@ -34,7 +34,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: .nvmrc
 
       - name: Set git config
         run: |
@@ -64,7 +64,7 @@ jobs:
       # FIXME: use a NX cache ? or better: set base of affected at the previous tag (then only copy new badges)
       - if: ${{ inputs.generate-badges }}
         name: Generate code coverage summary
-        #run: npm run test:ci # Affected
+        # run: npm run test:ci # Affected
         run: npx nx run-many -t test --configuration ci
       - if: ${{ inputs.generate-badges }}
         name: Generate code coverage badges

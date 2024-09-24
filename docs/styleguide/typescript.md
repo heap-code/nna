@@ -9,7 +9,9 @@ TODO
 <!-- toc -->
 
 - [`null` vs `undefined`](#null-vs-undefined)
+- [When to export `interface`s or `type`s?](#when-to-export-interfaces-or-types)
 - [`readonly` keyword](#readonly-keyword)
+- [Barrel files (index.ts)](#barrel-files-indexts)
 
 <!-- tocstop -->
 

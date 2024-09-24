@@ -8,27 +8,16 @@ TODO
 
 <!-- toc -->
 
-- [File structure](#file-structure)
 - [Writing](#writing)
-  - [3rd & Active vs Passive](#3rd--active-vs-passive)
   - [Headers](#headers)
+  - [Links](#links)
+  - [Mermaid](#mermaid)
+  - [Section - Table of contents](#section---table-of-contents)
+    - [ToC generator](#toc-generator)
 
 <!-- tocstop -->
 
-## File structure
-
 TODO
-
-### Vectorial images
-
-It is recommended to use [draw.io](https://app.diagrams.net/) when creating schemas, graphs, ... .
-
-There is plugins for the following IDEs:
-
-- Visual Studio Code: <https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio>
-- JetBrains IDE: <https://plugins.jetbrains.com/plugin/15635-diagrams-net-integration>
-
-> These files should have a `drawio.svg` extension.
 
 ## Writing
 
@@ -40,19 +29,6 @@ Use other punctuations, as `,`, or linking words to split the lines.
 > This concerns the edition of _Markdown_ files, not their preview.
 >
 > If the files are edited with 3rd parties editor, some rules can possibly not be respected.
-
-### 3rd & Active vs Passive
-
-The first person should only be used to express an opinion, a choice, a preference, etc.  
-The second person can be used to give instructions, but it is not recommended,
-unless it is the imperative mood.
-
-The passive voice should be preferred over the active one to omit pronouns.  
-Example:
-
-```text
-I load the data when the app is ready -> The data are loaded when the app is ready.
-```
 
 ### Headers
 
@@ -109,7 +85,8 @@ Content
 The table of contents can be generated with some IDE plugins,
 but the output can change depending of the IDE and/or plugins.
 
-To keep it "IDE agnostic", a ToC can be created with the [markdown-toc](https://www.npmjs.com/package/markdown-toc) package and the following command:
+To keep it "IDE agnostic", a ToC can be created with the [markdown-toc](https://www.npmjs.com/package/markdown-toc) package
+and the following command:
 
 ```bash
 npx markdown-toc -i <path/to/file>

@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: .nvmrc
 
       - name: Cache node modules
         id: cache-node-modules
@@ -44,7 +44,7 @@ jobs:
       - name: "[docker-compose] Up for DAST"
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
-          compose-file: "./docker-compose.yml"
+          compose-file: ./docker-compose.yml
       - name: Run Backend instance
         env:
           BE_DB_APPLY_MIGRATION: false

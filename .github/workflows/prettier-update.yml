@@ -10,8 +10,8 @@ on:
   pull_request:
     branches: [master]
     paths:
-      - "package.json"
-      - "package-lock.json"
+      - package-lock.json
+      - package.json
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -33,8 +33,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          cache: "npm"
-          node-version-file: ".nvmrc"
+          cache: npm
+          node-version-file: .nvmrc
 
       - name: Check if prettier was changed as part of the latest commit on the PR
         id: prettier-package-check
