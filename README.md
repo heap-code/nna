@@ -23,6 +23,7 @@
 - [Requirements](#requirements)
   - [DevContainer](#devcontainer)
 - [Quick Start-up](#quick-start-up)
+  - [Install](#install)
   - [Run the `backend`](#run-the-backend)
   - [Run the `frontend`](#run-the-frontend)
   - [Run the `office`](#run-the-office)
@@ -35,7 +36,23 @@
 
 ## Requirements
 
-TODO
+> If you use (or want to use/try) `DevContainer`, you can directly go [here](#devcontainer).
+
+To develop this project, the following conditions are expected:
+
+- [NodeJS](https://nodejs.org/en) (>= 20) - Build/run applications
+  - The "real" version for the applications is in the [nvmrc file](./.nvmrc), so [nvm](https://github.com/nvm-sh/nvm) can be used:  
+  `nvm use`
+- [npm](https://www.npmjs.com/) - Install dependencies and main executor for the "officials" commands of the project.
+- [docker](https://www.docker.com/) - To build docker images and for _development-server_ dependencies.
+
+---
+
+_Development-server_ dependencies (database, mail server, ...) can be served with:
+
+```bash
+docker compose up 
+```
 
 ### DevContainer
 
@@ -43,14 +60,23 @@ TODO
 
 ## Quick Start-up
 
-Some commands to quickly run the code:
+Some commands to quickly run the applications:
 
-> There is some other global [commands](./docs/commands.md) and
-> some specific for the applications.
+> Go [here](./docs/commands.md) for more commands and related information.
 
-TODO
+### Install
+
+Install the node packages:
+
+```bash
+npm install
+```
 
 ### Run the `backend`
+
+```bash
+npx mikro-orm migration:fresh --seed SimpleSeeder
+```
 
 ```bash
 npm run backend:start

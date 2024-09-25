@@ -58,7 +58,3 @@ Some files, or category of files, have their own styleguide:
 
 Do **not** prefix the services in a `docker-compose.yml` file.
 They are already prefixed by the folder it is run from.
-
-## TODO
-
-TODO
