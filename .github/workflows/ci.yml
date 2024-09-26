@@ -5,9 +5,12 @@ name: CI
 on:
   pull_request:
     branches:
-      - master
       - environments/*
-    types: [opened, synchronize, ready_for_review]
+      - master
+    types:
+      - opened
+      - ready_for_review
+      - synchronize
   workflow_call: {}
   workflow_dispatch: {}
 
@@ -39,7 +42,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: .nvmrc
 
       - name: Cache node modules
         id: cache-node-modules
@@ -76,7 +79,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: .nvmrc
 
       - name: Cache node modules
         id: cache-node-modules
@@ -140,7 +143,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: .nvmrc
 
       - name: Cache node modules
         id: cache-node-modules

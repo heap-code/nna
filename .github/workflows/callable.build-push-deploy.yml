@@ -6,7 +6,7 @@ on:
   workflow_call:
     inputs:
       version:
-        description: "Version to build (= tag)"
+        description: Version to build (= tag)
         type: string
         required: true
       version_tag:
@@ -14,7 +14,7 @@ on:
         type: string
         required: true
       environment:
-        description: "Environment to deploy"
+        description: Environment to deploy
         type: string
         required: true
 
@@ -25,7 +25,11 @@ jobs:
 
     strategy:
       matrix:
-        application: [backend, frontend, office, documentation]
+        application:
+          - backend
+          - documentation
+          - frontend
+          - office
 
     secrets: inherit
     with:

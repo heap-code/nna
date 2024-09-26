@@ -5,7 +5,7 @@
 services:
   db:
     environment:
-      POSTGRES_DB: "e2e"
+      POSTGRES_DB: e2e
 
   backend:
     image: backend
@@ -20,7 +20,7 @@ services:
       BE_DB_HOST: db
       BE_DB_TEST_NAME: e2e
       BE_HTTP_PORT: 33000
-      BE_MAIL_HOST: "mail-server"
+      BE_MAIL_HOST: mail-server
     ports:
       - "33000:33000"
 

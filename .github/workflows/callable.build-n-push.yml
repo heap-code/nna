@@ -47,7 +47,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: .nvmrc
 
       - name: Cache node modules
         id: cache-node-modules
@@ -77,15 +77,15 @@ jobs:
 
       # The label add a link to the GitHub repository the image is created from
       #   If used with Github docker registry, it links the image and the repository together
-      - name: "Build docker image"
+      - name: Build docker image
         run: npm run ${{ inputs.application }}:docker -- --label "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}"
 
-      - name: "Push docker image"
+      - name: Push docker image
         run: |
           docker tag ${{ inputs.application }} ${{ env.IMAGE_NAME }}
           docker push ${{ env.IMAGE_NAME }}
 
-      - name: "Push addition docker tag"
+      - name: Push addition docker tag
         if: ${{ inputs.tag_additional }}
         run: |
           docker tag ${{ inputs.application }} ${{ env.IMAGE_NAME_ADDITIONAL }}

@@ -13,6 +13,7 @@
 	"eslint.onIgnoredFiles": "warn",
 	"eslint.validate": [
 		"dockerfile",
+		"github-actions-workflow",
 		"handlebars",
 		"html",
 		"javascript",

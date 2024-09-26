@@ -6,6 +6,7 @@
 				"EditorConfig.EditorConfig",
 				"GitHub.vscode-pull-request-github",
 				"Gruntfuggly.todo-tree",
+				"ambooth.git-rename",
 				"bierner.markdown-mermaid",
 				"dbaeumer.vscode-eslint",
 				"exiasr.hadolint",
