@@ -174,7 +174,7 @@ jobs:
         run: npm run docker:e2e
       - if: ${{ steps.get-affected.outputs.N != 0 }}
         name: "[docker-compose] Prepare for E2E testing"
-        uses: hoverkraft-tech/compose-action@v2.0.1
+        uses: hoverkraft-tech/compose-action@v2.0.2
         with:
           compose-file: |
             ./docker-compose.yml
