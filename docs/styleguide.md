@@ -12,7 +12,6 @@ TODO
   - [Ordering](#ordering)
 - [Styleguide extensions](#styleguide-extensions)
 - [Docker-compose](#docker-compose)
-- [TODO](#todo)
 
 <!-- tocstop -->
 

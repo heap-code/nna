@@ -465,6 +465,7 @@
 			"files": ["*.yaml", "*.yml"],
 			"parser": "yaml-eslint-parser",
 			"rules": {
+				"yml/block-sequence": ["error", "always"],
 				"yml/sort-sequence-values": [
 					"warn",
 					{

@@ -27,6 +27,7 @@
   - [Run the `backend`](#run-the-backend)
   - [Run the `frontend`](#run-the-frontend)
   - [Run the `office`](#run-the-office)
+- [Contribution / development](#contribution--development)
 
 <!-- tocstop -->
 
@@ -93,3 +94,10 @@ npm run frontend:start
 ```bash
 npm run office:start
 ```
+
+## Contribution / development
+
+The following are guides/instructions to contribute to the project:
+
+- [Git flow](./docs/flow-git.md) - How to submit changes to the project
+- [Development "guide"](./docs/flow-dev.md) - How one should develop in this project

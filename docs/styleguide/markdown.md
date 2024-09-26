@@ -91,3 +91,9 @@ and the following command:
 ```bash
 npx markdown-toc -i <path/to/file>
 ```
+
+To create/update to all files:
+
+```bash
+find . -name '*.md' ! -path './tmp/*' ! -path './node_modules/*' -exec npx markdown-toc -i "{}" \;
+```

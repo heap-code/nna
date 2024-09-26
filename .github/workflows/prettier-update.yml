@@ -8,7 +8,8 @@ name: Prettier Update
 
 on:
   pull_request:
-    branches: [master]
+    branches:
+      - master
     paths:
       - package-lock.json
       - package.json
