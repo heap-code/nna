@@ -26,7 +26,7 @@ It can be summarized as follows:
 
 ## When to export `interface`s or `type`s?
 
-TODO
+TODO: always on _non-private_.
 
 ## `readonly` keyword
 

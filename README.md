@@ -42,8 +42,7 @@
 To develop this project, the following conditions are expected:
 
 - [NodeJS](https://nodejs.org/en) (>= 20) - Build/run applications
-  - The "real" version for the applications is in the [nvmrc file](./.nvmrc), so [nvm](https://github.com/nvm-sh/nvm) can be used:  
-  `nvm use`
+  - The "real" version for the applications is in the [nvmrc file](./.nvmrc), so [nvm](https://github.com/nvm-sh/nvm) can be used: `nvm use`
 - [npm](https://www.npmjs.com/) - Install dependencies and main executor for the "officials" commands of the project.
 - [docker](https://www.docker.com/) - To build docker images and for _development-server_ dependencies.
 
@@ -75,9 +74,13 @@ npm install
 
 ### Run the `backend`
 
+Creates the database and seed with a basic set of data:
+
 ```bash
 npx mikro-orm migration:fresh --seed SimpleSeeder
 ```
+
+And run the `backend` application:
 
 ```bash
 npm run backend:start
@@ -99,5 +102,5 @@ npm run office:start
 
 The following are guides/instructions to contribute to the project:
 
-- [Git flow](./docs/flow-git.md) - How to submit changes to the project
-- [Development "guide"](./docs/flow-dev.md) - How one should develop in this project
+- [Git flow](./docs/flow.git.md) - How to submit changes to the project
+- [Development "guide"](./docs/flow.dev.md) - How one should develop in this project
