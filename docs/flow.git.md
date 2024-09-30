@@ -17,7 +17,8 @@ TODO
 - [Commit message](#commit-message)
 - [Pull request](#pull-request)
   - [PR title](#pr-title)
-  - [Why 'merge-squash' ?](#why-merge-squash-)
+  - [Review & validation](#review--validation)
+  - [Why 'merge-squash'?](#why-merge-squash)
 
 <!-- tocstop -->
 
@@ -39,7 +40,7 @@ Example:
     - `dev/<slug>`
     - `fix/<task-id>/<slug>`
 2. Commit/push your work
-3. Create a PR into `master` with the title being a [commit message](#commit-message).  
+3. Create a PR into `master` with the title being a [PR title](#pr-title).  
 Example:
     - `fix: correct loading page`
     - `feat(#123/user): add user auth`
@@ -59,7 +60,7 @@ Example:
     - `hotfix/<slug>`
     - `hotfix/<task-id>/<slug>`
 2. Commit/push your work
-3. Create a PR into `environment/<env>` with the title being a [commit message](#commit-message).  
+3. Create a PR into `environment/<env>` with the title being a [PR title](#pr-title).  
 Example:
     - `fix: correct password secret`
     - `fix(#123/user): clean auth data`
@@ -130,7 +131,33 @@ Example:
 
 ### Environment branches
 
-TODO
+An _environment branch_ is a git branch that starts with the `environments/` folder.  
+It is supposed to represent the state (version of code) of a working production-like environment.
+
+The names of the environments depend of the project,
+but here is a list of common names:
+
+- `prod`
+- `pre-prod`
+- `uat`
+- `beta`
+- ...
+
+> **Note**:  
+> The environment can also be a _path_, e.g. `europe/prod`.
+
+The _state_ of an environment could be represented by a tag (and kinda is),
+but branches are used for 2 main reasons:
+
+1. A change in a environment branch is the real trigger for a [release/deploy process](./flow.release-deploy.md#release).
+2. Gives a simpler way to make [hot-fixes](#hotfix-contribution).
+
+> **Note**:  
+> The environment could also be a version, such as `environments/v2`,
+> in case a some level of retro-compatibility is required.
+>
+> However, if there is no environment (no server/application) for a given version,
+a git branch `versions/`, that only do releases but no deployments, would probably be more explicit.
 
 ## Commit message
 
@@ -152,13 +179,51 @@ Example: `fix(PR-123/users): correct login`
 
 ## Pull request
 
-TODO: Squash
+When creating a PR, it should:
+
+- Have a correct [PR title](#pr-title)
+- By default, for any _development branch_, the target is `master`
+- The merge strategy is **merge and squash**
+- If existing, add any additional information in the description
+
+> **Note**:  
+> Other constraints might be applied by [branch protection](./git-host.protection.md#protect-branches)
 
 ### PR title
 
+The title of a squash PR must also be a [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/),
+but, on the opposite of a [commit message](#commit-message),
+it **must** be more strictly respected.
+
+The strictness of the message is specifically applied to the _type_ of the commit and, even more precisely, to the type `feat`,
+because it is used to determine a new version, generate a _changelog_, ... (cf. [release](./flow.release-deploy.md#release)).
+
+> **Note**:  
+> Do not forget that there is other type of commit, such as `docs` or `perf`.
+
+The type of the commit must be choose depending of the **impact on the applications/project**, not the code.  
+For Example:
+
+1. When starting to develop a new feature:
+    - if a new entity has been added with a function to load it from the DB
+    - **but** there is no way to access this data (depending of the project: from HTTP, by exporting into a file, ...)
+    - then it is still a `chore`
+2. Later, when the feature is completed:
+    - If the end-user can load this data
+    - then it is a `feat`
+
+**Summary**:  
+It can be a `feat`,
+when it can be told to a client: "_From version_ A, _you can now do_ X".
+
+### Review & validation
+
 TODO
 
-### Why 'merge-squash' ?
+Depending on the team ...  
+But the reviewer should also verify that the [styleguide](./styleguide.md) is respected.
+
+### Why 'merge-squash'?
 
 As `master` is the important branch,
 only the useful changes should appear in its history.

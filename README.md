@@ -56,7 +56,20 @@ docker compose up
 
 ### DevContainer
 
-TODO
+[DevContainer](https://containers.dev/) allows to develop in a IDE inside a docker with all above requirements satisfied.  
+It also gives to all developers an (almost) identical environment.
+
+- [IntelliJ IDEA](https://www.jetbrains.com/help/idea/connect-to-devcontainer.html)
+- [VS Code](https://code.visualstudio.com/docs/devcontainers/containers) - Summary:
+  1. Install the [Dev Containers extension](vscode:extension/ms-vscode-remote.remote-containers)
+  2. Open the project as a `DevContainer`
+
+> Note:  
+> With _VS Code_, it also installs some extensions and configuration such as:
+>
+> - Auto-format (`eslint`)
+> - Access to the development Database
+> - ...
 
 ## Quick Start-up
 
