@@ -22,4 +22,4 @@ TODO ("Data-oriented", TDD, BDD)
 
 ## Global flow
 
-TODO
+TODO: common (DTO) ----> backend (controller, service, ...) ---> frontend (HttpClient, component, ...)

@@ -42,8 +42,7 @@
 To develop this project, the following conditions are expected:
 
 - [NodeJS](https://nodejs.org/en) (>= 20) - Build/run applications
-  - The "real" version for the applications is in the [nvmrc file](./.nvmrc), so [nvm](https://github.com/nvm-sh/nvm) can be used:  
-  `nvm use`
+  - The "real" version for the applications is in the [nvmrc file](./.nvmrc), so [nvm](https://github.com/nvm-sh/nvm) can be used: `nvm use`
 - [npm](https://www.npmjs.com/) - Install dependencies and main executor for the "officials" commands of the project.
 - [docker](https://www.docker.com/) - To build docker images and for _development-server_ dependencies.
 
@@ -57,7 +56,20 @@ docker compose up
 
 ### DevContainer
 
-TODO
+[DevContainer](https://containers.dev/) allows to develop in a IDE inside a docker with all above requirements satisfied.  
+It also gives to all developers an (almost) identical environment.
+
+- [IntelliJ IDEA](https://www.jetbrains.com/help/idea/connect-to-devcontainer.html)
+- [VS Code](https://code.visualstudio.com/docs/devcontainers/containers) - Summary:
+  1. Install the [Dev Containers extension](vscode:extension/ms-vscode-remote.remote-containers)
+  2. Open the project as a `DevContainer`
+
+> Note:  
+> With _VS Code_, it also installs some extensions and configuration such as:
+>
+> - Auto-format (`eslint`)
+> - Access to the development Database
+> - ...
 
 ## Quick Start-up
 
@@ -75,9 +87,13 @@ npm install
 
 ### Run the `backend`
 
+Creates the database and seed with a basic set of data:
+
 ```bash
 npx mikro-orm migration:fresh --seed SimpleSeeder
 ```
+
+And run the `backend` application:
 
 ```bash
 npm run backend:start
@@ -99,5 +115,5 @@ npm run office:start
 
 The following are guides/instructions to contribute to the project:
 
-- [Git flow](./docs/flow-git.md) - How to submit changes to the project
-- [Development "guide"](./docs/flow-dev.md) - How one should develop in this project
+- [Git flow](./docs/flow.git.md) - How to submit changes to the project
+- [Development "guide"](./docs/flow.dev.md) - How one should develop in this project
