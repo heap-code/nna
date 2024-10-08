@@ -5,7 +5,7 @@ describe("Auth DTOs", () => {
 
 	describe("AuthLogin", () => {
 		type Dto = AuthLogin.Dto;
-		const schema = AuthLogin.schema;
+		const { schema } = AuthLogin;
 
 		it("should be valid", () => {
 			for (const test of [
@@ -19,7 +19,7 @@ describe("Auth DTOs", () => {
 
 	describe("AuthProfile", () => {
 		type Dto = AuthProfile.Dto;
-		const schema = AuthProfile.schema;
+		const { schema } = AuthProfile;
 
 		it("should be valid", () => {
 			for (const test of [
@@ -32,7 +32,7 @@ describe("Auth DTOs", () => {
 
 	describe("AuthRefresh", () => {
 		type Dto = AuthRefresh.Dto;
-		const schema = AuthRefresh.schema;
+		const { schema } = AuthRefresh;
 
 		it("should be valid", () => {
 			for (const test of [
@@ -47,7 +47,7 @@ describe("Auth DTOs", () => {
 
 	describe("AuthSuccess", () => {
 		type Dto = AuthSuccess.Dto;
-		const schema = AuthSuccess.schema;
+		const { schema } = AuthSuccess;
 
 		it("should be valid", () => {
 			for (const test of [

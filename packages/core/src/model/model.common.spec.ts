@@ -31,7 +31,7 @@ describe("Model schema", () => {
 
 	describe("Errors", () => {
 		it("should fail when a property is missing", () => {
-			const { createdAt: _, ...model } = MODELS[0];
+			const [{ createdAt: _, ...model }] = MODELS;
 			expect(schemaCommon.safeParse(model).success).toBe(false);
 		});
 

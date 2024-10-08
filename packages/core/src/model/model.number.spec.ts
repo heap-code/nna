@@ -24,7 +24,7 @@ describe("Model schema", () => {
 
 	describe("Errors", () => {
 		it("should fail when a property is missing", () => {
-			const { _id: _, ...model } = MODELS[0];
+			const [{ _id: _, ...model }] = MODELS;
 			expect(schema.safeParse(model).success).toBe(false);
 		});
 
