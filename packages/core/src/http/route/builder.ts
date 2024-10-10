@@ -96,7 +96,7 @@ class Builder<const T extends readonly Segment[]> {
 	public request<const Handler extends AnyFunction>(
 		method: HttpMethod,
 	): Definition<Handler, this["segments"]> {
-		const segments = this.segments;
+		const { segments } = this;
 		const params = extractSegmentParams<this["segments"]>(this.segments);
 		const schema = new Singleton(() => paramsSchema(params));
 

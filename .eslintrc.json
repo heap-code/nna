@@ -535,6 +535,7 @@
 	],
 	"root": true,
 	"rules": {
+		"arrow-body-style": ["error", "as-needed"],
 		"eqeqeq": "error",
 		"eslint-comments/no-unused-disable": "error",
 		"eslint-comments/require-description": [
@@ -579,7 +580,15 @@
 		"no-console": "error",
 		"no-empty": "error",
 		"no-return-await": "error",
+		"prefer-arrow-callback": "error",
 		"prefer-const": "error",
+		"prefer-destructuring": [
+			"error",
+			{
+				"array": true,
+				"object": true
+			}
+		],
 		"prefer-rest-params": "error",
 		"prefer-template": "error",
 		"prettier/prettier": "error",
