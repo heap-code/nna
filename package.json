@@ -81,7 +81,7 @@
 		"@nx/web": "19.8.4",
 		"@nx/webpack": "19.8.4",
 		"@nx/workspace": "19.8.4",
-		"@release-it/conventional-changelog": "^8.0.1",
+		"@release-it/conventional-changelog": "^9.0.0",
 		"@schematics/angular": "~18.2.0",
 		"@storybook/addon-essentials": "8.3.5",
 		"@storybook/addon-interactions": "^8.0.0",
