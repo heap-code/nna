@@ -11,11 +11,11 @@
 	"osvVulnerabilityAlerts": true,
 	"packageRules": [
 		{
-			"matchDatasources": ["docker"],
-			"matchPackageNames": ["node"],
-			"matchPackagePatterns": ["/node$/"],
-			"versionCompatibility": "^(?<version>[^-]+)(?<compatibility>-.*)?$",
-			"versioning": "node"
+			"commitMessageTopic": "Node.js Group",
+			"excludePackageNames": ["calico/node", "kindest/node"],
+			"groupName": "Node.js Group",
+			"matchDepNames": ["node"],
+			"matchPackagePatterns": ["/node$"]
 		},
 		{
 			"extends": ["packages:jsUnitTest"],
