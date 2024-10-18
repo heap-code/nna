@@ -11,9 +11,11 @@
 	"osvVulnerabilityAlerts": true,
 	"packageRules": [
 		{
-			"matchDatasources": ["docker"],
+			"extends": ["group:nodeJs"],
+			"groupName": "NodeJs",
+			"matchDepNames": ["node"],
 			"matchPackageNames": ["node"],
-			"matchPackagePatterns": ["/node$/"],
+			"matchPackagePatterns": ["/node$"],
 			"versionCompatibility": "^(?<version>[^-]+)(?<compatibility>-.*)?$",
 			"versioning": "node"
 		},
