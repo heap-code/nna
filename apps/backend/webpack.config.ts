@@ -2,6 +2,7 @@ import { composePlugins } from "@nx/webpack";
 import { NxAppWebpackPlugin } from "@nx/webpack/app-plugin";
 import { deepmerge } from "deepmerge-ts";
 import * as GeneratePackageJsonPlugin from "generate-package-json-webpack-plugin";
+import { GitRevisionPlugin } from "git-revision-webpack-plugin";
 import type * as handlebars from "handlebars";
 import { minify } from "html-minifier";
 import * as path from "path";
@@ -11,9 +12,14 @@ import { DefinePlugin, RuleSetRule } from "webpack";
 // eslint-disable-next-line @nx/enforce-module-boundaries -- The bundler is not "part" of the app
 import * as packageJson from "../../package.json";
 
-const { name, version } = packageJson;
+const { name } = packageJson;
 
-// Nx plugins for webpack.
+const gitRevision = new GitRevisionPlugin();
+const version =
+	gitRevision.version() ||
+	// if there is no version -> use hash commit -> the date
+	(gitRevision.commithash() || new Date().toISOString()).slice(8);
+
 export default composePlugins(
 	(config, { options }) => ({
 		...config,

@@ -95,6 +95,6 @@ void (async () => {
 
 	await app.listen(host.port, host.name);
 	Logger.debug(
-		`💉 App-e2e 🧪 [${APP_NAME} - v${APP_VERSION}] is running on: ${await app.getUrl()}`,
+		`💉 App-e2e 🧪 [${APP_NAME} - ${APP_VERSION}] is running on: ${await app.getUrl()}`,
 	);
 })();

@@ -27,7 +27,10 @@
 			"extends": ["packages:eslint"],
 			"groupName": "Linting packages",
 			"groupSlug": "linting",
-			"matchPackageNames": ["@darraghor/eslint-plugin-nestjs-typed", "!eslint"]
+			"matchPackageNames": [
+				"@darraghor/eslint-plugin-nestjs-typed",
+				"!eslint"
+			]
 		},
 		{
 			"extends": ["packages:stylelint"],

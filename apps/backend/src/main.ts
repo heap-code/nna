@@ -42,6 +42,6 @@ void (async () => {
 
 	await app.listen(host.port, host.name);
 	Logger.debug(
-		`🚀 Application[${APP_NAME} - v${APP_VERSION}] is running on: ${await app.getUrl()}`,
+		`🚀 Application[${APP_NAME} - ${APP_VERSION}] is running on: ${await app.getUrl()}`,
 	);
 })();
