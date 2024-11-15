@@ -1,11 +1,15 @@
-import { EntityDTO, EntityRef } from "@mikro-orm/core";
-import { QueryFilter } from "@nna/core";
+import { Collection, EntityDTO, EntityRef } from "@mikro-orm/core";
+import { QueryFilter, QueryPrimitive } from "@nna/core";
 
 /** "Transform" a `mikro-orm` entity to a "query-able" model */
 export type EntityQueryModel<T> = {
-	[K in keyof T]: T[K] extends EntityRef<infer U>
+	[K in keyof T]: T[K] extends Collection<infer U>
 		? EntityQueryModel<U>
-		: T[K];
+		: T[K] extends EntityRef<infer U>
+			? EntityQueryModel<U>
+			: T[K] extends QueryPrimitive
+				? T[K]
+				: EntityQueryModel<T[K]>;
 };
 
 /**
