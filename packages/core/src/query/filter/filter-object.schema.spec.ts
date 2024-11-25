@@ -20,6 +20,7 @@ const schemaFlat = z.object({
 	number: z.number(),
 	numberNullable: z.number().nullable(),
 	string: z.string(),
+	stringDefault: z.string().default("a value"),
 	stringNullable: z.string().nullable(),
 });
 type SchemaFlat = z.infer<typeof schemaFlat>;
@@ -42,6 +43,7 @@ describe("ObjectFilter schema", () => {
 					number: 1,
 					numberNullable: 2,
 					string: "abc",
+					stringDefault: "value",
 					stringNullable: "def",
 				},
 				{
@@ -57,6 +59,7 @@ describe("ObjectFilter schema", () => {
 					enumNative: { $ne: MyEnum.A },
 					enumZod: { $in: ["a", "b"] },
 					number: { $gt: 2, $lt: 10 },
+					stringDefault: { $nin: ["a", "b"] },
 					stringNullable: { $eq: null },
 				},
 				{},
