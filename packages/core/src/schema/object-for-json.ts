@@ -45,7 +45,9 @@ function fromProperty<T extends z.ZodTypeAny>(propertySchema: T): T | false {
 		}
 
 		case z.ZodFirstPartyTypeKind.ZodDate:
-			return result.replace(dateString).pipe(propertySchema) as T;
+			return propertySchema.or(
+				result.replace(dateString).pipe(propertySchema),
+			) as never as T;
 
 		// The ternaries are here to reduce the number of new object references
 		case z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion: {
