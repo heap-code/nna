@@ -11,6 +11,7 @@ const ZOD_OFJ_TYPE = [
 	// OFJ => Object-For-JSON
 	z.ZodFirstPartyTypeKind.ZodArray,
 	z.ZodFirstPartyTypeKind.ZodDate,
+	z.ZodFirstPartyTypeKind.ZodDefault,
 	z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion,
 	z.ZodFirstPartyTypeKind.ZodObject,
 	z.ZodFirstPartyTypeKind.ZodLazy,
@@ -45,7 +46,20 @@ function fromProperty<T extends z.ZodTypeAny>(propertySchema: T): T | false {
 		}
 
 		case z.ZodFirstPartyTypeKind.ZodDate:
-			return result.replace(dateString).pipe(propertySchema) as T;
+			return propertySchema.or(
+				result.replace(dateString).pipe(propertySchema),
+			) as never as T;
+
+		case z.ZodFirstPartyTypeKind.ZodDefault: {
+			const previousType = definition.innerType as z.ZodTypeAny;
+			const updateType = fromProperty(previousType);
+
+			return updateType === false || updateType === previousType
+				? false
+				: (result.replace(
+						updateType.default(definition.defaultValue),
+					) as T);
+		}
 
 		// The ternaries are here to reduce the number of new object references
 		case z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion: {

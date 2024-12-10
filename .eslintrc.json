@@ -424,6 +424,7 @@
 				".devcontainer/**/devcontainer.json",
 				".eslintrc.json",
 				".prettierrc.json",
+				".stylelintrc.json",
 				".vscode/settings.json",
 				"tsconfig.*.json",
 				"tsconfig.json"

@@ -6,7 +6,7 @@
 				"stylelint-config-standard-scss"
 			],
 			"files": ["**/*.{css,scss}"],
-			"plugins": ["stylelint-prettier", "stylelint-order"],
+			"plugins": ["stylelint-order", "stylelint-prettier"],
 			"rules": {
 				"no-empty-source": null,
 				"prettier/prettier": true
