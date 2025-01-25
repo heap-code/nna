@@ -73,6 +73,7 @@ function fromType(zodType: z.ZodTypeAny, options: ObjectOptions): z.ZodType {
 	const { _def } = zodType as
 		| QueryObjectSchema
 		| z.ZodArray<z.ZodTypeAny>
+		| z.ZodDefault<z.ZodTypeAny>
 		| z.ZodLazy<z.ZodTypeAny>
 		| z.ZodUnknown;
 
@@ -80,6 +81,8 @@ function fromType(zodType: z.ZodTypeAny, options: ObjectOptions): z.ZodType {
 		case z.ZodFirstPartyTypeKind.ZodArray:
 			// For an array, explore its type
 			return z.lazy(() => fromType(_def.type, options));
+		case z.ZodFirstPartyTypeKind.ZodDefault:
+			return z.lazy(() => fromType(_def.innerType, options));
 		case z.ZodFirstPartyTypeKind.ZodLazy:
 			return z.lazy(() => fromType(_def.getter(), options));
 
