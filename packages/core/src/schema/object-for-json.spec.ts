@@ -12,6 +12,8 @@ describe("ObjectForJson", () => {
 			d: z.date().nullable(),
 		})
 		.partial();
+	const dateString = "2010-01-01T00:00:00.000Z";
+	const dateDate = new Date(Date.UTC(2010, 0));
 
 	it("should not modify the schema when there is no need", () => {
 		const schema = schemaBase.pick({ a: true, b: true });
@@ -20,7 +22,7 @@ describe("ObjectForJson", () => {
 
 	describe("On flat objects", () => {
 		const schema = objectForJson(schemaBase);
-		type Schema = z.infer<typeof schema>;
+		type Schema = z.input<typeof schema>;
 		type SchemaJson = Jsonify<Schema>;
 
 		it("should validate", () => {
@@ -28,6 +30,7 @@ describe("ObjectForJson", () => {
 				[{}, true],
 				[{ a: 0, b: "ab" }, true],
 				[{ c: "2000-01-01T12:00:00.000Z", d: null }, true],
+				[{ c: new Date() as never as string }, true],
 				[{ a: "" as unknown as number }, false],
 				[{ b: "" }, false],
 				[{ c: "1980-01-01T12:00:00.000Z" }, false],
@@ -40,9 +43,12 @@ describe("ObjectForJson", () => {
 			expect(
 				schema.parse({
 					a: 10,
-					c: "2010-01-01T00:00:00.000Z",
+					c: dateString,
 				} satisfies SchemaJson),
-			).toStrictEqual({ a: 10, c: new Date(2010, 0) } satisfies Schema);
+			).toStrictEqual({
+				a: 10,
+				c: dateDate,
+			} satisfies Schema);
 		});
 	});
 
@@ -74,11 +80,11 @@ describe("ObjectForJson", () => {
 			expect(
 				schema.parse({
 					b: "10",
-					n: { c: "2010-01-01T00:00:00.000Z" },
+					n: { c: dateString },
 				} satisfies SchemaJson),
 			).toStrictEqual({
 				b: "10",
-				n: { c: new Date(2010, 0) },
+				n: { c: dateDate },
 			} satisfies Schema);
 		});
 	});
@@ -97,8 +103,8 @@ describe("ObjectForJson", () => {
 			for (const [toParse, expected] of [
 				[{ array: [] }, true],
 				[{ ns: [] }, true],
-				[{ c: "2010-01-01T00:00:00.000Z", ns: [1] }, true],
-				[{ array: [{ c: "2010-01-01T00:00:00.000Z" }] }, true],
+				[{ c: dateString, ns: [1] }, true],
+				[{ array: [{ c: dateString }] }, true],
 				[{ array: [{}, {}, {}] }, false],
 			] satisfies Array<[SchemaJson, boolean]>) {
 				expect(schema.safeParse(toParse).success).toBe(expected);
@@ -108,12 +114,43 @@ describe("ObjectForJson", () => {
 		it("should transform", () => {
 			expect(
 				schema.parse({
-					array: [{ c: "2010-01-01T00:00:00.000Z" }],
+					array: [{ c: dateString }],
 					b: "10",
 				} satisfies SchemaJson),
 			).toStrictEqual({
-				array: [{ c: new Date(2010, 0) }],
+				array: [{ c: dateDate }],
 				b: "10",
+			} satisfies Schema);
+		});
+	});
+
+	describe("With default", () => {
+		const schema = objectForJson(
+			z.object({
+				a: z.date().optional(),
+				b: z.date().default(dateDate),
+				c: z.number().default(0),
+			}),
+		);
+		type Schema = z.infer<typeof schema>;
+		type SchemaJson = Jsonify<z.input<typeof schema>>;
+
+		it("should validate", () => {
+			for (const [toParse, expected] of [
+				[{}, true],
+				[{ a: dateString, b: dateString }, true],
+			] satisfies Array<[SchemaJson, boolean]>) {
+				expect(schema.safeParse(toParse).success).toBe(expected);
+			}
+		});
+
+		it("should transform", () => {
+			expect(
+				schema.parse({ a: dateString } satisfies SchemaJson),
+			).toStrictEqual({
+				a: dateDate,
+				b: dateDate,
+				c: 0,
 			} satisfies Schema);
 		});
 	});
@@ -149,11 +186,11 @@ describe("ObjectForJson", () => {
 			expect(
 				schema.parse({
 					b: "10",
-					n: { c: "2010-01-01T00:00:00.000Z" },
+					n: { c: dateString },
 				} satisfies SchemaJson),
 			).toStrictEqual({
 				b: "10",
-				n: { c: new Date(2010, 0) },
+				n: { c: dateDate },
 			} satisfies Schema);
 		});
 	});
@@ -184,11 +221,11 @@ describe("ObjectForJson", () => {
 			expect(
 				schema.parse({
 					_type: "b",
-					n: { c: "2010-01-01T00:00:00.000Z" },
+					n: { c: dateString },
 				} satisfies SchemaJson),
 			).toStrictEqual({
 				_type: "b",
-				n: { c: new Date(2010, 0) },
+				n: { c: dateDate },
 			} satisfies Schema);
 		});
 
