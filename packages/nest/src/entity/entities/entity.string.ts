@@ -26,7 +26,9 @@ export type EntityOptions<T> = Common.EntityOption<T> &
  * @param options for the properties
  * @returns constructed abstract class
  */
-export function Entity<T extends Model>(options: EntityOptions<T>) {
+export function Entity<T extends Model>(
+	options: EntityOptions<T>,
+): AbstractConstructor<Model> {
 	const { _id, ...common } = options;
 
 	abstract class EntityString extends Common.Entity(common) implements Model {
@@ -35,5 +37,5 @@ export function Entity<T extends Model>(options: EntityOptions<T>) {
 		public readonly _id!: string;
 	}
 
-	return EntityString satisfies AbstractConstructor<Model>;
+	return EntityString;
 }

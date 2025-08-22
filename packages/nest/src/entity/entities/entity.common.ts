@@ -28,7 +28,9 @@ export type EntityOption<T> = Partial<
  * @param options for the properties
  * @returns constructed abstract class
  */
-export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
+export function Entity<T extends ModelWithoutPK>(
+	options: EntityOption<T>,
+): AbstractConstructor<ModelWithoutPK> {
 	const { createdAt = {}, updatedAt = {} } = options;
 
 	abstract class EntityCommon extends BaseEntity implements ModelWithoutPK {
@@ -62,5 +64,5 @@ export function Entity<T extends ModelWithoutPK>(options: EntityOption<T>) {
 		public readonly updatedAt!: Opt<Date>;
 	}
 
-	return EntityCommon satisfies AbstractConstructor<ModelWithoutPK>;
+	return EntityCommon;
 }
