@@ -6,5 +6,5 @@ export const schema = z.object({
 	issuedAt: z.date().describe("Date the token have been issued"),
 	token: z.string().describe("The auth token"),
 });
-
+/** Dto-response success of login */
 export type Dto = z.infer<typeof schema>;
