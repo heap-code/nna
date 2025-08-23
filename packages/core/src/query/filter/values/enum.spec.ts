@@ -32,11 +32,9 @@ describe("Native enum filter", () => {
 				[null as unknown as Value, 1],
 			];
 			for (const [filter, nError] of filters) {
-				const results = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter>;
+				const results = schema.safeParse(filter);
 				expect(results.success).toBe(false);
-				expect(results.error.errors).toHaveLength(nError);
+				expect(results.error?.issues).toHaveLength(nError);
 			}
 		});
 	});
@@ -109,11 +107,9 @@ describe("Zod enum filter", () => {
 			[null as unknown as Value, 1],
 		];
 		for (const [filter, nError] of filters) {
-			const results = schema.safeParse(
-				filter,
-			) as z.SafeParseError<Filter>;
+			const results = schema.safeParse(filter);
 			expect(results.success).toBe(false);
-			expect(results.error.errors).toHaveLength(nError);
+			expect(results.error?.issues).toHaveLength(nError);
 		}
 	});
 

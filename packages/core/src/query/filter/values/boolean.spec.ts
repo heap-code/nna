@@ -1,5 +1,3 @@
-import * as z from "zod";
-
 import * as Filter from "./boolean";
 
 describe("Boolean filter", () => {
@@ -43,12 +41,10 @@ describe("Boolean filter", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.BooleanFilter>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -85,12 +81,10 @@ describe("Boolean filter", () => {
 				];
 
 				for (const [filter, nError] of filters) {
-					const result = schemaCoerce.safeParse(
-						filter,
-					) as z.SafeParseError<Filter.BooleanFilter>;
+					const result = schemaCoerce.safeParse(filter);
 
 					expect(result.success).toBe(false);
-					expect(result.error.errors).toHaveLength(nError);
+					expect(result.error?.issues).toHaveLength(nError);
 				}
 			});
 		});
@@ -163,12 +157,10 @@ describe("Nullable boolean filter", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.BooleanFilterNullable>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -210,12 +202,10 @@ describe("Nullable boolean filter", () => {
 				];
 
 				for (const [filter, nError] of filters) {
-					const result = schemaCoerce.safeParse(
-						filter,
-					) as z.SafeParseError<Filter.BooleanFilterNullable>;
+					const result = schemaCoerce.safeParse(filter);
 
 					expect(result.success).toBe(false);
-					expect(result.error.errors).toHaveLength(nError);
+					expect(result.error?.issues).toHaveLength(nError);
 				}
 			});
 		});

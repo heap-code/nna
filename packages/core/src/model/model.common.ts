@@ -3,10 +3,12 @@ import * as z from "zod";
 /** Base-base schema for `Model` */
 export const schemaCommon = z.object({
 	createdAt: z
-		.date({ description: "The date when this entity has been created" })
+		.date()
+		.meta({ description: "The date when this entity has been created" })
 		.readonly(),
 	updatedAt: z
-		.date({ description: "The date when this entity has been updated" })
+		.date()
+		.meta({ description: "The date when this entity has been updated" })
 		.readonly(),
 });
 

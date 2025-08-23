@@ -51,12 +51,10 @@ describe("QueryObject Schema", () => {
 		];
 
 		for (const [options, nError] of tests) {
-			const result = querySchema.safeParse(
-				options,
-			) as z.SafeParseError<never>;
+			const result = querySchema.safeParse(options);
 
 			expect(result.success).toBe(false);
-			expect(result.error.errors).toHaveLength(nError);
+			expect(result.error?.issues).toHaveLength(nError);
 		}
 	});
 
@@ -92,7 +90,7 @@ describe("QueryObject Schema", () => {
 			const results = querySchema.safeParse({
 				...options,
 				a: "abc",
-			}) as z.SafeParseSuccess<never>;
+			});
 
 			expect(results.success).toBe(true);
 			expect(results.data).toStrictEqual({
@@ -103,51 +101,20 @@ describe("QueryObject Schema", () => {
 	});
 
 	describe("With lazy content", () => {
-		const groupSchemaBase = z.object({ name: z.string() });
-		const userSchemaBase = z.object({ gId: z.number(), user: z.string() });
-
-		interface Group extends z.infer<typeof groupSchemaBase> {
-			users: User[];
-		}
-		interface User extends z.infer<typeof userSchemaBase> {
-			group: Group;
-		}
-
-		// TODO: transform this to a type-helper (and make it better, e.g. with optional)
-		type SchemaCircularItself = "__zod_circular_";
-		type SchemaCircular<
-			Base extends z.AnyZodObject,
-			Out extends object = z.infer<Base>,
-		> = z.ZodObject<
-			z.objectUtil.extendShape<
-				Base["shape"],
-				{
-					[K in keyof Out]: z.ZodType<
-						Out[K] extends SchemaCircularItself
-							? z.infer<SchemaCircular<Base, Out>>
-							: Out[K]
-					>;
-				}
-			>,
-			Base["_def"]["unknownKeys"],
-			Base["_def"]["catchall"],
-			Base["_output"] & {
-				[K in keyof Out]: Out[K] extends SchemaCircularItself
-					? z.infer<SchemaCircular<Base, Out>>
-					: Out[K];
-			}
-		>;
-
-		const groupSchema: SchemaCircular<
-			typeof groupSchemaBase,
-			{ users: User[] }
-		> = groupSchemaBase.extend({
-			users: z.array(z.lazy(() => userSchema())),
+		const groupSchema = z.object({
+			name: z.string(),
+			get users() {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define -- Ok here
+				return userSchema;
+			},
 		});
-		/** @internal */
-		function userSchema() {
-			return userSchemaBase.extend({ group: groupSchema });
-		}
+		const userSchema = z.object({
+			gId: z.number(),
+			get group() {
+				return groupSchema;
+			},
+			user: z.string(),
+		});
 
 		const filterSchema = createQueryObjectSchema(groupSchema, {
 			defaultLimit: null,
@@ -214,12 +181,10 @@ describe("QueryObject Schema", () => {
 			];
 
 			for (const [filter, nError] of tests) {
-				const result = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseError<never>;
+				const result = filterSchema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});

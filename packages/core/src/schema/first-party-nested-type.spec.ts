@@ -1,7 +1,6 @@
 import * as z from "zod";
 
 import {
-	ExploreSchemaFirstPartyNestedResultFound,
 	AnyFirstPartySchemaTypeName,
 	findSchemaFirstPartyNested,
 	isSchemaFirstPartyNestedType,
@@ -19,15 +18,17 @@ describe("SchemaFirstPartyNestedType", () => {
 			for (const schema of [z.number(), z.string()]) {
 				const result = findSchemaFirstPartyNested(
 					schema,
-					({ _def }) => _def.typeName === schema._def.typeName,
-				) as ExploreSchemaFirstPartyNestedResultFound<
-					typeof schema,
-					typeof schema
-				>;
+					({ _zod }) => _zod.def.type === schema._zod.def.type,
+				);
 
 				expect(result.found).toBe(true);
-				expect(result.schema).toBe(schema);
-				expect(result.replace(schema)).toBe(schema);
+
+				const okResult = result as Extract<
+					typeof result,
+					{ found: true }
+				>;
+				expect(okResult.schema).toBe(schema);
+				expect(okResult.replace(schema)).toBe(schema);
 			}
 		});
 
@@ -35,7 +36,7 @@ describe("SchemaFirstPartyNestedType", () => {
 			for (const schema of [z.date(), z.enum(["a", "b"])]) {
 				const _result = findSchemaFirstPartyNested(
 					schema.nullable().optional().readonly(),
-					({ _def }) => _def.typeName === schema._def.typeName,
+					({ _zod }) => _zod.def.type === schema._zod.def.type,
 				);
 
 				const result = _result as Extract<
@@ -54,26 +55,12 @@ describe("SchemaFirstPartyNestedType", () => {
 
 	it("should determine type", () => {
 		const tests: Array<
-			[z.ZodTypeAny, AnyFirstPartySchemaTypeName[], boolean]
+			[z.ZodType, AnyFirstPartySchemaTypeName[], boolean]
 		> = [
-			[z.string(), [z.ZodFirstPartyTypeKind.ZodString], true],
-			[z.object({}), [z.ZodFirstPartyTypeKind.ZodString], false],
-			[
-				z.number(),
-				[
-					z.ZodFirstPartyTypeKind.ZodNumber,
-					z.ZodFirstPartyTypeKind.ZodString,
-				],
-				true,
-			],
-			[
-				z.string(),
-				[
-					z.ZodFirstPartyTypeKind.ZodNumber,
-					z.ZodFirstPartyTypeKind.ZodDate,
-				],
-				false,
-			],
+			[z.string(), ["string"], true],
+			[z.object({}), ["string"], false],
+			[z.number(), ["number", "string"], true],
+			[z.string(), ["number", "date"], false],
 		];
 
 		for (const [schema, types, expected] of tests) {

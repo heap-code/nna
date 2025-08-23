@@ -9,5 +9,5 @@ export type QueryPrimitive = Date | boolean | number | string | null;
 
 /** Zod Object schemas managed by this `Query` "package" */
 export type QueryObjectSchema =
-	| z.ZodDiscriminatedUnion<string, Array<z.ZodObject<z.ZodRawShape>>>
+	| z.ZodDiscriminatedUnion
 	| z.ZodObject<z.ZodRawShape>;

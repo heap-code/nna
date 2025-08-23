@@ -47,12 +47,10 @@ describe("QueryOptions schema", () => {
 		];
 
 		for (const [options, nError] of tests) {
-			const result = optionsSchema.safeParse(
-				options,
-			) as z.SafeParseError<never>;
+			const result = optionsSchema.safeParse(options);
 
 			expect(result.success).toBe(false);
-			expect(result.error.errors).toHaveLength(nError);
+			expect(result.error?.issues).toHaveLength(nError);
 		}
 	});
 
@@ -68,7 +66,7 @@ describe("QueryOptions schema", () => {
 			const results = optionsSchema.safeParse({
 				...options,
 				a: "abc",
-			}) as z.SafeParseSuccess<never>;
+			});
 
 			expect(results.success).toBe(true);
 			expect(results.data).toStrictEqual(options);

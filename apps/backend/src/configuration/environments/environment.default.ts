@@ -116,7 +116,6 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 		actors: {
 			sender: {
 				address: z
-					.string()
 					.email()
 					.default("sender@host.local")
 					.parse(envDefault.BE_MAIL_SENDER_ADDRESS),
@@ -160,11 +159,7 @@ export const ENVIRONMENT_DEFAULT: Environment = {
 			.string()
 			.default("api")
 			.parse(envDefault.BE_HTTP_PREFIX),
-		name: z
-			.string()
-			.ip()
-			.default("127.0.0.1")
-			.parse(envDefault.BE_HTTP_HOST),
+		name: z.ipv4().default("127.0.0.1").parse(envDefault.BE_HTTP_HOST),
 		port: Schemas.port(z.coerce.number())
 			.default(3000)
 			.parse(envDefault.BE_HTTP_PORT),

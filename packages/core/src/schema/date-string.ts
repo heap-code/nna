@@ -9,7 +9,4 @@ import * as z from "zod";
  * @example
  * dateString.nullable().pipe(z.date().min(...))
  */
-export const dateString = z
-	.string()
-	.datetime()
-	.transform(arg => new Date(arg));
+export const dateString = z.iso.datetime().transform(arg => new Date(arg));

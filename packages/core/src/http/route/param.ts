@@ -85,6 +85,6 @@ export function paramsSchema<const T extends readonly Param[]>(
 				param,
 				paramValidationSchema(validation),
 			]),
-		) as ParamsToValidationShape<T>,
-	);
+		),
+	) as ParamsToValidationSchema<T>;
 }

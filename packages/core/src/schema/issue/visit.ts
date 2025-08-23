@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 /** The issue type managed by the {@link Visitor} */
-export type Issue = z.ZodIssueOptionalMessage;
+export type Issue = z.core.$ZodIssue;
 
 /** Visitor of {@link Issue issues} with its "handlers" */
 export type Visitor<T> = {

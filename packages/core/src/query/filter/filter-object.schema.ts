@@ -5,41 +5,42 @@ import { isFilterValueConvertible } from "./filter-value.helper";
 import * as FilterValue from "./filter-value.schema";
 import { QueryObjectSchema } from "../query.types";
 
-// FIXME: too much cast
-
 /** @internal */
-function fromShape<T extends z.ZodObject<z.ZodRawShape>>(
+function fromShape<T extends z.ZodObject>(
 	shape: T["shape"],
 	options: ObjectOptions,
-): z.AnyZodObject & z.ZodType<z.infer<T>> {
+): z.ZodObject & z.ZodType<z.infer<T>> {
 	// Explore the shape to create the filter
 	const schema = z
 		.object(
 			Object.fromEntries(
 				Object.entries(shape).map(([key, schema]) => [
 					key,
-					fromType(schema, options),
+					fromType(schema as never, options),
 				]),
 			),
 		)
 		.partial();
 
+	// @ts-expect-error -- FIXME ZOD-V4_UP
 	return options.strict ? schema.strict() : schema;
 }
 
 /** @internal */
 function fromDiscriminated(
-	definition: z.ZodDiscriminatedUnionDef<
-		string,
-		Array<z.ZodDiscriminatedUnionOption<string>>
-	>,
+	definition: z.core.$ZodDiscriminatedUnionDef,
 	options: ObjectOptions,
 ): z.ZodType<FilterObject<z.infer<(typeof definition)["options"][number]>>> {
 	const { discriminator } = definition;
-	const mapping = definition.options.map(
-		({ shape: { [discriminator]: key, ...shape } }) =>
-			[key as unknown as z.ZodLiteral<string>, shape] as const,
-	);
+	const mapping = definition.options
+		.filter(
+			(option): option is z.ZodObject =>
+				option._zod.def.type === "object",
+		)
+		.map(
+			({ shape: { [discriminator]: key, ...shape } }) =>
+				[key as unknown as z.ZodLiteral<string>, shape] as const,
+		);
 
 	// Schema for only the discriminator key as a `FilterValue`
 	const discriminatorSchema = fromShape(
@@ -56,7 +57,7 @@ function fromDiscriminated(
 		discriminator,
 		// `as never`: The typing for this one is quite complicate to satisfies from the dynamic `map`
 		mapping.map(([key, shape]) =>
-			z.object({ [discriminator]: key }).merge(fromShape(shape, options)),
+			fromShape(shape, options).extend({ [discriminator]: key }),
 		) as never,
 	);
 
@@ -64,30 +65,31 @@ function fromDiscriminated(
 }
 
 /** @internal */
-function fromType(zodType: z.ZodTypeAny, options: ObjectOptions): z.ZodType {
+function fromType(zodType: z.ZodType, options: ObjectOptions): z.ZodType {
 	if (isFilterValueConvertible(zodType)) {
 		// The schema use `QueryPrimitive`
 		return z.lazy(() => FilterValue.value(zodType, options));
 	}
 
-	const { _def } = zodType as
+	const { def } = zodType as
 		| QueryObjectSchema
-		| z.ZodArray<z.ZodTypeAny>
-		| z.ZodLazy<z.ZodTypeAny>
+		| z.ZodArray<z.ZodType>
+		| z.ZodLazy<z.ZodType>
 		| z.ZodUnknown;
 
-	switch (_def.typeName) {
-		case z.ZodFirstPartyTypeKind.ZodArray:
+	switch (def.type) {
+		case "array":
 			// For an array, explore its type
-			return z.lazy(() => fromType(_def.type, options));
-		case z.ZodFirstPartyTypeKind.ZodLazy:
-			return z.lazy(() => fromType(_def.getter(), options));
+			return z.lazy(() => fromType(def.element, options));
+		case "lazy": {
+			return z.lazy(() => fromType(def.getter(), options));
+		}
 
-		case z.ZodFirstPartyTypeKind.ZodObject:
+		case "object":
 			// For a nested object, it simply needs to explore its shape
-			return z.lazy(() => fromShape(_def.shape(), options));
-		case z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
-			return z.lazy(() => fromDiscriminated(_def, options));
+			return z.lazy(() => fromShape(def.shape, options));
+		case "union":
+			return z.lazy(() => fromDiscriminated(def, options));
 
 		default:
 			// Unmanaged/unknown type
@@ -116,11 +118,11 @@ function _schema<T extends QueryObjectSchema>(
 		return _schema(schema, {});
 	}
 
-	const { _def } = schema;
+	const { def } = schema;
 	return (
-		_def.typeName === z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion
-			? fromDiscriminated(_def, options)
-			: fromShape(_def.shape(), options)
+		def.type === "union"
+			? fromDiscriminated(def, options)
+			: fromShape(def.shape, options)
 	) as never;
 }
 

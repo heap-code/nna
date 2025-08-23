@@ -1,4 +1,3 @@
-import { patchNestjsSwagger } from "@anatine/zod-nestjs";
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { PayloadValidationPipe } from "@nna/nest";
@@ -48,13 +47,21 @@ export function bootstrap(app: INestApplication) {
 
 		// Needed from the zod-nestjs and openAPI compatibility
 		// https://github.com/anatine/zod-plugins/blob/main/packages/zod-nestjs/README.md#set-up-your-app
-		patchNestjsSwagger();
+		//patchNestjsSwagger();
 
 		const document = SwaggerModule.createDocument(app, {
 			...config,
 			// Needed from the zod-nestjs and openAPI compatibility
 			openapi: "3.1.0",
 		});
+
+		for (const schema of Object.values(
+			document.components?.schemas ?? {},
+		)) {
+			// https://github.com/BenLorantfy/nestjs-zod?tab=readme-ov-file#cleanupopenapidoc-ensure-proper-openapi-output
+			// @ts-expect-error -- linked to https://github.com/BenLorantfy/nestjs-zod/issues/184?
+			delete (schema.properties as { root: unknown })?.root;
+		}
 		SwaggerModule.setup(`/${host.globalPrefix}`, app, document);
 	}
 

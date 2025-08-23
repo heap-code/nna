@@ -94,12 +94,10 @@ describe("ObjectFilter schema", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseError<FilterObject<SchemaFlat>>;
+				const result = filterSchema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});
@@ -145,12 +143,10 @@ describe("ObjectFilter schema", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseError<FilterObject<SchemaNested>>;
+				const result = filterSchema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});
@@ -197,9 +193,7 @@ describe("ObjectFilter schema", () => {
 			];
 
 			for (const filter of filters) {
-				const results = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseSuccess<never>;
+				const results = filterSchema.safeParse(filter);
 				expect(results.success).toBe(true);
 				expect(results.data).toStrictEqual(filter);
 			}
@@ -218,12 +212,10 @@ describe("ObjectFilter schema", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseError<FilterObject<SchemaWithDiscrimination>>;
+				const result = filterSchema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 

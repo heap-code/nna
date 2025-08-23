@@ -1,12 +1,12 @@
 import * as z from "zod";
 
-import { NestedType } from "./types";
+import { _NestedType, NestedType } from "./types";
 
 /** Mostly any known Zod type */
-export type AnyFirstPartySchemaType =
-	| z.ZodFirstPartySchemaTypes
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- to use logic as the library one
-	| z.ZodReadonly<any>;
+export type AnyFirstPartySchemaType = z.ZodType;
+/** Typename definition from {@link AnyFirstPartySchemaType} */
+export type AnyFirstPartySchemaTypeName =
+	AnyFirstPartySchemaType["_zod"]["def"]["type"];
 
 /** @internal */
 interface ExploreSchemaFirstPartyNestedBase<T extends boolean> {
@@ -17,7 +17,6 @@ interface ExploreSchemaFirstPartyNestedBase<T extends boolean> {
 /** When a schema was found */
 export interface ExploreSchemaFirstPartyNestedResultFound<
 	T extends AnyFirstPartySchemaType, // Found schema
-	U extends AnyFirstPartySchemaType, // schema that replaces
 > extends ExploreSchemaFirstPartyNestedBase<true> {
 	/**
 	 * Replace the found schema in the "tree".
@@ -29,7 +28,7 @@ export interface ExploreSchemaFirstPartyNestedResultFound<
 	 * @param schema to replace the current for
 	 * @returns the tree of with the replaced schema
 	 */
-	replace: (schema: U) => NestedType<U>;
+	replace: <P extends z.ZodType>(schema: P) => NestedType<P>;
 	/** Schema found from the {@link ExploreZodSchemaFirstPartyNestedOptions.lookFor} */
 	schema: T;
 }
@@ -40,9 +39,8 @@ export type ExploreSchemaFirstPartyNestedResultNotFound =
 /** Result for {@link findSchemaFirstPartyNested} */
 export type ExploreSchemaFirstPartyNestedResult<
 	T extends AnyFirstPartySchemaType,
-	U extends AnyFirstPartySchemaType,
 > =
-	| ExploreSchemaFirstPartyNestedResultFound<T, U>
+	| ExploreSchemaFirstPartyNestedResultFound<T>
 	| ExploreSchemaFirstPartyNestedResultNotFound;
 
 /**
@@ -59,12 +57,10 @@ export type ExploreSchemaFirstPartyNestedResult<
  */
 export function findSchemaFirstPartyNested<
 	S extends NestedType<AnyFirstPartySchemaType>,
-	R extends
-		NestedType<AnyFirstPartySchemaType> = NestedType<AnyFirstPartySchemaType>,
 >(
 	schema: NestedType<AnyFirstPartySchemaType>,
 	predicate: (schema: NestedType<AnyFirstPartySchemaType>) => schema is S,
-): ExploreSchemaFirstPartyNestedResult<S, R>;
+): ExploreSchemaFirstPartyNestedResult<S>;
 /**
  * Explores first-level type of Zod schema.
  * That means than any object related schema is untouched
@@ -74,13 +70,10 @@ export function findSchemaFirstPartyNested<
  * @param predicate A function to determine when the wanted schema is found
  * @returns result of the exploration
  */
-export function findSchemaFirstPartyNested<
-	R extends
-		NestedType<AnyFirstPartySchemaType> = NestedType<AnyFirstPartySchemaType>,
->(
+export function findSchemaFirstPartyNested(
 	schema: NestedType<AnyFirstPartySchemaType>,
 	predicate: (schema: NestedType<AnyFirstPartySchemaType>) => boolean,
-): ExploreSchemaFirstPartyNestedResult<NestedType<AnyFirstPartySchemaType>, R>;
+): ExploreSchemaFirstPartyNestedResult<NestedType<AnyFirstPartySchemaType>>;
 /**
  * Explores first-level type of Zod schema.
  * That means than any object related schema is untouched
@@ -93,13 +86,10 @@ export function findSchemaFirstPartyNested<
  * 	It can use a 'type-predicate' to determine the returned type
  * @returns result of the exploration
  */
-export function findSchemaFirstPartyNested<
-	R extends
-		NestedType<AnyFirstPartySchemaType> = NestedType<AnyFirstPartySchemaType>,
->(
+export function findSchemaFirstPartyNested(
 	schema: NestedType<AnyFirstPartySchemaType>,
 	predicate: (schema: NestedType<AnyFirstPartySchemaType>) => boolean,
-): ExploreSchemaFirstPartyNestedResult<NestedType<AnyFirstPartySchemaType>, R> {
+): ExploreSchemaFirstPartyNestedResult<NestedType<AnyFirstPartySchemaType>> {
 	const found = predicate(schema);
 	if (found) {
 		return { found, replace: schema => schema, schema };
@@ -107,37 +97,33 @@ export function findSchemaFirstPartyNested<
 
 	// To replace in nested type and re-apply modifiers
 	const nestedReplace = (
-		{ innerType }: z.ZodNullableDef | z.ZodOptionalDef | z.ZodReadonlyDef,
-		replace: (
-			schema: AnyFirstPartySchemaType,
-		) => NestedType<AnyFirstPartySchemaType>,
-	): ExploreSchemaFirstPartyNestedResult<AnyFirstPartySchemaType, R> => {
-		const res = findSchemaFirstPartyNested(
-			innerType as AnyFirstPartySchemaType,
-			predicate,
-		);
+		{ innerType }: (z.ZodNullable | z.ZodOptional | z.ZodReadonly)["def"],
+		replace: (schema: z.ZodType) => NestedType<AnyFirstPartySchemaType>,
+	): ExploreSchemaFirstPartyNestedResult<AnyFirstPartySchemaType> => {
+		const res = findSchemaFirstPartyNested(innerType as never, predicate);
 
-		return res.found
-			? { ...res, replace: schema => replace(res.replace(schema)) as R }
-			: res;
+		if (!res.found) {
+			return res;
+		}
+
+		return {
+			...res,
+			replace: schema => replace(res.replace(schema)) as never,
+		};
 	};
 
-	const definition = schema._def;
-	switch (definition.typeName) {
-		case z.ZodFirstPartyTypeKind.ZodNullable:
+	const definition = (schema as _NestedType<z.ZodType> | z.ZodString).def;
+	switch (definition.type) {
+		case "nullable":
 			return nestedReplace(definition, schema => schema.nullable());
-		case z.ZodFirstPartyTypeKind.ZodOptional:
+		case "optional":
 			return nestedReplace(definition, schema => schema.optional());
-		case z.ZodFirstPartyTypeKind.ZodReadonly:
+		case "readonly":
 			return nestedReplace(definition, schema => schema.readonly());
 	}
 
 	return { found: false };
 }
-
-/** Typename definition from {@link AnyFirstPartySchemaType} */
-export type AnyFirstPartySchemaTypeName =
-	AnyFirstPartySchemaType["_def"]["typeName"];
 
 /**
  * Determines if the given schema if of type or given nested type
@@ -149,12 +135,12 @@ export type AnyFirstPartySchemaTypeName =
 export function isSchemaFirstPartyNestedType<
 	const T extends AnyFirstPartySchemaTypeName,
 >(
-	schema: AnyFirstPartySchemaType,
+	schema: z.ZodType,
 	types: readonly T[],
 ): schema is NestedType<
-	Extract<AnyFirstPartySchemaType, { _def: { typeName: T } }>
+	Extract<AnyFirstPartySchemaType, { def: { type: T } }>
 > {
-	return findSchemaFirstPartyNested(schema, ({ _def }) =>
-		types.includes(_def.typeName as never),
+	return findSchemaFirstPartyNested(schema, ({ _zod }) =>
+		types.includes(_zod.def.type as never),
 	).found;
 }

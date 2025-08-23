@@ -4,9 +4,8 @@ import * as z from "zod";
 import { groupModelSchema } from "../group";
 
 const discriminator = "type";
-const peopleType = z.discriminatedUnion(
-	discriminator,
-	[
+const peopleType = z
+	.discriminatedUnion(discriminator, [
 		z.object({
 			[discriminator]: z.literal("musician"),
 			groupId: z.lazy(() =>
@@ -17,9 +16,8 @@ const peopleType = z.discriminatedUnion(
 			instrument: z.string().min(2),
 		}),
 		z.object({ [discriminator]: z.literal("listener") }),
-	],
-	{ description: "Type of people" },
-);
+	])
+	.meta({ description: "Type of people" });
 
 export const personModelSchema = Model.schema.extend({
 	name: z.string().describe("Name of the person").min(3),

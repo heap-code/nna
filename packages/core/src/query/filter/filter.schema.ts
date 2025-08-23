@@ -20,8 +20,8 @@ function _schema<T extends QueryObjectSchema>(
 ) {
 	const filterSchema: z.ZodType<Filter<z.infer<T>>> = z.intersection(
 		// First element is the `FilterObject`
-		z.transformer(FilterObject.object(schema, options), {
-			transform: arg => {
+		z.preprocess(
+			arg => {
 				// Remove the operators from the object
 				//	so they do not fail the FilterObject strict validation
 				const {
@@ -33,8 +33,8 @@ function _schema<T extends QueryObjectSchema>(
 
 				return val;
 			},
-			type: "preprocess",
-		}),
+			FilterObject.object(schema, options),
+		),
 		// Then the recursive type with the logical operators
 		z
 			.object({
