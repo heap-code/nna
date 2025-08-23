@@ -38,12 +38,10 @@ describe("Order schema", () => {
 			];
 
 			for (const [order, nError] of orders) {
-				const result = orderSchema.safeParse(
-					order,
-				) as z.SafeParseError<never>;
+				const result = orderSchema.safeParse(order);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -59,7 +57,7 @@ describe("Order schema", () => {
 				const results = orderSchema.safeParse({
 					...order,
 					a: "abc",
-				}) as z.SafeParseSuccess<never>;
+				});
 				expect(results.success).toBe(true);
 				expect(results.data).toStrictEqual(order);
 			}
@@ -111,12 +109,10 @@ describe("Order schema", () => {
 			];
 
 			for (const [order, nError] of orders) {
-				const result = orderSchema.safeParse(
-					order,
-				) as z.SafeParseError<never>;
+				const result = orderSchema.safeParse(order);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});
@@ -171,12 +167,10 @@ describe("Order schema", () => {
 			];
 
 			for (const [order, nError] of orders) {
-				const result = orderSchema.safeParse(
-					order,
-				) as z.SafeParseError<never>;
+				const result = orderSchema.safeParse(order);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -203,19 +197,11 @@ describe("Order schema", () => {
 			lazyNumber: z.lazy(() => z.number()),
 		});
 
-		type SchemaLoop<Base extends z.AnyZodObject> = z.ZodObject<
-			z.objectUtil.extendShape<
-				Base["shape"],
-				{ lazyObject: z.ZodLazy<SchemaLoop<Base>> }
-			>,
-			Base["_def"]["unknownKeys"],
-			Base["_def"]["catchall"],
-			z.infer<Base> & { lazyObject: z.infer<SchemaLoop<Base>> },
-			z.infer<Base> & { lazyObject: z.infer<SchemaLoop<Base>> }
-		>;
-
-		const schemaLoop: SchemaLoop<typeof schemaBase> = schemaBase.extend({
-			lazyObject: z.lazy(() => schemaLoop),
+		const schemaLoop = schemaBase.extend({
+			get lazyObject() {
+				// Lazy is not necessarily
+				return z.lazy(() => schemaLoop);
+			},
 		});
 
 		type SchemaWithLazy = z.infer<typeof schemaLoop>;
@@ -271,12 +257,10 @@ describe("Order schema", () => {
 			];
 
 			for (const [order, nError] of orders) {
-				const result = orderSchema.safeParse(
-					order,
-				) as z.SafeParseError<never>;
+				const result = orderSchema.safeParse(order);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});

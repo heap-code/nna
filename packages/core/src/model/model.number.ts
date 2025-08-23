@@ -5,7 +5,8 @@ import { PRIMARY_KEY, schemaCommon } from "./model.common";
 /** Base schema for `Model` with a "number-id". */
 export const schema = schemaCommon.extend({
 	_id: z
-		.number({ description: "Unique ID defining an entity" })
+		.number()
+		.meta({ description: "Unique ID defining an entity" })
 		.int()
 		.positive()
 		.readonly(),

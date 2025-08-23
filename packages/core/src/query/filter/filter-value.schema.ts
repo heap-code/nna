@@ -23,25 +23,29 @@ function schema<T extends FilterZodEqType>(
 		zodType: FilterZodEqType,
 		nullable: boolean,
 	): z.ZodType<FilterValue<NonNullable<z.infer<T>>>> => {
-		switch (zodType._def.typeName) {
-			case z.ZodFirstPartyTypeKind.ZodNullable:
-				return fn(zodType._def.innerType, true);
-			case z.ZodFirstPartyTypeKind.ZodOptional:
-			case z.ZodFirstPartyTypeKind.ZodReadonly:
-				return fn(zodType._def.innerType, nullable);
+		const { def } = zodType;
+		switch (def.type) {
+			case "nullable":
+				return fn(def.innerType, true);
+			case "optional":
+			case "readonly":
+				return fn(def.innerType, nullable);
 
-			case z.ZodFirstPartyTypeKind.ZodBoolean:
+			case "boolean":
+				// @ts-expect-error -- FIXME ZOD-V4_UP
 				return FilterValues.boolean({ ...options, nullable });
-			case z.ZodFirstPartyTypeKind.ZodDate:
+			case "date":
+				// @ts-expect-error -- FIXME ZOD-V4_UP
 				return FilterValues.date({ ...options, nullable });
-			case z.ZodFirstPartyTypeKind.ZodNumber:
+			case "number":
+				// @ts-expect-error -- FIXME ZOD-V4_UP
 				return FilterValues.number({ ...options, nullable });
-			case z.ZodFirstPartyTypeKind.ZodString:
+			case "string":
+				// @ts-expect-error -- FIXME ZOD-V4_UP
 				return FilterValues.string({ ...options, nullable });
 
-			case z.ZodFirstPartyTypeKind.ZodEnum:
-			case z.ZodFirstPartyTypeKind.ZodNativeEnum:
-				return FilterValues.enum(zodType as FilterValues.EnumSchema, {
+			case "enum":
+				return FilterValues.enum(zodType as never, {
 					...options,
 					nullable,
 				});

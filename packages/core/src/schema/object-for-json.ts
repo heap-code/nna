@@ -9,69 +9,84 @@ import {
 /** @internal */
 const ZOD_OFJ_TYPE = [
 	// OFJ => Object-For-JSON
-	z.ZodFirstPartyTypeKind.ZodArray,
-	z.ZodFirstPartyTypeKind.ZodDate,
-	z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion,
-	z.ZodFirstPartyTypeKind.ZodObject,
-	z.ZodFirstPartyTypeKind.ZodLazy,
-] as const;
+	"array",
+	"date",
+	"union",
+	"lazy",
+	"object",
+] as const satisfies Array<z.ZodType["def"]["type"]>;
 /** @internal */
 function isOFJ(
 	schema: AnyFirstPartySchemaType,
-): schema is Extract<
-	AnyFirstPartySchemaType,
-	{ _def: { typeName: (typeof ZOD_OFJ_TYPE)[number] } }
-> {
-	return ZOD_OFJ_TYPE.includes(schema._def.typeName as never);
+): schema is
+	| z.ZodArray
+	| z.ZodDate
+	| z.ZodDiscriminatedUnion
+	| z.ZodLazy
+	| z.ZodObject {
+	return ZOD_OFJ_TYPE.includes(schema.def.type as never);
 }
 
 /** @internal */
-function fromProperty<T extends z.ZodTypeAny>(propertySchema: T): T | false {
-	const result = findSchemaFirstPartyNested(propertySchema, isOFJ);
+function fromProperty<const T extends z.core.$ZodType>(
+	propertySchema: T,
+): T | false {
+	const result = findSchemaFirstPartyNested(
+		propertySchema as never as z.ZodType,
+		isOFJ,
+	);
 	if (!result.found) {
 		return false;
 	}
 
 	const { schema } = result;
-	const definition = schema._def;
-	switch (definition.typeName) {
-		case z.ZodFirstPartyTypeKind.ZodArray: {
-			const previousType = definition.type as z.ZodTypeAny;
+	const definition = schema.def;
+	switch (definition.type) {
+		case "array": {
+			const previousType = definition.element;
 			const updateType = fromProperty(previousType);
 
 			return updateType === false || updateType === previousType
 				? false
-				: (result.replace(z.array(updateType).pipe(schema)) as T);
+				: // @ts-expect-error -- FIXME ZOD-V4_UP
+					(result.replace(z.array(updateType).pipe(schema)) as T);
 		}
 
-		case z.ZodFirstPartyTypeKind.ZodDate:
-			return result.replace(dateString).pipe(propertySchema) as T;
+		case "date":
+			return (
+				result
+					.replace(dateString)
+					// @ts-expect-error -- FIXME ZOD-V4_UP
+					.pipe(propertySchema) as T
+			);
 
 		// The ternaries are here to reduce the number of new object references
-		case z.ZodFirstPartyTypeKind.ZodDiscriminatedUnion: {
+		case "union": {
 			const updateType = fromDiscriminated(schema as ZodDiscriminated);
 
 			return updateType === schema
 				? false
-				: (result.replace(updateType) as T);
+				: // @ts-expect-error -- FIXME ZOD-V4_UP
+					(result.replace(updateType) as T);
 		}
-		case z.ZodFirstPartyTypeKind.ZodObject: {
+		case "object": {
 			const updateType = fromObject(schema as ZodObject);
 
 			return updateType === schema
 				? false
-				: (result.replace(updateType) as T);
+				: // @ts-expect-error -- FIXME ZOD-V4_UP
+					(result.replace(updateType) as T);
 		}
 
-		case z.ZodFirstPartyTypeKind.ZodLazy:
+		case "lazy":
 			return result.replace(
 				// Still return a `lazy` (even if it can be extracted here)
 				//	to avoid unnecessary calculation (e.g. if it is optional)
 				z.lazy(() => {
-					const updateType = definition.getter() as z.ZodTypeAny;
+					const updateType = definition.getter() as z.ZodType;
 					return fromProperty(updateType) || updateType;
 				}),
-			) as T;
+			) as never as T;
 	}
 }
 
@@ -92,7 +107,8 @@ function fromObject<T extends ZodObject>(schema: T): T {
 
 /** @internal */
 function fromDiscriminated<T extends ZodDiscriminated>(schema: T): T {
-	const options = schema._def.options.map(
+	const { def } = schema._zod;
+	const options = def.options.map(
 		option => [option, fromProperty(option)] as const,
 	);
 
@@ -102,7 +118,7 @@ function fromDiscriminated<T extends ZodDiscriminated>(schema: T): T {
 	}
 
 	return z.discriminatedUnion(
-		schema.discriminator,
+		def.discriminator,
 		options.map(([original, updated]) =>
 			updated === false ? original : updated,
 		) as never,
@@ -110,10 +126,7 @@ function fromDiscriminated<T extends ZodDiscriminated>(schema: T): T {
 }
 
 /** @internal */
-type ZodDiscriminated = z.ZodDiscriminatedUnion<
-	string,
-	Array<z.ZodObject<z.ZodRawShape>>
->;
+type ZodDiscriminated = z.ZodDiscriminatedUnion;
 /** @internal */
 type ZodObject = z.ZodObject<z.ZodRawShape>;
 /** Zod Object schemas that can be made "JSON compatible */

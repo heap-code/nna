@@ -1,14 +1,17 @@
 import * as z from "zod";
 
-import type { EnumSchema } from "./enum";
 import type { NestedType } from "../../../schema";
 import type { FilterValue, FilterValueOperatorMap } from "../filter-value";
 
 /** Zod schema for FilterValue ordernable type */
 export type FilterZodOrdType =
-	| EnumSchema
 	| z.ZodBoolean
+	| z.ZodCoercedBoolean
+	| z.ZodCoercedDate
+	| z.ZodCoercedNumber
+	| z.ZodCoercedString
 	| z.ZodDate
+	| z.ZodEnum
 	| z.ZodNumber
 	| z.ZodString;
 
@@ -152,7 +155,7 @@ export function schema<T extends FilterZodOrdType>(
 		return z
 			.custom<z.infer<T>>()
 			.transform<z.infer<T> | null>(val => (val === "null" ? null : val))
-			.pipe(type) as never;
+			.pipe(type as never) as never as FilterZodEqType;
 	})();
 
 	const operatorsBase = schemaOperatorMap(ordType, eqType);
@@ -161,7 +164,8 @@ export function schema<T extends FilterZodOrdType>(
 	return z.custom().transform((val, ctx) => {
 		// Verifies if it is an operators filter
 		const opResults = operators.safeParse(val);
-		if (opResults.success) {
+		if (opResults.success && !(val instanceof Date)) {
+			// FIXME: better way? (zod4 seems to convert to object when parsing Date for the operators)
 			return opResults.data;
 		}
 
@@ -178,10 +182,12 @@ export function schema<T extends FilterZodOrdType>(
 		// This is used to "flatten" Zod errors; with unions, Zod put both kind of errors under a common 'unionError'
 
 		const { issues } = z.object({}).safeParse(val).success
-			? opResults.error
+			? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- FIXME related to the Date case
+				opResults.error!
 			: prResults.error;
+
 		for (const issue of issues) {
-			ctx.addIssue(issue);
+			ctx.addIssue(issue as never);
 		}
 
 		// Not important as issues are added

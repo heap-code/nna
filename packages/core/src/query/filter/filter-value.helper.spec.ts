@@ -10,7 +10,7 @@ describe("FilterValue schema", () => {
 	}
 
 	it("isFilterValueConvertible", () => {
-		const tests: Array<[z.ZodTypeAny, boolean]> = [
+		const tests: Array<[z.ZodType, boolean]> = [
 			[z.string(), true],
 			[z.string().readonly(), true],
 			[z.number(), true],

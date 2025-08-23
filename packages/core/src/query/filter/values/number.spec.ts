@@ -1,5 +1,3 @@
-import * as z from "zod";
-
 import * as Filter from "./number";
 
 describe("Number filter", () => {
@@ -42,12 +40,10 @@ describe("Number filter", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.NumberFilter>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -81,12 +77,10 @@ describe("Number filter", () => {
 				];
 
 				for (const [filter, nError] of filters) {
-					const result = schemaCoerce.safeParse(
-						filter,
-					) as z.SafeParseError<Filter.NumberFilter>;
+					const result = schemaCoerce.safeParse(filter);
 
 					expect(result.success).toBe(false);
-					expect(result.error.errors).toHaveLength(nError);
+					expect(result.error?.issues).toHaveLength(nError);
 				}
 			});
 		});
@@ -161,12 +155,10 @@ describe("Nullable number filter", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.NumberFilterNullable>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -212,12 +204,10 @@ describe("Nullable number filter", () => {
 				];
 
 				for (const [filter, nError] of filters) {
-					const result = schemaCoerce.safeParse(
-						filter,
-					) as z.SafeParseError<Filter.NumberFilterNullable>;
+					const result = schemaCoerce.safeParse(filter);
 
 					expect(result.success).toBe(false);
-					expect(result.error.errors).toHaveLength(nError);
+					expect(result.error?.issues).toHaveLength(nError);
 				}
 			});
 		});

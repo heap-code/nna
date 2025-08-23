@@ -4,13 +4,7 @@ import * as common from "./common";
 import { FilterValue } from "../filter-value";
 
 /** Zod enum schemas managed as a filterable value */
-export type EnumSchema =
-	| z.ZodEnum<[string, ...string[]]>
-	| z.ZodNativeEnum<z.EnumLike>;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- To keep type inference
-type SchemaEnum = z.ZodEnum<[string, ...string[]]> | z.ZodNativeEnum<any>;
-
+export type EnumSchema = z.ZodEnum;
 /** Options to create a `enum` filter validation schema */
 export type EnumOptions = common.SchemaOptions;
 
@@ -21,7 +15,7 @@ export type EnumOptions = common.SchemaOptions;
  * @param options for the creation of the schema
  * @returns the validation schema
  */
-function schema<T extends SchemaEnum>(
+function schema<T extends z.ZodEnum>(
 	enumSchema: T,
 	options: common.SchemaOptionsNullable & EnumOptions,
 ): z.ZodType<FilterValue<z.infer<T> | null>>;
@@ -32,7 +26,7 @@ function schema<T extends SchemaEnum>(
  * @param options for the creation of the schema
  * @returns the validation schema
  */
-function schema<T extends SchemaEnum>(
+function schema<T extends z.ZodEnum>(
 	enumSchema: T,
 	options?: EnumOptions,
 ): z.ZodType<FilterValue<z.infer<T>>>;
@@ -44,18 +38,10 @@ function schema<T extends SchemaEnum>(
  * @param options for the creation of the schema
  * @returns the validation schema
  */
-function schema<T extends SchemaEnum>(
-	enumSchema: T,
-	options: EnumOptions = {},
-) {
-	if (
-		options.coerce &&
-		enumSchema._def.typeName === z.ZodFirstPartyTypeKind.ZodNativeEnum
-	) {
-		const values = Object.values(
-			(enumSchema as z.ZodNativeEnum<z.EnumLike>)._def.values,
-		);
-		const schemaEnum = z
+function schema<T extends z.ZodEnum>(enumSchema: T, options: EnumOptions = {}) {
+	if (options.coerce && enumSchema.def.type === "enum") {
+		const values = Object.values(enumSchema.def.entries);
+		const schema = z
 			.custom()
 			.transform(
 				inp =>
@@ -65,7 +51,7 @@ function schema<T extends SchemaEnum>(
 			)
 			.pipe(enumSchema) as unknown as T;
 
-		return common.schema(schemaEnum, options);
+		return common.schema(schema, options);
 	}
 
 	return common.schema(enumSchema, options);

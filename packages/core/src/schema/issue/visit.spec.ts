@@ -4,9 +4,14 @@ describe("Issue Visit", () => {
 	it("should visit", () => {
 		const value = Math.random();
 		const result = visitWithFallback(
-			{ code: "invalid_date", path: [] },
+			{
+				code: "invalid_value",
+				message: "",
+				path: [],
+				values: [],
+			},
 			() => -10,
-			{ invalid_date: () => value },
+			{ invalid_value: () => value },
 		);
 
 		expect(result).toBe(value);
@@ -15,7 +20,7 @@ describe("Issue Visit", () => {
 	it("should use the fallback", () => {
 		const value = Math.random();
 		const result = visitWithFallback(
-			{ code: "custom", path: [] },
+			{ code: "custom", message: "", path: [] },
 			() => value,
 			{},
 		);
@@ -24,15 +29,17 @@ describe("Issue Visit", () => {
 
 	it("should visit the issue (with issue type)", () => {
 		const issue: Issue = {
-			code: "invalid_string",
+			code: "too_big",
+			maximum: 100,
+			message: "",
+			origin: "number",
 			path: [],
-			validation: "email",
 		};
 		const { data, visited } = visit(issue, {
-			[issue.code]: i => i.validation,
-		}) as VisitResultVisited<typeof issue.validation>;
+			[issue.code]: i => i.maximum,
+		}) as VisitResultVisited<typeof issue.maximum>;
 
 		expect(visited).toBe(true);
-		expect(data).toBe(issue.validation);
+		expect(data).toBe(issue.maximum);
 	});
 });

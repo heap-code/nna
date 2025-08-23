@@ -3,11 +3,7 @@ import * as z from "zod";
 /** Validation schema for {@link Dto} */
 export const schema = z
 	.object({
-		cookie: z
-			.boolean()
-			.default(false)
-			.describe("Use a `HTTP only` cookie?")
-			.optional(),
+		cookie: z.boolean().describe("Use a `HTTP only` cookie?").optional(),
 	})
 	.strict();
 

@@ -5,13 +5,12 @@ import { isSchemaFirstPartyNestedType } from "../../schema";
 
 /** @internal */
 const TYPES = [
-	z.ZodFirstPartyTypeKind.ZodBoolean,
-	z.ZodFirstPartyTypeKind.ZodDate,
-	z.ZodFirstPartyTypeKind.ZodNumber,
-	z.ZodFirstPartyTypeKind.ZodString,
-	z.ZodFirstPartyTypeKind.ZodEnum,
-	z.ZodFirstPartyTypeKind.ZodNativeEnum,
-] as const;
+	"boolean",
+	"date",
+	"number",
+	"string",
+	"enum",
+] as const satisfies Array<z.ZodType["def"]["type"]>;
 
 /**
  * Determines if a schema can be used to created its {@link FilterValue} validation schema
@@ -20,7 +19,7 @@ const TYPES = [
  * @returns if the given schema can be converted to `FilterValue` schema
  */
 export function isFilterValueConvertible(
-	schema: z.ZodTypeAny,
+	schema: z.ZodType,
 ): schema is FilterZodEqType {
 	return isSchemaFirstPartyNestedType(schema, TYPES);
 }

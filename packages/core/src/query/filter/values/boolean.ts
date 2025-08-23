@@ -36,15 +36,14 @@ function schema(options?: BooleanOptions): z.ZodType<BooleanFilter>;
  */
 function schema(options: BooleanOptions = {}) {
 	const { coerce } = options;
+
+	const base = z.boolean();
 	return common.schema(
 		coerce
-			? (z
-					.custom()
-					.transform(val =>
-						val === "true" ? true : val === "false" ? false : val,
-					)
-					.pipe(z.boolean()) as never)
-			: z.boolean(),
+			? (base.or(
+					z.stringbool({ falsy: ["false"], truthy: ["true"] }),
+				) as never as typeof base)
+			: base,
 		options,
 	);
 }

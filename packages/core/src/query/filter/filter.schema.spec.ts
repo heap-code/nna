@@ -72,9 +72,7 @@ describe("Filter schema", () => {
 			];
 
 			for (const filter of filters) {
-				const results = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseSuccess<never>;
+				const results = filterSchema.safeParse(filter);
 				expect(results.success).toBe(true);
 				expect(results.data).toStrictEqual(filter);
 			}
@@ -122,12 +120,10 @@ describe("Filter schema", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter<SchemaFlat>>;
+				const result = filterSchema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});
@@ -180,12 +176,10 @@ describe("Filter schema", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter<SchemaNested>>;
+				const result = filterSchema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});
@@ -279,12 +273,10 @@ describe("Filter schema", () => {
 			];
 
 			for (const [filter, nError] of filters.slice(0, 1)) {
-				const result = filterSchema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter<SchemaWithDiscrimination>>;
+				const result = filterSchema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -332,9 +324,7 @@ describe("Filter schema", () => {
 				];
 
 				for (const [filter, expected] of tests) {
-					const results = filterSchema.safeParse(
-						filter,
-					) as z.SafeParseSuccess<never>;
+					const results = filterSchema.safeParse(filter);
 					expect(results.success).toBe(true);
 					expect(results.data).toStrictEqual(expected);
 				}
@@ -343,44 +333,14 @@ describe("Filter schema", () => {
 	});
 
 	describe("With lazy content", () => {
-		const schemaBase = schemaFlat.extend({
+		const schemaLoop = schemaFlat.extend({
 			lazyNumber: z.lazy(() => z.number()),
-		});
-
-		// TODO: transform this to a type-helper (and make it better, e.g. with optional)
-		type SchemaCircularItself = "__zod_circular_";
-		type SchemaCircular<
-			Base extends z.AnyZodObject,
-			Out extends object = z.infer<Base>,
-		> = z.ZodObject<
-			z.objectUtil.extendShape<
-				Base["shape"],
-				{
-					[K in keyof Out]: z.ZodType<
-						Out[K] extends SchemaCircularItself
-							? z.infer<SchemaCircular<Base, Out>>
-							: Out[K]
-					>;
-				}
-			>,
-			Base["_def"]["unknownKeys"],
-			Base["_def"]["catchall"],
-			Base["_output"] & {
-				[K in keyof Out]: Out[K] extends SchemaCircularItself
-					? z.infer<SchemaCircular<Base, Out>>
-					: Out[K];
-			}
-		>;
-
-		const schemaLoop: SchemaCircular<
-			typeof schemaBase,
-			{
-				lazyObject: SchemaCircularItself;
-				lazyObject2: SchemaCircularItself;
-			}
-		> = schemaBase.extend({
-			lazyObject: z.lazy(() => schemaLoop),
-			lazyObject2: z.lazy(() => schemaLoop),
+			get lazyObject() {
+				return z.lazy(() => schemaLoop);
+			},
+			get lazyObject2() {
+				return z.lazy(() => schemaLoop);
+			},
 		});
 
 		type SchemaWithLazy = z.infer<typeof schemaLoop>;
@@ -436,12 +396,10 @@ describe("Filter schema", () => {
 			];
 
 			for (const [order, nError] of orders) {
-				const result = filterSchema.safeParse(
-					order,
-				) as z.SafeParseError<never>;
+				const result = filterSchema.safeParse(order);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 	});

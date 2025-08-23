@@ -20,7 +20,7 @@ export interface PortOptions {
  * @param options for the resulted schema
  * @returns a schema (from the given on) with port constraint
  */
-export function port<T extends z.ZodNumber>(
+export function port<T extends z.ZodCoercedNumber | z.ZodNumber>(
 	schema: T,
 	options: PortOptions = {},
 ) {

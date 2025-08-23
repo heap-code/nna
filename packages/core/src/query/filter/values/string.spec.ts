@@ -1,5 +1,3 @@
-import * as z from "zod";
-
 import * as Filter from "./string";
 
 describe("String filter", () => {
@@ -51,12 +49,10 @@ describe("String filter", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.StringFilter>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -161,12 +157,10 @@ describe("Nullable string filter", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.StringFilterNullable>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 

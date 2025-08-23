@@ -1,5 +1,3 @@
-import * as z from "zod";
-
 import * as Filter from "./date";
 
 const now = new Date();
@@ -57,12 +55,10 @@ describe("Date filter", () => {
 			];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.DateFilter>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -96,12 +92,10 @@ describe("Date filter", () => {
 				];
 
 				for (const [filter, nError] of filters) {
-					const result = schemaCoerce.safeParse(
-						filter,
-					) as z.SafeParseError<Filter.DateFilter>;
+					const result = schemaCoerce.safeParse(filter);
 
 					expect(result.success).toBe(false);
-					expect(result.error.errors).toHaveLength(nError);
+					expect(result.error?.issues).toHaveLength(nError);
 				}
 			});
 		});
@@ -193,12 +187,10 @@ describe("Nullable date filter", () => {
 				];
 
 			for (const [filter, nError] of filters) {
-				const result = schema.safeParse(
-					filter,
-				) as z.SafeParseError<Filter.DateFilterNullable>;
+				const result = schema.safeParse(filter);
 
 				expect(result.success).toBe(false);
-				expect(result.error.errors).toHaveLength(nError);
+				expect(result.error?.issues).toHaveLength(nError);
 			}
 		});
 
@@ -243,12 +235,10 @@ describe("Nullable date filter", () => {
 				];
 
 				for (const [filter, nError] of filters) {
-					const result = schemaCoerce.safeParse(
-						filter,
-					) as z.SafeParseError<Filter.DateFilterNullable>;
+					const result = schemaCoerce.safeParse(filter);
 
 					expect(result.success).toBe(false);
-					expect(result.error.errors).toHaveLength(nError);
+					expect(result.error?.issues).toHaveLength(nError);
 				}
 			});
 		});

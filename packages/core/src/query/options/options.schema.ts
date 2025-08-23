@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import type { QueryObjectSchema, QueryOptions } from "..";
+import type { QueryObjectSchema } from "..";
 import { FilterOptions } from "../filter";
 import * as QueryOrder from "../order";
 
@@ -34,23 +34,21 @@ function _schema<T extends QueryObjectSchema>(
 		return _schema(schema, {});
 	}
 
-	type QryOptions = QueryOptions<z.infer<T>>;
-	type QryOptShape = Record<keyof QryOptions, z.ZodType>;
-
 	const { coerce = false, defaultLimit = QUERY_OPTIONS_DEFAULT_LIMIT } =
 		options;
-	const numberSchema = z.number({ coerce }).gte(0).optional();
+	const numberSchema = (coerce ? z.coerce.number() : z.number())
+		.gte(0)
+		.optional();
 
 	return z.object({
-		limit:
-			defaultLimit === null
-				? numberSchema
-				: numberSchema.default(defaultLimit),
+		limit: (defaultLimit === null
+			? numberSchema
+			: numberSchema.default(defaultLimit)) as typeof numberSchema,
 		order: z
 			.array(z.lazy(() => QueryOrder.order(schema, options)))
 			.optional(),
 		skip: numberSchema,
-	} satisfies QryOptShape);
+	});
 }
 
 export { _schema as options };
