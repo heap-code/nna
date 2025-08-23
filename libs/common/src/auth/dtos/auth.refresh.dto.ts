@@ -6,5 +6,5 @@ export const schema = z
 		cookie: z.boolean().describe("Use a `HTTP only` cookie?").optional(),
 	})
 	.strict();
-
+/** Dto for a the refresh of authed session */
 export type Dto = z.infer<typeof schema>;
