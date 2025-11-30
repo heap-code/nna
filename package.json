@@ -159,7 +159,7 @@
 		"ts-jest": "^29.1.0",
 		"ts-node": "10.9.2",
 		"type-fest": "^4.10.2",
-		"typescript": "~5.5.0",
+		"typescript": "~5.9.0",
 		"url-loader": "^4.1.1",
 		"wait-port": "^1.1.0"
 	},
